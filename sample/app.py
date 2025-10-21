@@ -33,7 +33,7 @@ if role == 'Student':
     selected = st.selectbox('Who are You?', options)
     password = st.text_input("Enter Secret Password:", type='password')
     
-        if st.button('Mark Present?'):
+    if st.button('Mark Present?'):
         today = datetime.today().strftime('%Y-%m-%d')
         if selected not in attendance_df[(attendance_df['Name'] == selected) & (attendance_df['Date'] == today)]['Name'].values:
             if passwords[selected] == password:
@@ -95,6 +95,7 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
 
