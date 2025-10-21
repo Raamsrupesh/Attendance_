@@ -33,15 +33,23 @@ if role == 'Student':
     selected = st.selectbox('Who are You?', options)
     password = st.text_input("Enter Secret Password:", type='password')
     
-    if st.button('Mark Present?'):
+        if st.button('Mark Present?'):
         today = datetime.today().strftime('%Y-%m-%d')
         if selected not in attendance_df[(attendance_df['Name'] == selected) & (attendance_df['Date'] == today)]['Name'].values:
             if passwords[selected] == password:
-                # Add to DataFrame and save
-                new_entry = pd.DataFrame({'Name': [selected], 'Date': [today]})
-                attendance_df = pd.concat([attendance_df, new_entry], ignore_index=True)
-                attendance_df.to_csv(ATTENDANCE_FILE, index=False)
-                st.success(f"You ({selected}) are now marked as present for {today}!")
+                if location.get("latitude") and location.get("longitude"):
+                    lat = location['latitude']
+                    long = location['longitude']
+                    if (lat >= 18.08646 and lat <= 18.0999) and (long >= 83.37392 and long <= 83.3999):
+                        # Add to DataFrame and save
+                        new_entry = pd.DataFrame({'Name': [selected], 'Date': [today]})
+                        attendance_df = pd.concat([attendance_df, new_entry], ignore_index=True)
+                        attendance_df.to_csv(ATTENDANCE_FILE, index=False)
+                        st.success(f"You ({selected}) are now marked as present for {today}!")
+                    else:
+                        st.error("Your Location is not matching to mark!!")
+                else:
+                    st.error("DIdn't fetch Location!!")
             else:
                 st.error('WRONG PASSWORD!!')
         else:
@@ -87,6 +95,7 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
 
