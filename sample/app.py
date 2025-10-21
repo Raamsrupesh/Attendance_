@@ -17,7 +17,7 @@ if not os.path.exists(ATTENDANCE_FILE):
 # Load existing attendance data
 attendance_df = pd.read_csv(ATTENDANCE_FILE)
 
-st.title('CSE-F Attendance Checker!!')
+st.title('CSE Attendance Checker!!')
 st.header('Enter the following details:')
 
 options = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9','AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM',
@@ -87,6 +87,7 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
 
