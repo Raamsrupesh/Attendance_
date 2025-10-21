@@ -20,7 +20,7 @@ attendance_df = pd.read_csv(ATTENDANCE_FILE)
 st.title('CSE-F Attendance Checker!!')
 st.header('Enter the following details:')
 
-options = ['RAAMA', 'BH', 'BI', 'BJ']
+options = ['RAAM', 'BH', 'BI', 'BJ']
 passwords = {
     'RAAMA': 'CHITCHOR',
     'BH': 'RR',
@@ -90,5 +90,6 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
