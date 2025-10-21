@@ -20,13 +20,10 @@ attendance_df = pd.read_csv(ATTENDANCE_FILE)
 st.title('CSE-F Attendance Checker!!')
 st.header('Enter the following details:')
 
-options = ['RAAM', 'BH', 'BI', 'BJ']
-passwords = {
-    'RAAMA': 'CHITCHOR',
-    'BH': 'RR',
-    'BI': 'Sam',
-    'BJ': 'Siri'
-}
+options = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9','AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM',
+ 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL',
+ 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ']
+passwords = {rn: 'In' + rn + '@123' for rn in options}
 rep_password = 'REP123'  # Special password for class reps to view attendance
 
 # Role selection
@@ -90,6 +87,7 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
 
