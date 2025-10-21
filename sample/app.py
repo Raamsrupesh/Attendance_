@@ -30,6 +30,8 @@ rep_password = 'REP123'  # Special password for class reps to view attendance
 role = st.radio('Select Your Role:', ['Student', 'Class Representative'])
 
 if role == 'Student':
+    from streamlit_geolocation import streamlit_geolocation
+    location = streamlit_geolocation()
     selected = st.selectbox('Who are You?', options)
     password = st.text_input("Enter Secret Password:", type='password')
     
@@ -95,6 +97,7 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
 
