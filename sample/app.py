@@ -66,7 +66,7 @@ if role == 'Student':
                 if location.get("latitude") and location.get("longitude"):
                     lat = location['latitude']
                     long = location['longitude']
-                    if (lat >= 18.0246 and lat <= 18.0318) and (long >= 83.3965 and long <= 83.4041):
+                    if (lat >= 18.0180 and lat <= 18.0285) and (long >= 83.3965 and long <= 83.4041):
                         st.session_state['user'] = selected  # Save the selection in session
                         already_marked = attendance_df[
                             (attendance_df['Name'] == selected) &
@@ -146,6 +146,7 @@ elif role == 'Class Representative':
         attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
         st.info(f"Attendance reset for {selected_date_str}!")
+
 
 
 
