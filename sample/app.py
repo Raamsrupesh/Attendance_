@@ -180,7 +180,13 @@ with tab3:
       else:
           st.error("!Enter NAME and ROLL NUMBER first!")  
       for idx,row in message_df.iterrows():
-          st.write(f"{row['Roll_no']}: {row['Message']}")
+            chat_html = "<div class='chat-container'>"
+            if row['Roll_no'] == Roll_no:
+                chat_html += f"<div class='chat-bubble left-bubble'><b>{row['Roll_no']}</b>:{row['Message']}</div>"
+            else:
+                chat_html += f"<div class='chat-bubble right-bubble'><b>{row['Roll_no']}</b>:{row['Message']}</div>"
+            chat_html += "</div>"
+            st.markdown(chat_html, unsafe_allow_html=True)
 
       if st.button("Reset"):
             message_df = pd.DataFrame(columns=message_df.columns)
@@ -189,6 +195,9 @@ with tab3:
                 st.write(f"{row['Roll_no']}: {row['Message']}")
       if st.button("REFRESH"):
           st.rerun()
+
+
+
 
 
 
