@@ -164,6 +164,53 @@ with tab2:
             st.info(f"Attendance reset for {selected_date_str}!")
 
 
+#======================= Chat Arrangement ======================== 
+st.markdown("""
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<style>
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    max-width: 100%;
+    width: 100%;
+}
+
+.chat-bubble {
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-size: 16px;
+    display: block;  /* Changed to block for better stacking */
+}
+
+.left-bubble {
+    align-self: flex-start;
+    background-color: #dcf8c6; /* light green */
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: black;
+    border-top-left-radius: 0;
+    text-align: left;
+}
+
+.right-bubble {
+    align-self: flex-end;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: #add8e6; /* light blue */
+    color: black;
+    border-top-right-radius: 0;
+    text-align: right;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 with tab3:
       MESSAGE_FILE = "messages.csv"
       if not os.path.exists(MESSAGE_FILE):
@@ -195,6 +242,7 @@ with tab3:
                 st.write(f"{row['Roll_no']}: {row['Message']}")
       if st.button("REFRESH"):
           st.rerun()
+
 
 
 
