@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 import hashlib
-
+st.title("** Welcome **")
 tab1, tab2, tab3 = st.tabs(['Register/Login', 'Student/CR', 'Ask Permission'])
 # ===== Unique session ID generation function =====
 def get_session_id():
@@ -189,5 +189,6 @@ with tab3:
                 st.write(f"{row['Roll_no']}: {row['Message']}")
       if st.button("REFRESH"):
           st.rerun()
+
 
 
