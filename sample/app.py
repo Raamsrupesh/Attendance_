@@ -124,7 +124,7 @@ with tab2:
                 try:
                     from streamlit_geolocation import streamlit_geolocation
                     location = streamlit_geolocation()
-                    st.write("Debug: Raw location data:", location)  # Temporary debug line
+                    st.write(f"📍You are at {location['latitude']} N and at {location['longitude']} E")  # Temporary debug line
                 except ImportError:
                     location = {}
                     st.warning('streamlit_geolocation package not found. Location fetch will not work!')
@@ -333,4 +333,5 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
