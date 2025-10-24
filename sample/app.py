@@ -124,9 +124,13 @@ with tab2:
                 try:
                     from streamlit_geolocation import streamlit_geolocation
                     location = streamlit_geolocation()
+                    st.write("Debug: Raw location data:", location)  # Temporary debug line
                 except ImportError:
                     location = {}
                     st.warning('streamlit_geolocation package not found. Location fetch will not work!')
+                except Exception as e:  # Catch other errors like timeouts
+                    location = {}
+                    st.error(f"Error fetching location: {str(e)}. Check browser permissions.")
 
                 selected = st.selectbox('Who are You?', [roll_no_tab2])
                 password = st.text_input("Enter Secret Password:", type='password')
@@ -329,3 +333,4 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
