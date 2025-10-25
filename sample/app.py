@@ -82,10 +82,13 @@ def is_bound_to_another_device(roll_number):
     return False
 
 with tab1:
+    no_of_times = 1 #First Time 
     st.title("Registration for Students!!")
     Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
     Roll_no = st.text_input("Enter Roll Number: ", placeholder='E.g: BI')
-    st.session_state['user'] = Roll_no
+    if no_of_times == 1:
+        st.session_state['user'] = Roll_no
+        no_of_times += 1
     if st.button('Submit'):
         if Roll_no not in options:
             st.error("YOU ARE NOT A MEMBER OF CLASS")
@@ -327,6 +330,7 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
 
 
