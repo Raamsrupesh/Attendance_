@@ -57,7 +57,7 @@ options = [
 ]
 passwords = {rn: 'In' + rn + '@123' for rn in options}
 rep_password = 'REP123'
-
+no_of_times = 1 #First Time 
 # ====== Create attendance file if needed ======
 if not os.path.exists(ATTENDANCE_FILE):
     df = pd.DataFrame(columns=['SessionID', 'Name', 'Date'])
@@ -82,7 +82,6 @@ def is_bound_to_another_device(roll_number):
     return False
 
 with tab1:
-    no_of_times = 1 #First Time 
     st.title("Registration for Students!!")
     Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
     Roll_no = st.text_input("Enter Roll Number: ", placeholder='E.g: BI')
@@ -330,6 +329,7 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
 
 
