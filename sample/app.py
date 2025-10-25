@@ -92,7 +92,6 @@ with tab1:
             st.error(f"ERROR: Roll number {Roll_no} is enrolled with another device. Access denied.")
         elif st.session_state['user'] is not None and st.session_state['user'] != Roll_no:
             st.error(f"This device is aldready bound to another Roll NO: {st.session_state['user']}!!")
-    
         else:
             conn = get_db_connection()
             cur = conn.cursor()
@@ -173,7 +172,7 @@ with tab2:
                                 else:
                                     st.error("Your Location is not matching i.e you aren't there in college!!")
                             else:
-                                st.error("Didn't fetch Location, open settings and try provide access to mark present!!")
+                                st.error(f"Didn't fetch location, open settings and grant permission of accessing Loaction for this device!!")
                         else:
                             st.error('WRONG PASSWORD!!')
                     else:
@@ -235,13 +234,7 @@ with tab2:
         st.error("Please enter a valid roll number.")
 
 #======================= Chat Arrangement ======================== 
-# import streamlit as st
-# import pandas as pd
-# import os
 import html  # For basic sanitization
-
-# Assuming these are defined elsewhere:
-# Roll_no, options, is_bound_to_another_device, st.session_state['user'], tab3
 
 st.markdown("""
 <link rel="stylesheet"
@@ -333,6 +326,3 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
-
-
-
