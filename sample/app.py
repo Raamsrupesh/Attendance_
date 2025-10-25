@@ -173,7 +173,7 @@ with tab2:
                                 else:
                                     st.error("Your Location is not matching i.e you aren't there in college!!")
                             else:
-                                st.error("Didn't fetch Location, try providing location once more!!")
+                                st.error("Didn't fetch Location, open settings and try provide access to mark present!!")
                         else:
                             st.error('WRONG PASSWORD!!')
                     else:
@@ -333,5 +333,6 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
 
