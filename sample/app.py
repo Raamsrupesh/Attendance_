@@ -143,7 +143,7 @@ with tab2:
                     today = datetime.today().strftime('%Y-%m-%d')
                     input_time = datetime.now().strftime("%H:%M:%S")
 
-                    if st.session_state['user'] is None:
+                    if st.session_state['user'] is not None:
                         # First mark for this browser session, user selection is saved
                         if passwords[selected] == password:
                             if location.get("latitude") and location.get("longitude"):
@@ -331,6 +331,7 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
 
 
