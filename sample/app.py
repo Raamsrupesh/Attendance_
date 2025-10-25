@@ -101,11 +101,13 @@ with tab1:
             cur.execute("SELECT device_id FROM user_bindings WHERE roll_number=?", (Roll_no,))
             row = cur.fetchone()
             if row:
+                st.session_state['user'] = Roll_no
                 st.success("**ACCESS GRANTED** (Already registered to this device)")
             else:
                 # Bind roll number to this device
                 cur.execute("INSERT INTO user_bindings (roll_number, device_id, name) VALUES (?, ?, ?)", (Roll_no, device_id, Name))
                 conn.commit()
+                st.session_state['user'] = Roll_no
                 st.success("**ACCESS GRANTED** (Registered to this device)")
             conn.close()
 
@@ -329,6 +331,7 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
 
 
