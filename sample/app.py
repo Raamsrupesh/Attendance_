@@ -80,7 +80,17 @@ def is_bound_to_another_device(roll_number):
     if row:
         return row[0] != device_id
     return False
-
+def checking(rno):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT device_id FROM attendance WHERE roll_number=?", (rno,))
+    row = cur.fetchone()
+    if row:
+        bound_device_id = row 
+        if bound_device_id != device_id:
+            return False 
+        else:
+            return True
 with tab1:
     st.title("Registration for Students!!")
     Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
@@ -91,7 +101,7 @@ with tab1:
     if st.button('Submit'):
         if Roll_no not in options:
             st.error("YOU ARE NOT A MEMBER OF CLASS")
-        elif is_bound_to_another_device(Roll_no):
+        elif is_bound_to_another_device(Roll_no) and checking(Roll_no):
             st.error(f"ERROR: Roll number {Roll_no} is enrolled with another device. Access denied.")
         elif st.session_state['user'] is not None and st.session_state['user'] != Roll_no:
             st.error(f"This device is aldready bound to another Roll NO: {st.session_state['user']}!!")
@@ -117,7 +127,7 @@ with tab2:
 
     roll_no_tab2 = Roll_no
     if roll_no_tab2 and roll_no_tab2 in options:
-        if is_bound_to_another_device(roll_no_tab2):
+        if is_bound_to_another_device(roll_no_tab2) and checking(roll_no_tab2):
             st.error(f"ERROR: Roll number {roll_no_tab2} is enrolled with another device. Access denied.")
         elif st.session_state['user'] is not None and st.session_state['user'] != roll_no_tab2:
             st.error("PROVIDE **VALID DETAILS** FIRST!")
@@ -285,7 +295,7 @@ st.markdown("""
 with tab3:
     roll_no_tab3 = Roll_no
     if roll_no_tab3 and roll_no_tab3 in options:
-        if is_bound_to_another_device(roll_no_tab3):
+        if is_bound_to_another_device(roll_no_tab3) and checking(roll_no_tab3):
             st.error(f"ERROR: Roll number {roll_no_tab3} is enrolled with another device. Access denied.")
         elif st.session_state['user'] is not None and roll_no_tab3 != st.session_state['user']:
             st.error("Provide the Valid Roll NO first!")
@@ -331,6 +341,7 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
 
 
