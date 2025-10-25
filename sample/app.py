@@ -85,7 +85,7 @@ with tab1:
     st.title("Registration for Students!!")
     Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
     Roll_no = st.text_input("Enter Roll Number: ", placeholder='E.g: BI')
-    st.session_state['user'] = Roll_no
+    # st.session_state['user'] = Roll_no
     if st.button('Submit'):
         if Roll_no not in options:
             st.error("YOU ARE NOT A MEMBER OF CLASS")
@@ -327,4 +327,5 @@ with tab3:
     else:
         st.error("Please enter a valid roll number.")
 st.caption(f"Device ID: {device_id}")
+
 
