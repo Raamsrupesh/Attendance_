@@ -93,33 +93,45 @@ def checking(rno):
             return True 
 with tab1:
     st.title("Registration for Students!!")
-    Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
-    Roll_no = st.text_input("Enter Roll Number: ", placeholder='E.g: BI')
-    # if no_of_times == 1:
-    #     st.session_state['user'] = Roll_no
-    #     no_of_times += 1
-    if st.button('Submit'):
-        if Roll_no not in options:
-            st.error("YOU ARE NOT A MEMBER OF CLASS")
-        elif is_bound_to_another_device(Roll_no) and checking(Roll_no):
-            st.error(f"ERROR: Roll number {Roll_no} is enrolled with another device. Access denied.")
-        elif st.session_state['user'] is not None and st.session_state['user'] != Roll_no:
-            st.error(f"This device is aldready bound to another Roll NO: {st.session_state['user']}!!")
-        else:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("SELECT device_id FROM user_bindings WHERE roll_number=?", (Roll_no,))
-            row = cur.fetchone()
-            if row:
-                st.session_state['user'] = Roll_no
-                st.success("**ACCESS GRANTED** (Already registered to this device)")
+    
+    # Check if this device is already bound to a roll number
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT roll_number, name FROM user_bindings WHERE device_id=?", (device_id,))
+    bound_row = cur.fetchone()
+    conn.close()
+    
+    if bound_row:
+        bound_roll, bound_name = bound_row
+        st.success(f"You are already registered as **{bound_name} ({bound_roll})** on this device.")
+        st.session_state['user'] = bound_roll  # Ensure session state is set
+        st.info("If this is incorrect, contact your admin to reset bindings.")
+        Roll_no = bound_roll
+    else:
+        # Show inputs only if not bound
+        Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
+        Roll_no = st.text_input("Enter Roll Number: ", placeholder='E.g: BI')
+        
+        if st.button('Submit'):
+            if Roll_no not in options:
+                st.error("YOU ARE NOT A MEMBER OF CLASS")
             else:
-                # Bind roll number to this device
-                cur.execute("INSERT INTO user_bindings (roll_number, device_id, name) VALUES (?, ?, ?)", (Roll_no, device_id, Name))
-                conn.commit()
-                st.session_state['user'] = Roll_no
-                st.success("**ACCESS GRANTED** (Registered to this device)")
-            conn.close()
+                conn = get_db_connection()
+                cur = conn.cursor()
+                
+                # Check if Roll_no is already bound to another device
+                cur.execute("SELECT device_id FROM user_bindings WHERE roll_number=?", (Roll_no,))
+                roll_bound_row = cur.fetchone()
+                if roll_bound_row and roll_bound_row[0] != device_id:
+                    st.error(f"ERROR: Roll number {Roll_no} is already bound to another device. Access denied.")
+                else:
+                    # Bind the roll number to this device (INSERT OR REPLACE to handle updates if needed)
+                    cur.execute("INSERT OR REPLACE INTO user_bindings (roll_number, device_id, name) VALUES (?, ?, ?)", (Roll_no, device_id, Name))
+                    conn.commit()
+                    st.session_state['user'] = Roll_no
+                    st.success("**ACCESS GRANTED** (Registered to this device)")
+                    st.rerun()  # Rerun to hide inputs and show bound info
+                conn.close()
 
 with tab2:
     st.title('CSE Attendance Checker!!')
@@ -429,5 +441,6 @@ with tab4:
                     mime="text/csv",
                     key="download-permissions"
             )
+
 
 
