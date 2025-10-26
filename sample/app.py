@@ -35,7 +35,7 @@ if ctx and ctx.session_id:
 else:
     device_id = str(uuid.uuid4())  # Fallback UUID if no session
 
-tab1, tab2, tab3 = st.tabs(['Register/Login', 'Student/CR', 'Ask Permission'])
+tab1, tab2, tab3, tab4 = st.tabs(['Register/Login', 'Student/CR','Chat', 'Ask Permission'])
 # ===== Unique session ID generation function =====
 def get_session_id():
     ctx = get_script_run_ctx()
@@ -90,7 +90,7 @@ def checking(rno):
         if bound_device_id != device_id:
             return False 
         else:
-            return True
+            return True 
 with tab1:
     st.title("Registration for Students!!")
     Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
@@ -153,7 +153,7 @@ with tab2:
                     today = datetime.today().strftime('%Y-%m-%d')
                     input_time = datetime.now().strftime("%H:%M:%S")
 
-                    if st.session_state['user'] is not None:
+                    if st.session_state['user'] is not None and st.session_state['user'] == selected:
                         # First mark for this browser session, user selection is saved
                         if passwords[selected] == password:
                             if location.get("latitude") and location.get("longitude"):
@@ -192,10 +192,7 @@ with tab2:
                             st.error('WRONG PASSWORD!!')
                     else:
                         # Session has already a user who marked attendance 
-                        if st.session_state['user'] != selected:
-                            st.error(f"This device/browser is already used by {st.session_state['user']}. You cannot mark for others during this session!")
-                        else:
-                            st.warning(f"{selected} has already marked attendance for this session.")
+                        st.error(f"Kindly Ensure whether that you've given valid details!!")
                 # if st.session_state['user'] is not None:
                 #     if st.button("Change User"):
                 #         # (1) Remove the last attendance row for this session, if marked
@@ -343,10 +340,93 @@ with tab3:
 st.caption(f"Device ID: {device_id}")
 
 
+with tab4:
+    tab_mode= st.radio("Enter the mode: ", ['MENTOR/CR', 'STUDENT'])
+    PERMISSIONS_FILE = "permissions.csv"
+    no_of_days = 0
+    if tab_mode == 'STUDENT':
+        if Roll_no and Roll_no in options:
+            if (is_bound_to_another_device(Roll_no) and checking(Roll_no)):
+                st.error(f"ERROR: Roll number {Roll_no} is enrolled with another device. Access denied.")
+            else:
+                if st.session_state['user'] is not None and roll_no_tab3 != st.session_state['user']:
+                    st.error("Provide the Valid Roll NO first!")
+                else:
+                    no_of_days = st.slider("Select the no of days: ", min_value=1, max_value=10)
+                    if not os.path.exists(PERMISSIONS_FILE):
+                            per_df = pd.DataFrame(columns=['Roll_no', 'Reason', 'Granted', "No_of_days"])
+                            per_df.to_csv(PERMISSIONS_FILE, index=False)
+                    else:
+                            per_df = pd.read_csv(PERMISSIONS_FILE)
+                        
+                    issue = st.chat_input("Enter your issue: ",key="permission_input")
+                    if issue:
+                            # Sanitize input to prevent HTML injection
+                            sanitized_issue = html.escape(issue)
+                            sanitized_days = html.escape(str(no_of_days))
+                            new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
+                            per_df = pd.concat([per_df, new_msg], ignore_index=True)
+                            per_df.to_csv(PERMISSIONS_FILE, index=False)
+                        
+                        # Sort by index for chronological order (assuming index represents time)
+                    per_df = per_df.sort_index()
+                    if Roll_no in per_df['Roll_no'].values:
+                        if per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
+                            st.write(f"Your case is : **Approved!!**")
+                        else:
+                            st.write('Your case is still in **PENDING** or The Mentor has **REJECTED** your leave!!')
+                    else:
+                        st.write("You didn't raise any permission request!!")
+                    # if st.button("Reset"):
+                    #         per_df = pd.DataFrame(columns=per_df.columns)
+                    #         per_df.to_csv(PERMISSIONS_FILE, index=False)
+                    #         st.rerun()
+                    # if st.button("REFRESH"):
+                    #         st.rerun()
 
+        else:
+            st.error("Please enter a valid roll number.")
+    
+    elif tab_mode == 'MENTOR/CR':
+        TEA_CR_PASSWORD = 'TEACR'
+        PERMISSIONS_FILE = "permissions.csv"
+        ment_cr_pass = st.text_input("Enter Mentor/Cr Password:")
+        if ment_cr_pass == TEA_CR_PASSWORD:
+            try:
+                per_df = pd.read_csv(PERMISSIONS_FILE)
+                for idx, row in per_df.iterrows():
+                    sanitized_roll = html.escape(str(row['Roll_no']))
+                    sanitized_msg = html.escape(str(row['Reason']))
 
+                    checked = st.checkbox(
+                        f"{sanitized_roll}: {sanitized_msg}",
+                        key=f"checkbox_{idx}"
+                    )
+                    if checked:
+                        st.write(f"Accepted: {sanitized_roll}")
+                        per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
+                        # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
+                    else:
+                        per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = False  
+                        # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
+                    per_df.to_csv(PERMISSIONS_FILE, index=False)
 
+                if st.button("Reset", key="Mentor_erasing"):
+                    per_df = pd.DataFrame(columns=per_df.columns)
+                    per_df.to_csv(PERMISSIONS_FILE, index=False)
+                    st.rerun()
 
+                if st.button("REFRESH", key="Mentor_Refreshing"):
+                    st.rerun()
 
-
+            except FileNotFoundError or NameError:
+                st.success("NO ONE YET ASKED PERMISSION!!")
+            csv_data=per_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                    label="Download Permissions CSV",
+                    data=csv_data,
+                    file_name="permissions.csv",
+                    mime="text/csv",
+                    key="download-permissions"
+            )
 
