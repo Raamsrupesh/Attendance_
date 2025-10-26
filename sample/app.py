@@ -1,14 +1,100 @@
-import streamlit as st
 import pandas as pd
-from datetime import datetime
-import os
-from streamlit.runtime.scriptrunner import get_script_run_ctx
-import hashlib
+import hashlib, uuid, os
+from streamlit_cookies_controller import CookieController
+import streamlit as st
+from datetime import datetime 
 import sqlite3
-import uuid
+from streamlit.runtime.scriptrunner import get_script_run_ctx
+#================= Persistent Device ID using Cookies =================
+controller = CookieController()
 
-DB_PATH = "attendance.sqlite"
+if not controller.getAll():
+    st.warning("Waiting for cookies to initialize. Please reload the page once.")
+    st.stop()
 
+cookie_id = controller.get("device_id")
+if cookie_id:
+    st.write(f"Device Cookie Value: {cookie_id}")  # Helpful for debugging, remove in production if you want!
+    device_id = cookie_id
+else:
+    new_id = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
+    controller.set("device_id", new_id, max_age=3600 * 24 * 365)
+    st.warning("Cookie set, please reload the page for proper persistence.")
+    st.stop()
+
+st.session_state["device_id"] = device_id
+
+#================= MARKED CSV loading and saving =================
+MARKED_FILE = "marked.csv"
+if not os.path.exists(MARKED_FILE):
+    pd.DataFrame(columns=["Roll_no", "device_id"]).to_csv(MARKED_FILE, index=False)
+
+marked_df = pd.read_csv(MARKED_FILE)
+
+#================= Registration / Login UI =================
+st.title("Register / Login")
+
+registered_entry = marked_df.loc[marked_df["device_id"] == device_id]
+
+if not registered_entry.empty:
+    # Already registered => Show only as view/locked mode
+    saved_roll = registered_entry.iloc[0]["Roll_no"]
+    st.success(f"You are permanently registered with Roll No: {saved_roll}")
+    st.text_input("Roll Number", value=saved_roll, disabled=True)
+    st.info("You cannot change Roll Number on this device.")
+    st.caption(f"Device ID: {device_id}")
+else:
+    # Not yet registered => Allow one-time registration
+    name = st.text_input("Enter your Name:")
+    roll_no = st.text_input("Enter your Roll Number:")
+    if st.button("Register"):
+        if not name or not roll_no:
+            st.error("Please fill in all fields.")
+        else:
+            # Prevent duplicate Roll Number
+            if roll_no in marked_df["Roll_no"].values:
+                st.error("This Roll Number is already bound to another device!")
+            else:
+                new_row = pd.DataFrame([{"Roll_no": roll_no, "device_id": device_id}])
+                marked_df = pd.concat([marked_df, new_row], ignore_index=True)
+                marked_df.to_csv(MARKED_FILE, index=False)
+                st.success(f"Registered successfully as {roll_no}")
+                st.rerun()
+
+#================= Other Tabs and Attendance Logic =================
+# You can add the rest of your student/CR/chat/permission tabs below here
+# For each tab, use the value of device_id and the permanent roll_no lookup as your identity key
+# Example stub:
+def get_session_id():
+    ctx = get_script_run_ctx()
+    if ctx and ctx.session_id:
+        return hashlib.sha256(ctx.session_id.encode()).hexdigest()
+    else:
+        return hashlib.sha256(str(datetime.now()).encode()).hexdigest()
+DB_PATH =  'attendance.sqlite'
+ATTENDANCE_FILE = 'attendance.csv'
+if not os.path.exists(ATTENDANCE_FILE):
+    attendance_df = pd.DataFrame(columns=['SessionID', 'Name', 'Date'])
+    attendance_df.to_csv(ATTENDANCE_FILE, index=False) 
+attendance_df = pd.read_csv(ATTENDANCE_FILE)
+if 'user' not in st.session_state:
+    try:
+        st.session_state['user'] = saved_roll
+    except NameError:
+        st.session_state['user'] = None
+if not 'session_id' in st.session_state:
+    st.session_state['session_id'] = get_session_id()
+rep_password = 'REP123'
+options = [
+    'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'Y0', 'Y1', 'Y2', 'Y3',
+    'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Z0', 'Z1', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6',
+    'Z7', 'Z8', 'Z9', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ',
+    'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW',
+    'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ',
+    'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW',
+    'BX', 'BY', 'BZ'
+]
+passwords = {rn: 'In' + rn + '@123' for rn in options} 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.execute("""
@@ -27,50 +113,6 @@ def get_db_connection():
         )
     """)
     return conn
-
-# Fallback: Generate a unique device ID using session context (not truly device-bound, but unique per session)
-ctx = get_script_run_ctx()
-if ctx and ctx.session_id:
-    device_id = hashlib.sha256(ctx.session_id.encode()).hexdigest()
-else:
-    device_id = str(uuid.uuid4())  # Fallback UUID if no session
-
-tab1, tab2, tab3, tab4 = st.tabs(['Register/Login', 'Student/CR','Chat', 'Ask Permission'])
-# ===== Unique session ID generation function =====
-def get_session_id():
-    ctx = get_script_run_ctx()
-    if ctx and ctx.session_id:
-        return hashlib.sha256(ctx.session_id.encode()).hexdigest()
-    else:
-        return hashlib.sha256(str(datetime.now()).encode()).hexdigest()
-
-# ====== Constants/Initializations ======
-ATTENDANCE_FILE = 'attendance.csv'
-options = [
-    'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'Y0', 'Y1', 'Y2', 'Y3',
-    'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Z0', 'Z1', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6',
-    'Z7', 'Z8', 'Z9', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ',
-    'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW',
-    'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ',
-    'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW',
-    'BX', 'BY', 'BZ'
-]
-passwords = {rn: 'In' + rn + '@123' for rn in options}
-rep_password = 'REP123'
-# no_of_times = 1 #First Time 
-# ====== Create attendance file if needed ======
-if not os.path.exists(ATTENDANCE_FILE):
-    df = pd.DataFrame(columns=['SessionID', 'Name', 'Date'])
-    df.to_csv(ATTENDANCE_FILE, index=False)
-
-attendance_df = pd.read_csv(ATTENDANCE_FILE)
-
-# ====== Initialize session context ======
-if 'session_id' not in st.session_state:
-    st.session_state['session_id'] = get_session_id()
-if 'user' not in st.session_state:
-    st.session_state['user'] = None
-
 def is_bound_to_another_device(roll_number):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -91,53 +133,14 @@ def checking(rno):
             return False 
         else:
             return True 
+tab1, tab2, tab3 = st.tabs(['Student/CR', 'Chat', 'Ask Permission'])
 with tab1:
-    st.title("Registration for Students!!")
-    
-    # Check if this device is already bound to a roll number
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT roll_number, name FROM user_bindings WHERE device_id=?", (device_id,))
-    bound_row = cur.fetchone()
-    conn.close()
-    
-    if bound_row:
-        bound_roll, bound_name = bound_row
-        st.success(f"You are already registered as **{bound_name} ({bound_roll})** on this device.")
-        st.session_state['user'] = bound_roll  # Ensure session state is set
-        st.info("If this is incorrect, contact your admin to reset bindings.")
-        Roll_no = bound_roll
-    else:
-        # Show inputs only if not bound
-        Name = st.text_input("Enter your name: ", placeholder='E.g: RAAMA')
-        Roll_no = st.text_input("Enter Roll Number: ", placeholder='E.g: BI')
-        
-        if st.button('Submit'):
-            if Roll_no not in options:
-                st.error("YOU ARE NOT A MEMBER OF CLASS")
-            else:
-                conn = get_db_connection()
-                cur = conn.cursor()
-                
-                # Check if Roll_no is already bound to another device
-                cur.execute("SELECT device_id FROM user_bindings WHERE roll_number=?", (Roll_no,))
-                roll_bound_row = cur.fetchone()
-                if roll_bound_row and roll_bound_row[0] != device_id:
-                    st.error(f"ERROR: Roll number {Roll_no} is already bound to another device. Access denied.")
-                else:
-                    # Bind the roll number to this device (INSERT OR REPLACE to handle updates if needed)
-                    cur.execute("INSERT OR REPLACE INTO user_bindings (roll_number, device_id, name) VALUES (?, ?, ?)", (Roll_no, device_id, Name))
-                    conn.commit()
-                    st.session_state['user'] = Roll_no
-                    st.success("**ACCESS GRANTED** (Registered to this device)")
-                    st.rerun()  # Rerun to hide inputs and show bound info
-                conn.close()
-
-with tab2:
     st.title('CSE Attendance Checker!!')
     st.header('Enter the following details:')
-
-    roll_no_tab2 = Roll_no
+    try:
+        roll_no_tab2 = saved_roll
+    except:
+        roll_no_tab2 = None
     if roll_no_tab2 and roll_no_tab2 in options:
         if is_bound_to_another_device(roll_no_tab2) and checking(roll_no_tab2):
             st.error(f"ERROR: Roll number {roll_no_tab2} is enrolled with another device. Access denied.")
@@ -160,18 +163,14 @@ with tab2:
 
                 selected = st.selectbox('Who are You?', [roll_no_tab2])
                 password = st.text_input("Enter Secret Password:", type='password')
-
                 if st.button('Mark Present?'):
                     today = datetime.today().strftime('%Y-%m-%d')
                     input_time = datetime.now().strftime("%H:%M:%S")
-
-                    if st.session_state['user'] is not None and st.session_state['user'] == selected:
-                        # First mark for this browser session, user selection is saved
-                        if passwords[selected] == password:
-                            if location.get("latitude") and location.get("longitude"):
-                                lat = location['latitude']
-                                long = location['longitude']
-                                if (lat >= 18.08646 and lat <= 18.0999) and (long >= 83.37392 and long <= 83.3999):
+                    if passwords[selected] == password:
+                        if location.get("latitude") and location.get("longitude"):
+                            lat = location['latitude']
+                            long = location['longitude']
+                            if (lat >= 18.08646 and lat <= 18.0999) and (long >= 83.37392 and long <= 83.3999):
                                     st.session_state['user'] = selected  # Save the selection in session
                                     # Device-bound check for attendance
                                     conn = get_db_connection()
@@ -196,15 +195,12 @@ with tab2:
                                             attendance_df = pd.concat([attendance_df, new_df], ignore_index=True)
                                             attendance_df.to_csv(ATTENDANCE_FILE, index=False)
                                         st.success(f"You ({selected}) are now marked as present for {today}!")
-                                else:
-                                    st.error("Your Location is not matching i.e you aren't there in college!!")
                             else:
-                                st.error(f"Didn't fetch location, open settings and grant permission of accessing Loaction for this device!!")
+                                st.error("Your Location is not matching i.e you aren't there in college!!")
                         else:
-                            st.error('WRONG PASSWORD!!')
+                            st.error(f"Didn't fetch location, open settings and grant permission of accessing Loaction for this device!!")
                     else:
-                        # Session has already a user who marked attendance 
-                        st.error(f"Kindly Ensure whether that you've given valid details!!")
+                            st.error('WRONG PASSWORD!!')
                 # if st.session_state['user'] is not None:
                 #     if st.button("Change User"):
                 #         # (1) Remove the last attendance row for this session, if marked
@@ -247,17 +243,22 @@ with tab2:
                                         st.write(f"- {name}")
                                 else:
                                     st.write("Everyone present!")
+                        with col2:
+                            col = st.columns(1)
+                            attendance_data = pd.DataFrame({'Date':[selected_date_str], 'Presenties':[present_list], 'Absenties':[absent_list]}) 
+                            # attendance_data = pd.read_csv(attendance_data)
+                            cr_csv_data=attendance_data.to_csv(index=False).encode('utf-8')
+                            st.download_button(label='Download Report', data=cr_csv_data, mime='text/csv', key='CR_Download', file_name=ATTENDANCE_FILE)
                     else:
                         st.error('Wrong Rep Password!')
 
                 if st.button('Reset Attendance for Selected Date') and rep_pass == rep_password:
                     attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
-                    attendance_df.to_csv(ATTENDANCE_FILE, index=False)
+                    attendance_df.to_csv('ATTENDANCE_FILE', index=False)
                     st.info(f"Attendance reset for {selected_date_str}!")
     else:
         st.error("Please enter a valid roll number.")
 
-#======================= Chat Arrangement ======================== 
 import html  # For basic sanitization
 
 st.markdown("""
@@ -301,8 +302,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-with tab3:
-    roll_no_tab3 = Roll_no
+with tab2:
+    try:
+        roll_no_tab3 = saved_roll 
+    except:
+        roll_no_tab3 = None
     if roll_no_tab3 and roll_no_tab3 in options:
         if is_bound_to_another_device(roll_no_tab3) and checking(roll_no_tab3):
             st.error(f"ERROR: Roll number {roll_no_tab3} is enrolled with another device. Access denied.")
@@ -352,10 +356,14 @@ with tab3:
 st.caption(f"Device ID: {device_id}")
 
 
-with tab4:
+with tab3:
     tab_mode= st.radio("Enter the mode: ", ['MENTOR/CR', 'STUDENT'])
     PERMISSIONS_FILE = "permissions.csv"
     no_of_days = 0
+    try:
+        Roll_no = saved_roll
+    except:
+        Roll_no = None
     if tab_mode == 'STUDENT':
         if Roll_no and Roll_no in options:
             if (is_bound_to_another_device(Roll_no) and checking(Roll_no)):
@@ -383,10 +391,12 @@ with tab4:
                         # Sort by index for chronological order (assuming index represents time)
                     per_df = per_df.sort_index()
                     if Roll_no in per_df['Roll_no'].values:
-                        if per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any() == True:
-                            st.write(f"Your case is : **Approved!!**")
+                        if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
+                            st.write(f"😥😥Your case is still in **PENDING**")
+                        elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
+                            st.write('🎉🎉Congrats! your leave is: **APPROVED**')
                         else:
-                            st.write('Your case is still in **PENDING** or The Mentor has **REJECTED** your leave!!')
+                            st.write('😑😑The Mentor has **MIGHT BE REJECTED** your leave!!')
                     else:
                         st.write("You didn't raise any permission request!!")
                     # if st.button("Reset"):
@@ -409,12 +419,13 @@ with tab4:
                 for idx, row in per_df.iterrows():
                     sanitized_roll = html.escape(str(row['Roll_no']))
                     sanitized_msg = html.escape(str(row['Reason']))
-
-                    checked = st.checkbox(
+                    if 'checked' not in st.session_state:
+                        st.session_state['checked'] = None 
+                    st.session_state['checked'] = st.checkbox(
                         f"{sanitized_roll}: {sanitized_msg}",
                         key=f"checkbox_{idx}"
                     )
-                    if checked:
+                    if st.session_state['checked']:
                         st.write(f"Accepted: {sanitized_roll}")
                         per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
                         # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
@@ -437,10 +448,11 @@ with tab4:
             st.download_button(
                     label="Download Permissions CSV",
                     data=csv_data,
-                    file_name="permissions.csv",
+                    file_name=PERMISSIONS_FILE,
                     mime="text/csv",
                     key="download-permissions"
             )
 
 
 
+# This ensures your attendance, chat, and permission logic will always refer to the correct locked-in roll number
