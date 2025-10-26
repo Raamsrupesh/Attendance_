@@ -702,6 +702,23 @@ elif page == "Student":
                                     st.error(f"Didn't fetch location, open settings and grant permission of accessing Loaction for this device!!")
                             else:
                                     st.error('WRONG PASSWORD!!')
+                        present = attendance_df.loc[attendance_df['Name'] == selected, 'Date']
+                        present_list = []
+                        for i in present:
+                            i=i.replace("2025-10-","")
+                            i=int(i)
+                            present_list.append(i)
+                        todays_date=datetime.today().strftime("%d")
+                        csv_attendance_list=pd.DataFrame(columns=['Date', 'Attended/Not'])
+                        for i in range(int(todays_date), 0, -1):
+                            if i in present_list:
+                                csv_attendance_list=pd.concat([csv_attendance_list, pd.DataFrame({'Date': [i], 'Attended/Not': ['Yes']})], ignore_index=True)
+                            else:
+                                csv_attendance_list=pd.concat([csv_attendance_list, pd.DataFrame({'Date': [i], 'Attended/Not': ['No']})], ignore_index=True)
+                        csv_attendance_list=csv_attendance_list.to_csv(index=False).encode('utf-8')
+                        col_1,down_col,col_2=st.columns([1,2,1]) 
+                        with col_2:
+                            st.download_button(label="This month report",data=csv_attendance_list,file_name='attendance.csv',key='download',mime='text/csv')
                         # if st.session_state['user'] is not None:
                         #     if st.button("Change User"):
                         #         # (1) Remove the last attendance row for this session, if marked
@@ -909,4 +926,5 @@ elif page == "Student":
             else:
                 st.error("Please enter a valid roll number.")
             
+
 
