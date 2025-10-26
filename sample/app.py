@@ -371,7 +371,7 @@ with tab4:
                         # Sort by index for chronological order (assuming index represents time)
                     per_df = per_df.sort_index()
                     if Roll_no in per_df['Roll_no'].values:
-                        if per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
+                        if per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any() == True:
                             st.write(f"Your case is : **Approved!!**")
                         else:
                             st.write('Your case is still in **PENDING** or The Mentor has **REJECTED** your leave!!')
@@ -429,4 +429,5 @@ with tab4:
                     mime="text/csv",
                     key="download-permissions"
             )
+
 
