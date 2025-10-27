@@ -33,6 +33,7 @@ if page == "Mentor":
                         st.write(f"Accepted: {sanitized_roll}")
                         per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
                         # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
+                        st.rerun()
                     else:
                         per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = False  
                         # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
@@ -706,6 +707,7 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
