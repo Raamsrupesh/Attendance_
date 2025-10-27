@@ -583,6 +583,8 @@ elif page == "Student":
                         if row['Roll_no'] == roll_no_tab3:
                             chat_html += f"<div class='chat-bubble left-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
                         else:
+                            from streamlit_autorefresh import st_autorefresh
+                            st_autorefresh(interval=2000,key="chat_autorefresh")
                             chat_html += f"<div class='chat-bubble right-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
                     chat_html += "</div>"
                     st.markdown(chat_html, unsafe_allow_html=True)
@@ -592,9 +594,6 @@ elif page == "Student":
                         message_df.to_csv(MESSAGE_FILE, index=False)
                         st.rerun()
                         
-
-                    if st.button("REFRESH"):
-                        st.rerun()
             else:
                 st.error("Please enter a valid roll number.")
 
@@ -731,6 +730,7 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
