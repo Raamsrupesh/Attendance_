@@ -1,8 +1,7 @@
-
 import streamlit as st
 import pandas as pd
 import os
-
+from random import choice
 
 PASS_FILE = 'password.csv'
 if not os.path.exists(PASS_FILE):
@@ -18,8 +17,8 @@ if 'user_authenticated' not in st.session_state:
 if not st.session_state.user_authenticated:
     st.header("Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
-    user_name = st.text_input("Enter your Name:", placeholder='E.g: RAAMA')
-    user_password = st.text_input("Enter Password:", type="password")
+    user_name = st.text_input("Enter your Name:", placeholder=f"E.g: {choice(['RAAM', 'SITA', 'LAKSHMANA', 'HANUMAN', 'BHARATA', 'SHATRUGHNA', 'SHABARI', 'DASHARATHA', 'KAIKEYI', 'SUMITRA', 'KAUSALYA', 'MANDODARI', 'VIBHISHANA', 'SUGRIVA', 'VALI', 'JATAYU', 'URMILA', 'KEVAT', 'YAKSHRAJ', 'TRIJATA', 'GARUD'])}")
+    user_password = st.text_input("Enter Password:", type="password", placeholder='Type here....')
 
     if action == "Register":
         if st.button("Register"):
@@ -74,7 +73,7 @@ else:
     if page == "Mentor":
                 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
                 PERMISSIONS_FILE = "permissions.csv"
-                ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password')
+                ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password', placeholder='Type here....')
                 if ment_cr_pass == TEA_CR_PASSWORD:
                     from streamlit_autorefresh import st_autorefresh
                     st_autorefresh(interval=1500, key='mentor_refresh')
@@ -312,7 +311,7 @@ else:
                                     st.error(f"Error fetching location: {str(e)}. Check browser permissions.")
 
                                 selected = st.selectbox('Who are You?', [roll_no_tab2])
-                                password = st.text_input("Enter Secret Password:", type='password')
+                                password = st.text_input("Enter Secret Password:", type='password', placeholder='Type here...')
                                 if st.button('Mark Present?'):
                                     today = datetime.today().strftime('%Y-%m-%d')
                                     input_time = datetime.now().strftime("%H:%M:%S")
@@ -803,9 +802,9 @@ else:
 
     elif page == "Settings":
             st.header("Change password if you want!!")
-            prev_name=st.text_input("Enter User Name: ")
-            prev_pass=st.text_input("Enter previous password: ")
-            curr_pass=st.text_input("Enter current password: ")
+            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: {choice(['RAAM', 'SITA', 'LAKSHMANA', 'HANUMAN', 'BHARATA', 'SHATRUGHNA', 'SHABARI', 'DASHARATHA', 'KAIKEYI', 'SUMITRA', 'KAUSALYA', 'MANDODARI', 'VIBHISHANA', 'SUGRIVA', 'VALI', 'JATAYU', 'URMILA', 'KEVAT', 'YAKSHRAJ', 'TRIJATA', 'GARUD'])}")
+            prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password')
+            curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password')
             if prev_name == "" or prev_pass == "" or curr_pass == "":
                 pass
             elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
@@ -822,6 +821,3 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
-
-
-
