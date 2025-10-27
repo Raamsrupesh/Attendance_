@@ -59,8 +59,35 @@ if page == "Mentor":
                 )
             except:
                 pass 
-            st.caption('~ A Website done by Raamroop Das.')
-
+            st.write("-------------------")
+            date=st.date_input("Enter the date of attendance: ")
+            x,y=st.columns(2)
+            with x:
+                try:
+                    st.subheader('Presenties: ')
+                    teach_df = pd.read_csv(ATTENDANCE_FILE)
+                    
+                    present = teach_df.loc[teach_df['Date'] == date.strftime("%Y-%m-%d")]
+                    present=(present.drop(columns=['SessionID', 'Date']))
+                    present=present.rename(columns={"Name":'Roll_NO'})
+                    st.write(present)
+                    present_list=teach_df['Name'].tolist() 
+                except:
+                    st.info("Not used yet!!") 
+            with y:
+                try:
+                    st.subheader("Absenties: ")
+                    absent = pd.DataFrame([i for i in options if i not in present_list],columns=['Roll_NO'])
+                    st.write(absent)
+                except:
+                    pass 
+            ment_attendance_df=(pd.concat([pd.Series(data=[str(date)] * max(len(present), len(absent))),present, absent], axis=1,ignore_index=True))
+            ment_attendance_df=ment_attendance_df.rename(columns={0: 'Date', 1:'Presenties', 2: 'Absenties'})    
+            _,abc,_ = st.columns([1,2,1])
+            with abc:
+                # st.write(ment_attendance_df)
+                ment_attendance_df=ment_attendance_df.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Attendance", file_name=f"{date}atttendance_report.csv", data=ment_attendance_df, mime='text/csv',key='DOWNLOAD_MENT_ATTENDANCE')
 elif page == "Student":
         import pandas as pd
         import hashlib, uuid, os
@@ -676,3 +703,4 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
