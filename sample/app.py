@@ -6,10 +6,19 @@ from streamlit.runtime.scriptrunner import get_script_run_ctx
 import hashlib
 import sqlite3
 import uuid
-
+ATTENDANCE_FILE = 'attendance.csv'
+options = [
+            'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'Y0', 'Y1', 'Y2', 'Y3',
+            'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Z0', 'Z1', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6',
+            'Z7', 'Z8', 'Z9', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ',
+            'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW',
+            'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ',
+            'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW',
+            'BX', 'BY', 'BZ'
+]
 st.sidebar.title("Navigation Bar")
 
-page = st.sidebar.radio("Are you:", ["Mentor", "Student", "About"], index=1)
+page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About"], index=1)
 import html
 if page == "Mentor":
         TEA_CR_PASSWORD = 'TEACR'
@@ -73,7 +82,7 @@ if page == "Mentor":
                     st.write(present)
                     present_list=teach_df['Name'].tolist() 
                 except:
-                    st.info("Not used yet!!") 
+                    st.info("Not one marked present yet!!") 
             with y:
                 try:
                     st.subheader("Absenties: ")
@@ -91,6 +100,8 @@ if page == "Mentor":
                     st.download_button(label="Download Attendance", file_name=f"{date}atttendance_report.csv", data=ment_attendance_df, mime='text/csv',key='DOWNLOAD_MENT_ATTENDANCE')
             except NameError:
                 pass
+
+
 elif page == "Student":
         import pandas as pd
         import hashlib, uuid, os
@@ -706,6 +717,7 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
