@@ -18,7 +18,7 @@ if 'user_authenticated' not in st.session_state:
 if not st.session_state.user_authenticated:
     st.header("Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
-    user_name = st.text_input("Enter your Name:")
+    user_name = st.text_input("Enter your Name:", placeholder='E.g: RAAMA')
     user_password = st.text_input("Enter Password:", type="password")
 
     if action == "Register":
@@ -822,5 +822,6 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
