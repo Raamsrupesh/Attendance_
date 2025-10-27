@@ -4,3 +4,4 @@ numpy
 matplotlib
 streamlit_cookies_controller
 streamlit_geolocation
+streamlit_autorefresh 
