@@ -606,4 +606,73 @@ elif page == "Student":
             else:
                 st.error("Please enter a valid roll number.")
         st.caption(f"Device ID: {device_id}")            
+elif page == "About":
+    from datetime import datetime
 
+    APP_NAME = "GeoMark Attendance"
+    VERSION = "v2.0"
+    DEVELOPER = "Raamanand"
+    LAST_UPDATE = datetime(2025, 10, 27)
+
+    about_header = f"""
+    # {APP_NAME}
+    
+    ---
+
+    Welcome to my advanced, location-based attendance management platform—engineered to deliver reliable, secure, and automated attendance for educational institutions and organizations.
+    """
+
+    st.markdown(about_header)
+    st.subheader("Advanced Features")
+    st.markdown(
+    """
+    - **Smart Location Validation:** Ensures users are at authorized physical locations before marking attendance (uses HTML5 Geolocation API).
+    - **Role-Based Security:** Custom access control for students, admins, and supervisors with encrypted session tokens.
+    - **Real-Time Analytics:** Visual dashboards, attendance statistics, and downloadable reports.
+    - **Proxy Prevention:** Strict geolocation and session checks to block fraudulent or duplicate entries.
+    """
+    )
+    st.warning("⚠️⚠️**One Time Registration:** This feature will not allow any user to use another user's details. And once registered to a device, that very device owner could only use those details.")
+    
+
+    st.write("---")
+    st.info("Driven by a passion for building robust, real-world solutions for education and organizations.")
+
+    st.metric(label="App Version", value="v2.0", delta="+1 new feature")
+    st.metric(label="Active Users", value="000", delta="+2 this week")
+
+    tab1, tab2 = st.tabs(["Overview", "Technical Details"])
+    with tab1:
+        st.markdown("""
+        Welcome to our advanced, location-based attendance platform.
+        - **Location Validation**
+        - **Security & Analytics**
+        - Role-based access
+        """)
+    with tab2:
+        st.subheader("Technology Stack")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown(
+                """
+                - Python 3.13+
+                - Streamlit
+                - SQLite (Data Storage)
+                - HTML5 Geolocation
+                """
+            )
+        with col2:
+            st.markdown(
+                """
+                - Pandas (Data Handling)
+                - Secure Session Management
+                - Responsive Web UI
+                - Real-time Data Analytics
+                """
+            )
+
+    with st.expander("Meet the Developer"):
+        st.write("Created by [Raamanand], a student developer passionate about practical AI solutions.")
+
+    st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
+   
