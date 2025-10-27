@@ -9,7 +9,7 @@ import uuid
 
 st.sidebar.title("Navigation Bar")
 
-page = st.sidebar.radio("Are you:", ["Mentor", "Student", "Done by"], index=1)
+page = st.sidebar.radio("Are you:", ["Mentor", "Student", "About"], index=1)
 import html
 if page == "Mentor":
         TEA_CR_PASSWORD = 'TEACR'
@@ -706,6 +706,7 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
