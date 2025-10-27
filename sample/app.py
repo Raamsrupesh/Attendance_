@@ -706,6 +706,7 @@ else:
 
                 with tab4:
                     tab4_df=pd.read_csv(ATTENDANCE_FILE)
+                    month=datetime.today().month
                     date_series=tab4_df['Date']
                     student_list = []
                     for i in date_series:
@@ -821,4 +822,5 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
