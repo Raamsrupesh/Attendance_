@@ -25,6 +25,8 @@ if page == "Mentor":
         PERMISSIONS_FILE = "permissions.csv"
         ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password')
         if ment_cr_pass == TEA_CR_PASSWORD:
+            from streamlit_autorefresh import st_autorefresh
+            st_autorefresh(interval=1000, key='student_refresh')
             try:
                 per_df = pd.read_csv(PERMISSIONS_FILE)
                 for idx, row in per_df.iterrows():
@@ -52,8 +54,6 @@ if page == "Mentor":
                     per_df.to_csv(PERMISSIONS_FILE, index=False)
                     st.rerun()
 
-                if st.button("REFRESH", key="Mentor_Refreshing"):
-                    st.rerun()
 
             except FileNotFoundError or NameError:
                 st.success("NO ONE YET ASKED PERMISSION AND NOTHING TO DOWNLOAD!!")
@@ -630,6 +630,8 @@ elif page == "Student":
                                 # Sort by index for chronological order (assuming index represents time)
                             per_df = per_df.sort_index()
                             if Roll_no in per_df['Roll_no'].values:
+                                from streamlit_autorefresh import st_autorefresh
+                                st_autorefresh(interval=1000, key='student_refresh')
                                 if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
                                     st.warning(f"😥😥Your case is still in **PENDING**")
                                 elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
@@ -717,6 +719,7 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
