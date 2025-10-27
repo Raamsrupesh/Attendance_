@@ -35,6 +35,10 @@ if page == "Mentor":
                     key=f"checkbox_{idx}"
                     if key not in st.session_state:
                         st.session_state[key] = False 
+                    st.markdown(
+                        "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
+                        unsafe_allow_html=True
+                    )    
                     st.session_state['checked'] = st.checkbox(
                         f"{sanitized_roll}: {sanitized_msg}",
                         key=f"checkbox_{idx}",
@@ -635,8 +639,16 @@ elif page == "Student":
                                 if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
                                     st.warning(f"😥😥Your case is still in **PENDING**")
                                 elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
+                                    st.markdown(
+                                     "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
+                                     unsafe_allow_html=True
+                                    )
                                     st.success('🎉🎉Congrats! your leave is: **APPROVED**')
                                 else:
+                                    st.markdown(
+                                                "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
+                                                unsafe_allow_html=True
+                                    )
                                     st.error('😑😑The Mentor has **MIGHT BE REJECTED** your leave!!')
                             else:
                                 st.write("You didn't raise any permission request!!")
@@ -719,6 +731,7 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
