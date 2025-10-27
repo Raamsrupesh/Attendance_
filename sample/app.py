@@ -81,13 +81,16 @@ if page == "Mentor":
                     st.write(absent)
                 except:
                     pass 
-            ment_attendance_df=(pd.concat([pd.Series(data=[str(date)] * max(len(present), len(absent))),present, absent], axis=1,ignore_index=True))
-            ment_attendance_df=ment_attendance_df.rename(columns={0: 'Date', 1:'Presenties', 2: 'Absenties'})    
-            _,abc,_ = st.columns([1,2,1])
-            with abc:
-                # st.write(ment_attendance_df)
+            try:
+                ment_attendance_df=(pd.concat([pd.Series(data=[str(date)] * max(len(present), len(absent))),present, absent], axis=1,ignore_index=True))
+                ment_attendance_df=ment_attendance_df.rename(columns={0: 'Date', 1:'Presenties', 2: 'Absenties'})    
                 ment_attendance_df=ment_attendance_df.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Attendance", file_name=f"{date}atttendance_report.csv", data=ment_attendance_df, mime='text/csv',key='DOWNLOAD_MENT_ATTENDANCE')
+                _,abc,_ = st.columns([1,2,1])
+                with abc:
+                    # st.write(ment_attendance_df)
+                    st.download_button(label="Download Attendance", file_name=f"{date}atttendance_report.csv", data=ment_attendance_df, mime='text/csv',key='DOWNLOAD_MENT_ATTENDANCE')
+            except NameError:
+                pass
 elif page == "Student":
         import pandas as pd
         import hashlib, uuid, os
@@ -703,5 +706,6 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
