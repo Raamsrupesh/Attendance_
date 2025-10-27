@@ -726,10 +726,11 @@ elif page == "About":
             )
 
     with st.expander("Meet the Developer"):
-        st.write("Created by [Raamanand], a student developer passionate about practical AI solutions.")
+        st.write("Created by Raamanand, a student developer passionate about practical AI solutions.")
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
 
 
