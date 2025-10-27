@@ -14,7 +14,7 @@ import html
 if page == "Mentor":
         TEA_CR_PASSWORD = 'TEACR'
         PERMISSIONS_FILE = "permissions.csv"
-        ment_cr_pass = st.text_input("Enter Mentor/Cr Password:")
+        ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password')
         if ment_cr_pass == TEA_CR_PASSWORD:
             try:
                 per_df = pd.read_csv(PERMISSIONS_FILE)
@@ -703,4 +703,5 @@ elif page == "About":
 
     st.download_button("Download App Manual", "Manual content...", file_name="manual.txt")
    
+
 
