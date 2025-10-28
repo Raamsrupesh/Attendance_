@@ -67,7 +67,7 @@ else:
                     'BX', 'BY', 'BZ'
     ]
     
-    st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
+    st.logo(icon_image="https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
     st.markdown("""
     <style>
     [data-testid="stSidebarUserInfo"] img, [data-testid="stSidebarNav"] img, .stLogo img {
@@ -830,6 +830,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
