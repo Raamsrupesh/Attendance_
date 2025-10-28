@@ -68,14 +68,20 @@ else:
     ]
     
     st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="large")
-    st.markdown("""
-    <style>
-    [data-testid="stSidebarUserInfo"] img, [data-testid="stSidebarNav"] img, .stLogo img {
-        border-radius: 50% !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
+    st.markdown(
+        """
+        <style>
+        div[data-testid="stSidebarHeader"] img {
+            height: 120px !important; /* set desired size */
+            width: auto;
+            border-radius: 20px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
     # st.sidebar.title("**Presents**")
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
@@ -830,6 +836,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
