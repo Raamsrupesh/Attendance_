@@ -73,10 +73,10 @@ else:
         <style>
         div[data-testid="stSidebarHeader"] img {
             height: 6rem !important;
-            margin-top: 0.75rem !important;
+            margin-top: 1 !important;
             width: auto;
             border-radius: 20px;
-            margin-bottom:0.75rem;
+            margin-bottom:0.5rem !important;
         }
         </style>
         """,
@@ -838,6 +838,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
