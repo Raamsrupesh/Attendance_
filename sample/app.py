@@ -66,7 +66,7 @@ else:
                     'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW',
                     'BX', 'BY', 'BZ'
     ]
-    st.sidebar.title("Nav Bar")
+    
     # st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp",icon_image="https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
     st.markdown("""
     <style>
@@ -76,6 +76,7 @@ else:
     </style>
     """, unsafe_allow_html=True)
     st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
+    st.sidebar.title("**Presents**")
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
     if page == "Mentor":
@@ -829,6 +830,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
