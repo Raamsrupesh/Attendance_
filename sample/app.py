@@ -815,23 +815,25 @@ else:
 
     elif page == "Settings":
             st.header("Change password if you want!!")
-            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: {choice(['RAAM', 'SITA', 'LAKSHMANA', 'HANUMAN', 'BHARATA', 'SHATRUGHNA', 'SHABARI', 'DASHARATHA', 'KAIKEYI', 'SUMITRA', 'KAUSALYA', 'MANDODARI', 'VIBHISHANA', 'SUGRIVA', 'VALI', 'JATAYU', 'URMILA', 'KEVAT', 'YAKSHRAJ', 'TRIJATA', 'GARUD'])}")
+            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: YAKSHRAJ")
             prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password')
             curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password')
-            if prev_name == "" or prev_pass == "" or curr_pass == "":
-                pass
-            elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
-                password_df.loc[password_df['user_name']==prev_name, 'pass'] = curr_pass 
-                password_df.to_csv(PASS_FILE, index=False)
-                st.success(f"Password has changed to {password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]}")
-
-            elif password_df.loc[password_df['user_name'] == prev_name].empty or prev_name not in password_df['user_name'].to_list():
-                st.error("User Name is incorrect!")
-            elif prev_pass != password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
-                st.error("The password is incorrect!!")
-
-            else:
-                st.error("❌❌ Error Occured!!")
+            if st.button("Submit"):
+                if prev_name == "" or prev_pass == "" or curr_pass == "":
+                    st.warning("All fields are required!!")
+                elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
+                    password_df.loc[password_df['user_name']==prev_name, 'pass'] = curr_pass 
+                    password_df.to_csv(PASS_FILE, index=False)
+                    st.success(f"Password has changed to {password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]}")
+    
+                elif password_df.loc[password_df['user_name'] == prev_name].empty or prev_name not in password_df['user_name'].to_list():
+                    st.error("User Name is incorrect!")
+                elif prev_pass != password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
+                    st.error("The password is incorrect!!")
+    
+                else:
+                    st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
