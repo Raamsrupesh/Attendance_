@@ -68,21 +68,24 @@ else:
     ]
     
     st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")
-    st.markdown(
-        """
+# Inject custom CSS to center and control image size
+    st.markdown("""
         <style>
-        div[data-testid="stSidebarHeader"] img {
-            height: 6rem !important;
-            margin-top: 1rem !important;
-            padding-top: 1rem !important;
-            
-            border-radius: 20px;
-            margin-bottom:0.75rem !important;
-        }
+            [data-testid="stSidebar"] img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 60px;  /* change for more vertical space */
+                height: 120px;     /* set your desired logo size */
+                width: auto;
+                border-radius: 20px;
+            }
         </style>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
+    
+    # Place logo in sidebar, not main header
+    st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
+
 
     # st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
     # st.sidebar.title("**Presents**")
@@ -839,6 +842,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
