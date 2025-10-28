@@ -70,8 +70,8 @@ else:
 
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
-    # from streamlit_autorefresh import st_autorefresh
-    # st_autorefresh(interval=3000, key='mentor_refresh')
+    from streamlit_autorefresh import st_autorefresh
+    st_autorefresh(interval=3000, key='mentor_refresh')
     if page == "Mentor":
                 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
                 PERMISSIONS_FILE = "permissions.csv"
@@ -95,7 +95,6 @@ else:
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
                             )
-                            st.rerun()
                             # st.toast(f"Recieved notification from {sanitized_roll}", icon="💬")
                             # import time 
                             # time.sleep(5)
@@ -350,7 +349,6 @@ else:
                                                             new_df = pd.DataFrame(data, columns=['SessionID', 'Name', 'Date'])
                                                             attendance_df = pd.concat([attendance_df, new_df], ignore_index=True)
                                                             attendance_df.to_csv(ATTENDANCE_FILE, index=False)
-                                                            st.rerun()
                                                         st.success(f"You ({selected}) are now marked as present for {today}!")
                                             else:
                                                 st.error("Your Location is not matching i.e you aren't there in college!!")
@@ -548,7 +546,6 @@ else:
                                     attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
                                     attendance_df.to_csv(ATTENDANCE_FILE, index=False)
                                     st.info(f"Attendance reset for {selected_date_str}!")
-                                    st.rerun()
                                     
                     else:
                         st.error("Please enter a valid roll number.")
@@ -632,13 +629,11 @@ else:
                                 sanitized_msg = html.escape(str(row['Message']))
                                 if row['Roll_no'] == roll_no_tab3:
                                     chat_html += f"<div class='chat-bubble left-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
-                                    st.rerun()
                                 else:
                                     chat_html += f"<div class='chat-bubble right-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
                                     
                             chat_html += "</div>"
                             st.markdown(chat_html, unsafe_allow_html=True)
-                            st.rerun()
                             if st.button("Reset"):
                                 message_df = pd.DataFrame(columns=message_df.columns)
                                 message_df.to_csv(MESSAGE_FILE, index=False)
@@ -681,7 +676,6 @@ else:
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                            st.rerun()
                                         
                                         # Sort by index for chronological order (assuming index represents time)
                                     per_df = per_df.sort_index()
@@ -837,6 +831,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
