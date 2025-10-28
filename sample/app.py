@@ -775,7 +775,7 @@ else:
         elif admin_pass == 'RAAMROOP':
             if 'good_news' not in st.session_state:
                 st.session_state['good_news'] = ""
-            message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....')
+            message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....', type = 'password')
             if st.button("Start"):
                 st.session_state['good_news'] = message
                 st.rerun()
@@ -877,6 +877,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
