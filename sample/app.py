@@ -106,7 +106,7 @@ else:
     if page == "Mentor":
                 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
                 PERMISSIONS_FILE = "permissions.csv"
-                ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password', placeholder='Type here....')
+                ment_cr_pass = st.text_input("Enter Mentor Password:", type='password', placeholder='Type here....')
                 if ment_cr_pass == TEA_CR_PASSWORD:
                     try:
                         per_df = pd.read_csv(PERMISSIONS_FILE)
@@ -877,6 +877,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
