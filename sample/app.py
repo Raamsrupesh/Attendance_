@@ -98,8 +98,8 @@ else:
                                 value=st.session_state[key]
                             )
                             st.toast(f"Recieved notification from {sanitized_roll}", icon="💬")
-                            import time 
-                            time.sleep(5)
+                            # import time 
+                            # time.sleep(5)
                             if st.session_state['checked']:
                                 st.write(f"Accepted: {sanitized_roll}")
                                 per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
@@ -835,5 +835,6 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
