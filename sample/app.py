@@ -769,10 +769,7 @@ else:
                     with butt:
                         st.download_button(label='Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
     elif page == "Admin":
-        admin_pass=st.text_input("Enter Admin Password: ", placeholder='E.g: Enter text here...', type = 'password')
-        if admin_pass == "":
-            pass
-        elif admin_pass == 'RAAMROOP':
+        if st.session_state["device_id"] in ['45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
             if 'good_news' not in st.session_state:
                 st.session_state['good_news'] = ""
             message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....')
@@ -877,6 +874,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
