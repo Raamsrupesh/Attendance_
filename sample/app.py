@@ -522,7 +522,7 @@ else:
                                             with cola:
                                                 st.write('**Presenties:**')
                                                 if present_list:
-                                                    for name in present_list:
+                                                    for name in daily_attendance['Name']:
                                                         st.write(f"- {name}")
                                                 else:
                                                     st.write("No one present.")
@@ -835,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
