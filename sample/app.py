@@ -535,7 +535,7 @@ else:
                                                 st.write("Everyone present!")
                                         with col2:
                                             col = st.columns(1)
-                                            attendance_data=pd.concat(['Date':[selected_date_str] * max(len(present_list), len(absent_list)), 'Present': daily_attendance['Name'], 'Absent':absent_df], ignore_index=True, axis=1)
+                                            attendance_data=pd.concat([pd.Series('Date':[selected_date_str] * max(len(present_list), len(absent_list))), daily_attendance['Name'], absent_df], axis=1, ignore_index=True)
                                             # attendance_data = pd.read_csv(attendance_data)
                                             cr_csv_data=attendance_data.to_csv(index=False).encode('utf-8')
                                             st.download_button(label='Download Report', data=cr_csv_data, mime='text/csv', key='CR_Download', file_name=ATTENDANCE_FILE)
@@ -833,6 +833,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
