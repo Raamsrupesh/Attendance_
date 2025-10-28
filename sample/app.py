@@ -77,7 +77,7 @@ else:
             padding-top: 1rem !important;
             width: auto;
             border-radius: 20px;
-            margin-bottom:0.5rem !important;
+            margin-bottom:0.75rem !important;
         }
         </style>
         """,
@@ -839,6 +839,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
