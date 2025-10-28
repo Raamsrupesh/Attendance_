@@ -685,17 +685,17 @@ else:
                                     per_df = per_df.sort_index()
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
-                                            st.toast("⌛Your request is pending...")
+                                            # st.toast("⌛Your request is pending...")
                                             st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
-                                            st.toast("🎉Your leave has been approved!", icon="✅")
+                                            # st.toast("🎉Your leave has been approved!", icon="✅")
                                             st.success('🎉🎉Congrats! your leave is: **APPROVED**')
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
                                             )
                                         else:
-                                            st.toast("Your leave might be rejected!", icon="❌")
+                                            # st.toast("Your leave might be rejected!", icon="❌")
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
@@ -835,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
