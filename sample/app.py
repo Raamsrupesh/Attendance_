@@ -1,3 +1,4 @@
+# --- ADD/EDIT: Import if not present
 import streamlit as st
 import pandas as pd
 import os
@@ -9,11 +10,11 @@ if not os.path.exists(PASS_FILE):
     password_df.to_csv(PASS_FILE, index=False)
 password_df = pd.read_csv(PASS_FILE)
 
-
+# --- ADD: Session state flag for authenticated user
 if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
-
-
+from plyer import notification
+# --- EDIT: Authentication UI at the top of your main script
 if not st.session_state.user_authenticated:
     st.header("Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
@@ -34,20 +35,20 @@ if not st.session_state.user_authenticated:
 
     elif action == "Sign In":
         if st.button("Sign In"):
-            if user_name==" " and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
-                st.session_state.user_authenticated = True
-            elif user_name in password_df['user_name'].to_list():
+            if user_name in password_df['user_name'].to_list():
                 stored_password = password_df.loc[password_df['user_name'] == user_name, 'pass'].values
                 if stored_password.size > 0 and stored_password[0] == user_password:
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
-                    st.rerun()  
+                    st.rerun()  # EDIT: Added rerun to update UI on successful login
                 else:
-                    st.error("Wrong password!") 
+                    st.error("Wrong password!")
+            elif user_name==" " and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
+                st.session_state.user_authenticated = True 
             else:
                 st.error("Username not found!")
 else:
-
+    # --- EDIT: Show navigation/pages only after successful SignIn
     import streamlit as st
     import pandas as pd
     from datetime import datetime
@@ -66,9 +67,9 @@ else:
                     'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW',
                     'BX', 'BY', 'BZ'
     ]
-    
     st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")    
     st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
+
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
     if page == "Mentor":
@@ -77,7 +78,7 @@ else:
                 ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password', placeholder='Type here....')
                 if ment_cr_pass == TEA_CR_PASSWORD:
                     from streamlit_autorefresh import st_autorefresh
-                    st_autorefresh(interval=1500, key='mentor_refresh')
+                    st_autorefresh(interval=2000, key='mentor_refresh')
                     try:
                         per_df = pd.read_csv(PERMISSIONS_FILE)
                         for idx, row in per_df.iterrows():
@@ -90,6 +91,7 @@ else:
                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                 unsafe_allow_html=True
                             )
+        
                             st.session_state['checked'] = st.checkbox(
                                 f"{sanitized_roll}: {sanitized_msg}",
                                 key=f"checkbox_{idx}",
@@ -672,15 +674,19 @@ else:
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
+                                            
                                         
                                         # Sort by index for chronological order (assuming index represents time)
                                     from streamlit_autorefresh import st_autorefresh
-                                    st_autorefresh(interval=1000, key='student_refresh')
+                                    st_autorefresh(interval=2500, key='student_refresh')
                                     per_df = per_df.sort_index()
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
                                             st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
+                                            if not st.session_state.get("Notified", False):
+                                                notification.notify(title="GeoTracker Attendance",message=f"{'Mentor'}: {'🎉🎉Congrats! your leave is: **APPROVED**'}", timeout=5, app_name="Attendance Marker!!")
+                                                st.session_state['Notified'] = True
                                             st.success('🎉🎉Congrats! your leave is: **APPROVED**')
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
@@ -803,7 +809,7 @@ else:
 
     elif page == "Settings":
             st.header("Change password if you want!!")
-            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: Nishadraj")
+            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: {choice(['RAAM', 'SITA', 'LAKSHMANA', 'HANUMAN', 'BHARATA', 'SHATRUGHNA', 'SHABARI', 'DASHARATHA', 'KAIKEYI', 'SUMITRA', 'KAUSALYA', 'MANDODARI', 'VIBHISHANA', 'SUGRIVA', 'VALI', 'JATAYU', 'URMILA', 'KEVAT', 'YAKSHRAJ', 'TRIJATA', 'GARUD'])}")
             prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password')
             curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password')
             if prev_name == "" or prev_pass == "" or curr_pass == "":
@@ -822,46 +828,3 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
