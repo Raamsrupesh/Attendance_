@@ -72,7 +72,7 @@ else:
     st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
 
 
-    # st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
+    st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
     # st.sidebar.title("**Presents**")
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
@@ -827,6 +827,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
