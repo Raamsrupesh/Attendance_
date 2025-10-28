@@ -514,7 +514,8 @@ else:
                                     daily_attendance = attendance_df[attendance_df['Date'] == selected_date_str]
                                     present_list = daily_attendance['Name'].tolist()
                                     absent_list = [name for name in options if name not in present_list]
-
+                                    absent_df=pd.DataFrame({'Name':absent_list})
+                                    
                                     st.subheader(f'Attendance for {selected_date_str}:')
                                     col1, col2, col3 = st.columns([1, 2, 1])
                                     with col2:
@@ -529,7 +530,7 @@ else:
                                         with colb:
                                             st.write('**Absenties:**')
                                             if absent_list:
-                                                for name in absent_list:
+                                                for name in absent_df:
                                                     st.write(f"- {name}")
                                             else:
                                                 st.write("Everyone present!")
@@ -835,6 +836,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
