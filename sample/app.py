@@ -75,7 +75,7 @@ else:
     }
     </style>
     """, unsafe_allow_html=True)
-    st.sidebar.image("https://www.shutterstock.com/shutterstock/photos/1848792091/display_1500/stock-vector-abstract-initial-letter-r-and-r-logo-usable-for-branding-and-business-logos-flat-logo-design-1848792091.jpg", width=100)
+    st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
     # st.sidebar.title("**Presents**")
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
