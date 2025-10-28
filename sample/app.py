@@ -701,8 +701,8 @@ else:
                                                 unsafe_allow_html=True
                                             )
                                             st.error('😑😑The Mentor has **MIGHT BE REJECTED** your leave!!')
-                                        import time
-                                        time.sleep(4)
+                                        # import time
+                                        # time.sleep(4)
                                     else:
                                         st.write("You didn't raise any permission request!!")
                                         
@@ -835,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
