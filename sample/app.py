@@ -802,7 +802,7 @@ else:
 
     elif page == "Settings":
             st.header("Change password if you want!!")
-            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: {choice(['RAAM', 'SITA', 'LAKSHMANA', 'HANUMAN', 'BHARATA', 'SHATRUGHNA', 'SHABARI', 'DASHARATHA', 'KAIKEYI', 'SUMITRA', 'KAUSALYA', 'MANDODARI', 'VIBHISHANA', 'SUGRIVA', 'VALI', 'JATAYU', 'URMILA', 'KEVAT', 'YAKSHRAJ', 'TRIJATA', 'GARUD'])}")
+            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: Nishadraj")
             prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password')
             curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password')
             if prev_name == "" or prev_pass == "" or curr_pass == "":
@@ -821,5 +821,6 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
