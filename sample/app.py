@@ -635,10 +635,10 @@ else:
                                     st.rerun()
                                 else:
                                     chat_html += f"<div class='chat-bubble right-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
-                                    st.rerun()
+                                    
                             chat_html += "</div>"
                             st.markdown(chat_html, unsafe_allow_html=True)
-                            
+                            st.rerun()
                             if st.button("Reset"):
                                 message_df = pd.DataFrame(columns=message_df.columns)
                                 message_df.to_csv(MESSAGE_FILE, index=False)
@@ -837,6 +837,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
