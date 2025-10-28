@@ -543,8 +543,8 @@ else:
                                     st.error('Wrong Rep Password!')
 
                                 if st.button('Reset Attendance for Selected Date') and rep_pass == rep_password:
-                                    sr_df = attendance_df[attendance_df['Date'] == selected_date_str]
-                                    attendance_df.to_csv('ATTENDANCE_FILE', index=False)
+                                    attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
+                                    attendance_df.to_csv(ATTENDANCE_FILE, index=False)
                                     st.info(f"Attendance reset for {selected_date_str}!")
                                     st.rerun()
                     else:
@@ -834,6 +834,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
