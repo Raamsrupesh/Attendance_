@@ -67,7 +67,7 @@ else:
                     'BX', 'BY', 'BZ'
     ]
     
-    # st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")
+    st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")
 # Inject custom CSS to center and control image size
     st.markdown("""
         <style>
@@ -843,6 +843,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
