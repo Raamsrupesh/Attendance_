@@ -509,30 +509,30 @@ else:
                                 selected_date = st.date_input("Select Date to View Attendance:", value=datetime.today())
                                 selected_date_str = selected_date.strftime('%Y-%m-%d')
 
-                                if st.button('View Attendance'):
-                                    if rep_pass == rep_password:
-                                        daily_attendance = attendance_df[attendance_df['Date'] == selected_date_str]
-                                        present_list = daily_attendance['Name'].tolist()
-                                        absent_list = [name for name in options if name not in present_list]
 
-                                        st.subheader(f'Attendance for {selected_date_str}:')
-                                        col1, col2, col3 = st.columns([1, 2, 1])
-                                        with col2:
-                                            cola, colb = st.columns(2)
-                                            with cola:
-                                                st.write('**Presenties:**')
-                                                if present_list:
-                                                    for name in daily_attendance['Name']:
-                                                        st.write(f"- {name}")
-                                                else:
-                                                    st.write("No one present.")
-                                            with colb:
-                                                st.write('**Absenties:**')
-                                                if absent_list:
-                                                    for name in absent_list:
-                                                        st.write(f"- {name}")
-                                                else:
-                                                    st.write("Everyone present!")
+                                if rep_pass == rep_password:
+                                    daily_attendance = attendance_df[attendance_df['Date'] == selected_date_str]
+                                    present_list = daily_attendance['Name'].tolist()
+                                    absent_list = [name for name in options if name not in present_list]
+
+                                    st.subheader(f'Attendance for {selected_date_str}:')
+                                    col1, col2, col3 = st.columns([1, 2, 1])
+                                    with col2:
+                                        cola, colb = st.columns(2)
+                                        with cola:
+                                            st.write('**Presenties:**')
+                                            if present_list:
+                                                for name in daily_attendance['Name']:
+                                                    st.write(f"- {name}")
+                                            else:
+                                                st.write("No one present.")
+                                        with colb:
+                                            st.write('**Absenties:**')
+                                            if absent_list:
+                                                for name in absent_list:
+                                                    st.write(f"- {name}")
+                                            else:
+                                                st.write("Everyone present!")
                                         with col2:
                                             col = st.columns(1)
                                             attendance_data = pd.DataFrame({'Date':[selected_date_str], 'Presenties':[present_list], 'Absenties':[absent_list]}) 
@@ -835,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
