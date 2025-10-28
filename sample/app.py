@@ -505,12 +505,13 @@ else:
                                 #         st.success("Session released! You can select a new user and try again.")
 
                             elif role == 'Class Representative':
-                                rep_pass = st.text_input("Enter Rep Password:", type='password')
+                                rep_pass = st.text_input("Enter Rep Password:", type='password').strip()
                                 selected_date = st.date_input("Select Date to View Attendance:", value=datetime.today())
                                 selected_date_str = selected_date.strftime('%Y-%m-%d')
+                                if rep_pass == "":
+                                    pass
 
-
-                                if rep_pass == rep_password:
+                                elif rep_pass == rep_password:
                                     daily_attendance = attendance_df[attendance_df['Date'] == selected_date_str]
                                     present_list = daily_attendance['Name'].tolist()
                                     absent_list = [name for name in options if name not in present_list]
@@ -834,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
