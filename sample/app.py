@@ -218,6 +218,8 @@ else:
                             # Prevent duplicate Roll Number
                             if roll_no in marked_df["Roll_no"].values:
                                 st.error("This Roll Number is already bound to another device!")
+                            elif roll_no not in options:
+                                st.error('Invalid **ROLL NUMBER**')
                             else:
                                 new_row = pd.DataFrame([{"Roll_no": roll_no, "device_id": device_id}])
                                 marked_df = pd.concat([marked_df, new_row], ignore_index=True)
@@ -835,6 +837,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
