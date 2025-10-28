@@ -72,13 +72,13 @@ else:
     st.markdown("""
         <style>
             [data-testid="stSidebar"] img {
-                display: none !important;
+                display: block;
                 margin-left: auto;
                 margin-right: auto;
                 margin-top: 60px;  
                 height: 120px;    
                 width: auto;
-                
+                margin-bottom:3rem !important;
                 border-radius: 20px;
             }
         </style>
@@ -843,6 +843,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
