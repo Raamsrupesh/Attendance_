@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 import os
 from random import choice
+GOOD_NEWS = 'good_news.txt'
+def read():
+    if os.path.exists(GOOD_NEWS):
+        with open(GOOD_NEWS, mode='r', encoding='utf-8') as f:
+            return f.read()
+        return ""
 st.markdown("""
         <style>
             .block-container { padding-top: 2rem !important; margin-top:1.5rem !important;}
@@ -20,14 +26,12 @@ st.markdown("""
             body { padding-top: 60px !important; }
             </style>
     """, unsafe_allow_html=True)
-if 'good_news' not in st.session_state:
-    st.session_state['good_news'] = None
-if st.session_state['good_news'] is not None and st.session_state['good_news'] != "":
+if read() != "" and read() is not None:
             st.markdown(
                 f"""
                 <div class='custom-banner' style='background:{choice(['white', 'lightyellow', 'skyblue', 'lightpink', 'lavender', 'mintcream', 'aliceblue', 'honeydew', 'azure', 'seashell', 'beige', 'mistyrose'])}; color:{choice(['black', 'darkblue', 'darkviolet', 'purple'])}; font-size:20px; border-radius:4px;font-family:{choice(['Arial', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Georgia', 'Times New Roman', 'Impact', 'Comic Sans MS', 'Courier New', 'Lucida Console', 'Palatino Linotype', 'Garamond'])}'>
                     <marquee behavior='scroll' direction='left' scrollamount='7'>
-                        {st.session_state['good_news']}
+                        {read()}
                     </marquee>
                 </div>
                 """,
@@ -788,16 +792,18 @@ else:
                     with butt:
                         st.download_button(label='Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
     elif page == "Admin":
-        if st.session_state["device_id"] in ['45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
-            if 'good_news' not in st.session_state:
-                st.session_state['good_news'] = ""
+        def write(msg):
+            with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
+                f.write(msg) 
+
+        if st.session_state.get("device_id", None) in ['ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
             message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....')
             if st.button("Start"):
-                st.session_state['good_news'] = message
-                st.rerun()
+                write(message)
+        
             if st.button("Stop"):
-                st.session_state['good_news'] = ""
-                st.rerun() 
+                write("")
+                
         else:
             st.error("Eve is trying to get in Admin Section!!")
     elif page == "About":
