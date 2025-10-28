@@ -97,6 +97,9 @@ else:
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
                             )
+                            st.toast(f"Recieved notification from {sanitized_roll}", icon="💬")
+                            import time 
+                            time.sleep(5)
                             if st.session_state['checked']:
                                 st.write(f"Accepted: {sanitized_roll}")
                                 per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
@@ -682,24 +685,27 @@ else:
                                     per_df = per_df.sort_index()
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
+                                            st.toast("⌛Your request is pending...")
                                             st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
-                                            if not st.session_state.get("Notified", False):
-                                                notification.notify(title="GeoTracker Attendance",message=f"{'Mentor'}: {'🎉🎉Congrats! your leave is: **APPROVED**'}", timeout=5, app_name="Attendance Marker!!")
-                                                st.session_state['Notified'] = True
+                                            st.toast("🎉Your leave has been approved!", icon="✅")
                                             st.success('🎉🎉Congrats! your leave is: **APPROVED**')
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
                                             )
                                         else:
+                                            st.toast("Your leave might be rejected!", icon="❌")
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
                                             )
                                             st.error('😑😑The Mentor has **MIGHT BE REJECTED** your leave!!')
+                                        import time
+                                        time.sleep(4)
                                     else:
                                         st.write("You didn't raise any permission request!!")
+                                        
                                     # if st.button("Reset"):
                                     #         per_df = pd.DataFrame(columns=per_df.columns)
                                     #         per_df.to_csv(PERMISSIONS_FILE, index=False)
@@ -828,3 +834,4 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
