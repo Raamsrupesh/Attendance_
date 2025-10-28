@@ -2,7 +2,38 @@ import streamlit as st
 import pandas as pd
 import os
 from random import choice
-
+st.markdown("""
+        <style>
+            .block-container { padding-top: 2rem !important; margin-top:1.5rem !important;}
+            .custom-banner {
+                    position: fixed;
+                    top: 20;
+                    left: 0;
+                    width: 100vw;
+                    z-index: 1000;
+                    margin-bottom: 0.75rem !important;
+                    padding: 10px;
+                    display:flex;
+                    align-items: center !important;
+                    padding-top:1rem !important;
+            }
+            body { padding-top: 60px !important; }
+            </style>
+    """, unsafe_allow_html=True)
+if 'good_news' not in st.session_state:
+    st.session_state['good_news'] = None
+if st.session_state['good_news'] is not None and st.session_state['good_news'] != "":
+            st.markdown(
+                f"""
+                <div class='custom-banner' style='background:{choice(['white', 'lightyellow', 'skyblue', 'lightpink', 'lavender', 'mintcream', 'aliceblue', 'honeydew', 'azure', 'seashell', 'beige', 'mistyrose'])}; color:{choice(['black', 'darkblue', 'darkviolet', 'purple'])}; font-size:20px; border-radius:4px;font-family:{choice(['Arial', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Georgia', 'Times New Roman', 'Impact', 'Comic Sans MS', 'Courier New', 'Lucida Console', 'Palatino Linotype', 'Garamond'])}'>
+                    <marquee behavior='scroll' direction='left' scrollamount='7'>
+                        {st.session_state['good_news']}
+                    </marquee>
+                </div>
+                """,
+                unsafe_allow_html=True
+)
+st.markdown("<br><br>", unsafe_allow_html=True)
 PASS_FILE = 'password.csv'
 if not os.path.exists(PASS_FILE):
     password_df = pd.DataFrame(columns=['user_name', 'pass'])
@@ -12,7 +43,7 @@ password_df = pd.read_csv(PASS_FILE)
 
 if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
-from plyer import notification
+# from plyer import notification
 
 if not st.session_state.user_authenticated:
     st.header("Sign In / Register")
@@ -68,7 +99,7 @@ else:
     st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")    
     st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
 
-    page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
+    page = st.sidebar.radio("Select either of these:", ["Mentor", "Student","Admin", "About", "Settings"], index=1)
     import html
     from streamlit_autorefresh import st_autorefresh
     st_autorefresh(interval=3000, key='mentor_refresh')
@@ -737,7 +768,22 @@ else:
                     _,butt,_= st.columns([1,1,1])
                     with butt:
                         st.download_button(label='Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
-
+    elif page == "Admin":
+        admin_pass=st.text_input("Enter Admin Password: ", placeholder='E.g: Enter text here...')
+        if admin_pass == "":
+            pass
+        elif admin_pass == 'RAAMROOP':
+            if 'good_news' not in st.session_state:
+                st.session_state['good_news'] = ""
+            message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....')
+            if st.button("Start"):
+                st.session_state['good_news'] = message
+                st.rerun()
+            if st.button("Stop"):
+                st.session_state['good_news'] = ""
+                st.rerun() 
+        else:
+            st.error("Eve is trying to get in Admin Section!!")
     elif page == "About":
             from datetime import datetime
 
@@ -831,6 +877,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
