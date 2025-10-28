@@ -1,4 +1,3 @@
-# --- ADD/EDIT: Import if not present
 import streamlit as st
 import pandas as pd
 import os
@@ -10,16 +9,16 @@ if not os.path.exists(PASS_FILE):
     password_df.to_csv(PASS_FILE, index=False)
 password_df = pd.read_csv(PASS_FILE)
 
-# --- ADD: Session state flag for authenticated user
+
 if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
 from plyer import notification
-# --- EDIT: Authentication UI at the top of your main script
+
 if not st.session_state.user_authenticated:
     st.header("Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
-    user_name = st.text_input("Enter your Name:", placeholder=f"E.g: GARUD")
-    user_password = st.text_input("Enter Password:", type="password", placeholder='Type here....')
+    user_name = st.text_input("Enter your Name:", placeholder=f"E.g: GARUD").strip()
+    user_password = st.text_input("Enter Password:", type="password", placeholder='Type here....').strip()
 
     if action == "Register":
         if st.button("Register"):
@@ -40,7 +39,7 @@ if not st.session_state.user_authenticated:
                 if stored_password.size > 0 and stored_password[0] == user_password:
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
-                    st.rerun()  # EDIT: Added rerun to update UI on successful login
+                    st.rerun() 
                 else:
                     st.error("Wrong password!")
             elif user_name==" " and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
@@ -48,7 +47,6 @@ if not st.session_state.user_authenticated:
             else:
                 st.error("Username not found!")
 else:
-    # --- EDIT: Show navigation/pages only after successful SignIn
     import streamlit as st
     import pandas as pd
     from datetime import datetime
@@ -817,9 +815,9 @@ else:
 
     elif page == "Settings":
             st.header("Change password if you want!!")
-            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: YAKSHRAJ")
-            prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password')
-            curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password')
+            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: YAKSHRAJ").strip()
+            prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password').strip()
+            curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password').strip()
             if st.button("Submit"):
                 if prev_name == "" or prev_pass == "" or curr_pass == "":
                     st.warning("All fields are required!!")
@@ -837,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
