@@ -70,13 +70,13 @@ else:
 
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
+    from streamlit_autorefresh import st_autorefresh
+    st_autorefresh(interval=2000, key='mentor_refresh')
     if page == "Mentor":
                 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
                 PERMISSIONS_FILE = "permissions.csv"
                 ment_cr_pass = st.text_input("Enter Mentor/Cr Password:", type='password', placeholder='Type here....')
                 if ment_cr_pass == TEA_CR_PASSWORD:
-                    from streamlit_autorefresh import st_autorefresh
-                    st_autorefresh(interval=2000, key='mentor_refresh')
                     try:
                         per_df = pd.read_csv(PERMISSIONS_FILE)
                         for idx, row in per_df.iterrows():
@@ -535,7 +535,7 @@ else:
                                                 st.write("Everyone present!")
                                         with col2:
                                             col = st.columns(1)
-                                            attendance_data = pd.DataFrame({'Date':[selected_date_str], 'Presenties':[present_list], 'Absenties':[absent_list]}) 
+                                            attendance_data = pd.DataFrame({'Date':[selected_date_str], 'Presenties':daily_attendance, 'Absenties':absent_df}) 
                                             # attendance_data = pd.read_csv(attendance_data)
                                             cr_csv_data=attendance_data.to_csv(index=False).encode('utf-8')
                                             st.download_button(label='Download Report', data=cr_csv_data, mime='text/csv', key='CR_Download', file_name=ATTENDANCE_FILE)
@@ -680,8 +680,6 @@ else:
                                             
                                         
                                         # Sort by index for chronological order (assuming index represents time)
-                                    from streamlit_autorefresh import st_autorefresh
-                                    st_autorefresh(interval=2500, key='student_refresh')
                                     per_df = per_df.sort_index()
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
@@ -835,6 +833,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
