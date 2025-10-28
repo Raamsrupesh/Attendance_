@@ -539,8 +539,8 @@ else:
                                             # attendance_data = pd.read_csv(attendance_data)
                                             cr_csv_data=attendance_data.to_csv(index=False).encode('utf-8')
                                             st.download_button(label='Download Report', data=cr_csv_data, mime='text/csv', key='CR_Download', file_name=ATTENDANCE_FILE)
-                                    else:
-                                        st.error('Wrong Rep Password!')
+                                else:
+                                    st.error('Wrong Rep Password!')
 
                                 if st.button('Reset Attendance for Selected Date') and rep_pass == rep_password:
                                     attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
@@ -835,6 +835,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
