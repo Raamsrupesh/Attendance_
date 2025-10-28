@@ -67,7 +67,7 @@ else:
                     'BX', 'BY', 'BZ'
     ]
     
-    st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")
+    # st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")
 # Inject custom CSS to center and control image size
     st.markdown("""
         <style>
@@ -85,7 +85,7 @@ else:
     """, unsafe_allow_html=True)
     
     # Place logo in sidebar, not main header
-    # st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
+    st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
 
 
     # st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", width=100)
@@ -843,6 +843,7 @@ else:
                 st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
