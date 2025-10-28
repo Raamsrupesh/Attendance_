@@ -543,13 +543,32 @@ else:
                                     pass
 
                                 elif rep_pass == rep_password:
+                                    attendance_df = pd.read_csv(ATTENDANCE_FILE)
                                     daily_attendance = attendance_df[attendance_df['Date'] == selected_date_str]
                                     present_list = daily_attendance['Name'].tolist()
                                     absent_list = [name for name in options if name not in present_list]
                                     absent_df=pd.DataFrame({'Name':absent_list})
                                     
                                     st.subheader(f'Attendance for {selected_date_str}:')
-                                    col1, col2, col3 = st.columns([1, 2, 1])
+                                    col1, col2, col3 = st.columns([1, 6, 1])
+
+                                    permissions_df = pd.read_csv('permissions.csv')
+                                    permissions_df=permissions_df.drop(columns=['Reason','No_of_days'])
+                                    import numpy as np
+                                    absent_df['result'] = np.where(
+                                        absent_df['Name'].isin(permissions_df['Roll_no']),
+                                        'A',
+                                        'NA'
+                                    )
+
+                                    def apply_highlight(row):
+                                        color = 'background-color:white;color:black;' if row['result'] == 'A' else 'background-color:black;color:white;'
+                                        return [color] * len(row) 
+
+
+                                    coloured_df=absent_df.loc[:].style.apply(apply_highlight, axis=1)
+                                    # coloured_df.drop(col)
+
                                     with col2:
                                         cola, colb = st.columns(2)
                                         with cola:
@@ -561,7 +580,7 @@ else:
                                         with colb:
                                             st.write('**Absenties:**')
                                             if absent_list:
-                                                st.write(absent_df['Name'])
+                                                st.dataframe(coloured_df, use_container_width=True)
                                             else:
                                                 st.write("Everyone present!")
                                         with col2:
@@ -874,58 +893,3 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
