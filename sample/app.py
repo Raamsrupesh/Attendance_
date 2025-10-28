@@ -70,8 +70,8 @@ else:
 
     page = st.sidebar.radio("Select either of these:", ["Mentor", "Student", "About", "Settings"], index=1)
     import html
-    from streamlit_autorefresh import st_autorefresh
-    st_autorefresh(interval=2000, key='mentor_refresh')
+    # from streamlit_autorefresh import st_autorefresh
+    # st_autorefresh(interval=3000, key='mentor_refresh')
     if page == "Mentor":
                 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
                 PERMISSIONS_FILE = "permissions.csv"
@@ -832,6 +832,7 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
 
 
