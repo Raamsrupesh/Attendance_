@@ -1,8 +1,31 @@
-import streamlit as st
+#   ============================= IMPORTING LIBRARIES ===========================
+
 import pandas as pd
 import os
 from random import choice
+from datetime import datetime
+from streamlit.runtime.scriptrunner import get_script_run_ctx
+import hashlib
+import sqlite3
+import uuid
+import streamlit as st
+
+#   =========================================================================
+
+DB_PATH =  'attendance.sqlite'
+ATTENDANCE_FILE = 'attendance.csv'
 GOOD_NEWS = 'good_news.txt'
+PASS_FILE = 'password.csv'
+PERMISSIONS_FILE = 'permissions.csv' 
+MESSAGE_FILE = "messages.csv"
+MARKED_FILE = "marked.csv"
+POLLS_FILE = "polls.csv"
+
+#   =========================================================================
+TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
+rep_password = 'REP123'
+
+#   ===================== MARQUEE ===========================================
 def read():
     if os.path.exists(GOOD_NEWS):
         with open(GOOD_NEWS, mode='r', encoding='utf-8') as f:
@@ -37,24 +60,23 @@ if read() != "" and read() is not None:
                 """,
                 unsafe_allow_html=True
 )
-st.markdown("<br><br>", unsafe_allow_html=True)
-PASS_FILE = 'password.csv'
+            st.markdown("<br><br>", unsafe_allow_html=True)
+
+#   ================================================================================
 if not os.path.exists(PASS_FILE):
     password_df = pd.DataFrame(columns=['user_name', 'pass'])
     password_df.to_csv(PASS_FILE, index=False)
 password_df = pd.read_csv(PASS_FILE)
 
-
 if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
-# from plyer import notification
 
 if not st.session_state.user_authenticated:
     st.header("Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
     user_name = st.text_input("Enter your Name:", placeholder=f"E.g: GARUD").strip()
     user_password = st.text_input("Enter Password:", type="password", placeholder='Type here....').strip()
-
+#   ========================== REGISTER TAB ==========================
     if action == "Register":
         if st.button("Register"):
             if user_name in password_df['user_name'].to_list():
@@ -67,6 +89,8 @@ if not st.session_state.user_authenticated:
             else:
                 st.warning("Both fields are required.")
 
+#   ========================== SIGN IN TAB ==========================
+
     elif action == "Sign In":
         if st.button("Sign In"):
             if user_name in password_df['user_name'].to_list():
@@ -74,24 +98,16 @@ if not st.session_state.user_authenticated:
                 if stored_password.size > 0 and stored_password[0] == user_password:
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
-                    # # # # # # # # # st.rerun() 
+                    # st.rerun() 
                 else:
                     st.error("Wrong password!")
             elif user_name=="" and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
                 st.session_state.user_authenticated = True 
             else:
                 st.error("Username not found!")
-else:
-    import streamlit as st
-    import pandas as pd
-    from datetime import datetime
-    import os
-    from streamlit.runtime.scriptrunner import get_script_run_ctx
-    import hashlib
-    import sqlite3
-    import uuid
-    ATTENDANCE_FILE = 'attendance.csv'
-    options = [
+
+else:    
+    CLASS_ROLL_NUMBERS = [
                     'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'Y0', 'Y1', 'Y2', 'Y3',
                     'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Z0', 'Z1', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6',
                     'Z7', 'Z8', 'Z9', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ',
@@ -100,20 +116,29 @@ else:
                     'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW',
                     'BX', 'BY', 'BZ'
     ]
+
+#   ============================== LOGO BAR ========================================
+
     st.logo("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp", size="medium")    
     st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
 
-    page = st.sidebar.radio("Select either of these:", ["Mentor", "Student","Admin", "About", "Settings"], index=1)
+#   ================================================================================
+
+    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings"], index=1)
     import html
-    from streamlit_autorefresh import st_autorefresh
-    st_autorefresh(interval=3000, key='mentor_refresh')
-    if page == "Mentor":
-                TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
-                PERMISSIONS_FILE = "permissions.csv"
+    # from streamlit_autorefresh import st_autorefresh
+    # st_autorefresh(interval=3000, key='mentor_refresh')
+
+#   =========================== MENTOR PORTAL =================================
+
+    if page == "🧑‍🏫 Mentor":   
+                st.header("🧑‍🏫 Mentor Portal")
                 ment_cr_pass = st.text_input("Enter Mentor Password:", type='password', placeholder='Type here....')
                 if ment_cr_pass == TEA_CR_PASSWORD:
                     try:
-                        per_df = pd.read_csv(PERMISSIONS_FILE)
+                        per_df = pd.read_csv(PERMISSIONS_FILE) 
+                        st.write("---")
+                        st.subheader("📋 Permission Requests")
                         for idx, row in per_df.iterrows():
                             sanitized_roll = html.escape(str(row['Roll_no']))
                             sanitized_msg = html.escape(str(row['Reason']))
@@ -127,35 +152,32 @@ else:
                                         unsafe_allow_html=True
                                 )
                                 
-                            # st.session_state['checked'] = bool(per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'].values[0])
                             st.session_state['checked'] = st.checkbox(
                                 f"{sanitized_roll}: {sanitized_msg}",
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
                             )
                             
-                            # import time 
-                            # time.sleep(5)
+
                             if st.session_state['checked']:
                                 st.write(f"Accepted: {sanitized_roll}")
                                 per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
-                                # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
+
                             else:
                                 per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = False  
-                                # per_df.loc[per_df['Roll_no'] == sanitized_roll, 'No_of_days'] = no_of_days
                             per_df.to_csv(PERMISSIONS_FILE, index=False)
 
-                        if st.button("Reset", key="Mentor_erasing"):
+                        if st.button("🔁 Clear", key="Mentor_erasing"):
                             per_df = pd.DataFrame(columns=per_df.columns)
                             per_df.to_csv(PERMISSIONS_FILE, index=False)
-                            # # # # # # # # # # st.rerun()
+                            # st.rerun()
 
                     except FileNotFoundError or NameError:
                         st.success("NO ONE YET ASKED PERMISSION AND NOTHING TO DOWNLOAD!!")
                     try:
                         csv_data=per_df.to_csv(index=False).encode('utf-8')
                         st.download_button(
-                                label="Download Permissions Report",
+                                label="🗃️ Download Permissions Report",
                                 data=csv_data,
                                 file_name=PERMISSIONS_FILE,
                                 mime="text/csv",
@@ -163,8 +185,9 @@ else:
                         )
                     except:
                         pass 
-                    st.write("-------------------")
+                    st.write("----------")
                     date=st.date_input("Enter the date of attendance: ")
+                    st.subheader("📊 Attendance Report")
                     x,y=st.columns(2)
                     with x:
                         try:
@@ -182,14 +205,14 @@ else:
                         try:
                             import numpy as np
                             st.subheader("Absenties: ")
-                            absent = pd.DataFrame([i for i in options if i not in present_list],columns=['Roll_NO'])
+                            absent = pd.DataFrame([i for i in CLASS_ROLL_NUMBERS if i not in present_list],columns=['Roll_NO'])
                             teach_per_df = pd.read_csv(PERMISSIONS_FILE)
                             teach_per_df=teach_per_df.drop(columns=['No_of_days', 'Reason']) 
                             teach_per_df=teach_per_df.loc[teach_per_df['Granted'] == True]
                             absent['Result'] = absent['Roll_NO'].isin(teach_per_df['Roll_no']) 
-                            st.dataframe(absent,use_container_width=True) 
+                            st.write(absent) 
                         except:
-                            st.info("No one yet marked attendance!!")  
+                            st.info("No one yet marked attendance!!") 
                     try:
                         ment_attendance_df=(pd.concat([pd.Series(data=[str(date)] * max(len(present), len(absent))),present, absent], axis=1,ignore_index=True))
                         ment_attendance_df=ment_attendance_df.rename(columns={0: 'Date', 1:'Presenties', 2: 'Absenties'})    
@@ -197,12 +220,14 @@ else:
                         _,abc,_ = st.columns([1,2,1])
                         with abc:
                             # st.write(ment_attendance_df)
-                            st.download_button(label="Download Attendance", file_name=f"{date}atttendance_report.csv", data=ment_attendance_df, mime='text/csv',key='DOWNLOAD_MENT_ATTENDANCE')
+                            st.download_button(label="📩 Download Attendance", file_name=f"{date}atttendance_report.csv", data=ment_attendance_df, mime='text/csv',key='DOWNLOAD_MENT_ATTENDANCE')
                     except NameError:
                         pass
-            
+                elif ment_cr_pass == "":
+                    st.warning("⚠️ Please enter the correct mentor password to access this section.")
+#   =========================== STUDENT AND CR PORTAL ==================================            
 
-    elif page == "Student":
+    elif page == "👨‍🎓 Student":
                 import pandas as pd
                 import hashlib, uuid, os
                 from streamlit_cookies_controller import CookieController
@@ -219,7 +244,7 @@ else:
 
                 cookie_id = controller.get("device_id")
                 if cookie_id:
-                    st.write(f"Device Cookie Value: {cookie_id}")  # Helpful for debugging, remove in production if you want!
+                    st.title("👨‍🎓" + "**Student Portal**")  
                     device_id = cookie_id
                 else:
                     new_id = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
@@ -230,56 +255,52 @@ else:
                 st.session_state["device_id"] = device_id
 
                 #================= MARKED CSV loading and saving =================
-                MARKED_FILE = "marked.csv"
+
                 if not os.path.exists(MARKED_FILE):
                     pd.DataFrame(columns=["Roll_no", "device_id"]).to_csv(MARKED_FILE, index=False)
-
                 marked_df = pd.read_csv(MARKED_FILE)
 
                 #================= Registration / Login UI =================
-                st.title("Register / Login")
+                st.header("Register / Login")
 
                 registered_entry = marked_df.loc[marked_df["device_id"] == device_id]
 
                 if not registered_entry.empty:
-                    # Already registered => Show only as view/locked mode
                     saved_roll = registered_entry.iloc[0]["Roll_no"]
                     st.success(f"You are permanently registered with Roll No: {saved_roll}")
                     st.text_input("Roll Number", value=saved_roll, disabled=True)
                     st.info("You cannot change Roll Number on this device.")
-                    st.caption(f"Device ID: {device_id}")
+                    st.write(f"Device ID: {device_id}")
                 else:
-                    # Not yet registered => Allow one-time registration
                     name = st.text_input("Enter your Name:")
                     roll_no = st.text_input("Enter your Roll Number:")
                     if st.button("Register"):
                         if not name or not roll_no:
                             st.error("Please fill in all fields.")
                         else:
-                            # Prevent duplicate Roll Number
+                            
                             if roll_no in marked_df["Roll_no"].values:
                                 st.error("This Roll Number is already bound to another device!")
-                            elif roll_no not in options:
+                            elif roll_no not in CLASS_ROLL_NUMBERS:
                                 st.error('Invalid **ROLL NUMBER**')
                             else:
                                 new_row = pd.DataFrame([{"Roll_no": roll_no, "device_id": device_id}])
                                 marked_df = pd.concat([marked_df, new_row], ignore_index=True)
                                 marked_df.to_csv(MARKED_FILE, index=False)
                                 st.success(f"Registered successfully as {roll_no}")
-                                # # # # # # # # # # st.rerun()
+                                # st.rerun()
 
                 #================= Other Tabs and Attendance Logic =================
-                # You can add the rest of your student/CR/chat/permission tabs below here
-                # For each tab, use the value of device_id and the permanent roll_no lookup as your identity key
+                # For each tab, I should use the value of device_id and the permanent roll_no lookup as your identity key
                 # Example stub:
+
                 def get_session_id():
                     ctx = get_script_run_ctx()
                     if ctx and ctx.session_id:
                         return hashlib.sha256(ctx.session_id.encode()).hexdigest()
                     else:
                         return hashlib.sha256(str(datetime.now()).encode()).hexdigest()
-                DB_PATH =  'attendance.sqlite'
-                ATTENDANCE_FILE = 'attendance.csv'
+
                 if not os.path.exists(ATTENDANCE_FILE):
                     attendance_df = pd.DataFrame(columns=['SessionID', 'Name', 'Date'])
                     attendance_df.to_csv(ATTENDANCE_FILE, index=False) 
@@ -291,8 +312,7 @@ else:
                         st.session_state['user'] = None
                 if not 'session_id' in st.session_state:
                     st.session_state['session_id'] = get_session_id()
-                rep_password = 'REP123'
-                passwords = {rn: 'In' + rn + '@123' for rn in options} 
+                passwords = {rn: 'In' + rn + '@123' for rn in CLASS_ROLL_NUMBERS} 
                 def get_db_connection():
                     conn = sqlite3.connect(DB_PATH)
                     conn.execute("""
@@ -319,7 +339,8 @@ else:
                     conn.close()
                     if row:
                         return row[0] != device_id
-                    return False
+                    return False 
+                
                 def checking(rno):
                     conn = get_db_connection()
                     cur = conn.cursor()
@@ -331,15 +352,16 @@ else:
                             return False 
                         else:
                             return True 
-                tab1, tab2, tab3, tab4 = st.tabs(['Student/CR', 'Chat', 'Ask Permission', 'LeaderBoard'])
+                tab1, tab2, tab3, tab4 = st.tabs(['🎯 Student/CR', '💬 Chat', '📝 Ask Permission', '🏆 Leaderboard'])
+#   ======================= STUDENT SECTION =============================                
                 with tab1:
-                    st.title('CSE Attendance Checker!!')
-                    st.header('Enter the following details:')
+                    st.header('📑 Mark your Attendance')
+                    # st.header('Enter the following details:')
                     try:
                         roll_no_tab2 = saved_roll
                     except:
                         roll_no_tab2 = None
-                    if roll_no_tab2 and roll_no_tab2 in options:
+                    if roll_no_tab2 and roll_no_tab2 in CLASS_ROLL_NUMBERS:
                         if is_bound_to_another_device(roll_no_tab2) and checking(roll_no_tab2):
                             st.error(f"ERROR: Roll number {roll_no_tab2} is enrolled with another device. Access denied.")
                         elif st.session_state['user'] is not None and st.session_state['user'] != roll_no_tab2:
@@ -351,26 +373,25 @@ else:
                                 try:
                                     from streamlit_geolocation import streamlit_geolocation
                                     location = streamlit_geolocation()
-                                    st.write(f"📍You are at {location['latitude']} N and at {location['longitude']} E")  # Temporary debug line
+                                    st.write(f"📍You are at {location['latitude']} N and at {location['longitude']} E")
                                 except ImportError:
                                     location = {}
                                     st.warning('streamlit_geolocation package not found. Location fetch will not work!')
-                                except Exception as e:  # Catch other errors like timeouts
+                                except Exception as e:
                                     location = {}
                                     st.error(f"Error fetching location: {str(e)}. Check browser permissions.")
 
                                 selected = st.selectbox('Who are You?', [roll_no_tab2])
                                 password = st.text_input("Enter Secret Password:", type='password', placeholder='Type here...')
-                                if st.button('Mark Present?'):
+                                if st.button('Mark Present?', type='primary'):
                                     today = datetime.today().strftime('%Y-%m-%d')
                                     input_time = datetime.now().strftime("%H:%M:%S")
                                     if passwords[selected] == password:
                                         if location.get("latitude") and location.get("longitude"):
                                             lat = location['latitude']
                                             long = location['longitude']
-                                            if (lat >= 18.0264 and lat <= 18.0300) and (long >= 83.3984 and long <= 83.4022):
-                                                    st.session_state['user'] = selected  # Save the selection in session
-                                                    # Device-bound check for attendance
+                                            if (lat >= 18.09 and lat <= 18.12) and (long >= 83.39 and long <= 83.42):
+                                                    st.session_state['user'] = selected
                                                     conn = get_db_connection()
                                                     cur = conn.cursor()
                                                     cur.execute("SELECT device_id, mark_date, mark_time FROM attendance WHERE roll_number=?", (selected,))
@@ -382,10 +403,8 @@ else:
                                                         else:
                                                             st.warning(f"{selected} is already marked present (by this device).")
                                                     else:
-                                                        # Mark attendance
                                                         cur.execute("INSERT INTO attendance (roll_number, device_id, mark_date, mark_time) VALUES (?, ?, ?, ?)", (selected, device_id, today, input_time))
                                                         conn.commit()
-                                                        # Also update CSV for compatibility
                                                         already_marked = attendance_df[(attendance_df['Name'] == selected) & (attendance_df['Date'] == today)]
                                                         if already_marked.empty:
                                                             data = [[st.session_state['session_id'], selected, today]]
@@ -400,9 +419,7 @@ else:
                                     else:
                                             st.error('WRONG PASSWORD!!')
                                 try:
-                                    import streamlit as st
                                     import datetime
-                                    import pandas as pd
                                     month = datetime.datetime.today().month 
                                     user = selected
                                     di = {
@@ -515,7 +532,6 @@ else:
 
                                             csv_attendance_list=csv_attendance_list.sort_values('Date')
                                             csv_attendance_list=csv_attendance_list.to_csv(index=False).encode('utf-8') 
-                                            # st.write(f"Selected {selected_month}")
                                             st.download_button(label=f"{selected_month} Report", mime='text/csv',key="download_user", data=csv_attendance_list, file_name=f'{user}_{selected_month}_attendance.csv')
                                     this_month_list = []
                                     this_month_list = [i for i in year_list if i.month == month]
@@ -534,37 +550,27 @@ else:
                                         df = pd.DataFrame(columns=['SessionID','Name','Date'])
                                         df.to_csv(ATTENDANCE_FILE)
                                         st.info("Attendance file not found yet. Start marking attendance!")
-                                # if st.session_state['user'] is not None:
-                                #     if st.button("Change User"):
-                                #         # (1) Remove the last attendance row for this session, if marked
-                                #         today = datetime.today().strftime('%Y-%m-%d')
-                                #         mask = ~((attendance_df['SessionID'] == st.session_state['session_id']) & (attendance_df['Date'] == today))
-                                #         attendance_df = attendance_df[mask]
-                                #         attendance_df.to_csv(ATTENDANCE_FILE, index=False)
-                                        
-                                #         # (2) Clear session state and assign a new session ID
-                                #         st.session_state['user'] = None
-                                #         st.session_state['session_id'] = get_session_id()
-                                #         st.success("Session released! You can select a new user and try again.")
+
+#   =============================== CLASS REPRESENTATIVE TAB =============================
 
                             elif role == 'Class Representative':
                                 rep_pass = st.text_input("Enter Rep Password:", type='password').strip()
                                 selected_date = st.date_input("Select Date to View Attendance:", value=datetime.today())
                                 selected_date_str = selected_date.strftime('%Y-%m-%d')
                                 if rep_pass == "":
-                                    pass
+                                    st.warning("Enter correct password to access details!")
 
                                 elif rep_pass == rep_password:
                                     attendance_df = pd.read_csv(ATTENDANCE_FILE)
                                     daily_attendance = attendance_df[attendance_df['Date'] == selected_date_str]
                                     present_list = daily_attendance['Name'].tolist()
-                                    absent_list = [name for name in options if name not in present_list]
+                                    absent_list = [name for name in CLASS_ROLL_NUMBERS if name not in present_list]
                                     absent_df=pd.DataFrame({'Name':absent_list})
                                     
                                     st.subheader(f'Attendance for {selected_date_str}:')
                                     col1, col2, col3 = st.columns([1, 6, 1])
 
-                                    permissions_df = pd.read_csv('permissions.csv')
+                                    permissions_df = pd.read_csv(PERMISSIONS_FILE)
                                     permissions_df=permissions_df.drop(columns=['Reason','No_of_days'])
                                     import numpy as np
                                     absent_df['result'] = np.where(
@@ -579,7 +585,6 @@ else:
 
 
                                     coloured_df=absent_df.loc[:].style.apply(apply_highlight, axis=1)
-                                    # coloured_df.drop(col)
 
                                     with col2:
                                         cola, colb = st.columns(2)
@@ -598,7 +603,6 @@ else:
                                         with col2:
                                             col = st.columns(1)
                                             attendance_data=pd.concat([pd.Series([selected_date_str] * max(len(present_list), len(absent_list))), daily_attendance['Name'], absent_df], axis=1, ignore_index=True)
-                                            # attendance_data = pd.read_csv(attendance_data)
                                             cr_csv_data=attendance_data.to_csv(index=False).encode('utf-8')
                                             st.download_button(label='Download Report', data=cr_csv_data, mime='text/csv', key='CR_Download', file_name=ATTENDANCE_FILE)
                                 else:
@@ -608,11 +612,8 @@ else:
                                     attendance_df = attendance_df[attendance_df['Date'] != selected_date_str]
                                     attendance_df.to_csv(ATTENDANCE_FILE, index=False)
                                     st.info(f"Attendance reset for {selected_date_str}!")
-                                    
                     else:
                         st.error("Please enter a valid roll number.")
-
-                import html  # For basic sanitization
 
                 st.markdown("""
                 <link rel="stylesheet"
@@ -654,67 +655,66 @@ else:
                 }
                 </style>
                 """, unsafe_allow_html=True)
+#   =========================== CHAT TAB ===============================
 
                 with tab2:
+                    st.subheader("🗨️ Group chat")
                     try:
                         roll_no_tab3 = saved_roll 
                     except:
                         roll_no_tab3 = None
-                    if roll_no_tab3 and roll_no_tab3 in options:
+                    if roll_no_tab3 and roll_no_tab3 in CLASS_ROLL_NUMBERS:
                         if is_bound_to_another_device(roll_no_tab3) and checking(roll_no_tab3):
                             st.error(f"ERROR: Roll number {roll_no_tab3} is enrolled with another device. Access denied.")
                         elif st.session_state['user'] is not None and roll_no_tab3 != st.session_state['user']:
                             st.error("Provide the Valid Roll NO first!")
                         else:
-                            MESSAGE_FILE = "messages.csv"
-                            if not os.path.exists(MESSAGE_FILE):
-                                message_df = pd.DataFrame(columns=['Roll_no', 'Message'])
-                                message_df.to_csv(MESSAGE_FILE, index=False)
-                            else:
-                                message_df = pd.read_csv(MESSAGE_FILE)
-                            
-                            issue = st.chat_input("Enter your issue: ")
-                            if issue:
-                                # Sanitize input to prevent HTML injection
-                                sanitized_issue = html.escape(issue)
-                                new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Message": [sanitized_issue]})
-                                message_df = pd.concat([message_df, new_msg], ignore_index=True)
-                                message_df.to_csv(MESSAGE_FILE, index=False)
-                            
-                            # Sort by index for chronological order (assuming index represents time)
-                            message_df = message_df.sort_index()
-                            
-                            # Build the entire chat HTML in one go
-                            chat_html = "<div class='chat-container'>"
-                            for idx, row in message_df.iterrows():
-                                sanitized_roll = html.escape(str(row['Roll_no']))
-                                sanitized_msg = html.escape(str(row['Message']))
-                                if row['Roll_no'] == roll_no_tab3:
-                                    chat_html += f"<div class='chat-bubble left-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
+                            chat1, chat2, chat3=st.tabs(['Messages', 'Polls', 'Files'])
+                            with chat1:
+                                if not os.path.exists(MESSAGE_FILE):
+                                    st.info("💭 No messages yet. Start the conversation!")
+                                    message_df = pd.DataFrame(columns=['Roll_no', 'Message'])
+                                    message_df.to_csv(MESSAGE_FILE, index=False)
                                 else:
-                                    chat_html += f"<div class='chat-bubble right-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
-                                    
-                            chat_html += "</div>"
-                            st.markdown(chat_html, unsafe_allow_html=True)
-                            if st.button("Reset"):
-                                message_df = pd.DataFrame(columns=message_df.columns)
-                                message_df.to_csv(MESSAGE_FILE, index=False)
-                                # # # # # # # # # # st.rerun()
+                                    message_df = pd.read_csv(MESSAGE_FILE)
                                 
-
+                                issue = st.chat_input("Enter your issue: ")
+                                if issue:
+                                    sanitized_issue = html.escape(issue)
+                                    new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Message": [sanitized_issue]})
+                                    message_df = pd.concat([message_df, new_msg], ignore_index=True)
+                                    message_df.to_csv(MESSAGE_FILE, index=False)
+                                
+                                message_df = message_df.sort_index()
+                                
+                                chat_html = "<div class='chat-container'>"
+                                for idx, row in message_df.iterrows():
+                                    sanitized_roll = html.escape(str(row['Roll_no']))
+                                    sanitized_msg = html.escape(str(row['Message']))
+                                    if row['Roll_no'] == roll_no_tab3:
+                                        chat_html += f"<div class='chat-bubble left-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
+                                    else:
+                                        chat_html += f"<div class='chat-bubble right-bubble'><b>{sanitized_roll}</b>: {sanitized_msg}</div>"
+                                        
+                                chat_html += "</div>"
+                                st.markdown(chat_html, unsafe_allow_html=True)
+                                if st.button("🗑️ Clear chat"):
+                                    message_df = pd.DataFrame(columns=message_df.columns)
+                                    message_df.to_csv(MESSAGE_FILE, index=False)
+                                # st.rerun()
+                           
                     else:
                         st.error("Please enter a valid roll number.")
 
+#   ======================= ASK PERMISSION TAB =========================
 
                 with tab3:
-                    PERMISSIONS_FILE = "permissions.csv"
                     no_of_days = 0
                     try:
                         Roll_no = saved_roll
                     except:
                         Roll_no = None
-                    
-                    if Roll_no and Roll_no in options:
+                    if Roll_no and Roll_no in CLASS_ROLL_NUMBERS:
 
                         if (is_bound_to_another_device(Roll_no) and checking(Roll_no)):
                                 st.error(f"ERROR: Roll number {Roll_no} is enrolled with another device. Access denied.")
@@ -722,31 +722,32 @@ else:
                                 if st.session_state['user'] is not None and roll_no_tab3 != st.session_state['user']:
                                     st.error("Provide the Valid Roll NO first!")
                                 else:
-                                    no_of_days = st.slider("Select the no of days: ", min_value=1, max_value=10)
+                                    st.subheader("New Permission request")
+                                    no_of_days = st.slider("Number of days: ", min_value=1, max_value=10)
                                     if not os.path.exists(PERMISSIONS_FILE):
                                             per_df = pd.DataFrame(columns=['Roll_no', 'Reason', 'Granted', "No_of_days"])
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
                                     else:
                                             per_df = pd.read_csv(PERMISSIONS_FILE)
                                         
-                                    issue = st.chat_input("Enter your issue: ",key="permission_input")
+                                    issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
                                     if issue:
-                                            # Sanitize input to prevent HTML injection
                                             sanitized_issue = html.escape(issue)
                                             sanitized_days = html.escape(str(no_of_days))
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
                                         
-                                        # Sort by index for chronological order (assuming index represents time)
                                     per_df = per_df.sort_index()
+                                    st.write("---")
+                                    st.subheader("📑 Requested Permissions report")
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
                                             # st.toast("⌛Your request is pending...")
                                             st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
                                             # st.toast("🎉Your leave has been approved!", icon="✅")
-                                            st.success('🎉🎉Congrats! your leave is: **APPROVED**')
+                                            st.success('✅ Your permissions has been approved!!')
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
@@ -758,22 +759,16 @@ else:
                                                 unsafe_allow_html=True
                                             )
                                             st.error('😑😑The Mentor has **MIGHT BE REJECTED** your leave!!')
-                                        # import time
-                                        # time.sleep(4)
                                     else:
                                         st.write("You didn't raise any permission request!!")
-                                        
-                                    # if st.button("Reset"):
-                                    #         per_df = pd.DataFrame(columns=per_df.columns)
-                                    #         per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                    #         # # # # # # # # # st.rerun()
-                                    # if st.button("REFRESH"):
-                                    #         # # # # # # # # # st.rerun()
                     else:
                         st.error("Please enter a valid roll number.")
                 st.caption(f"Device ID: {device_id}")            
 
+#   ======================= LEADER BOARD TAB ============================
+
                 with tab4:
+                    st.subheader("🏆 Attendance Leaderboard")
                     tab4_df=pd.read_csv(ATTENDANCE_FILE)
                     month=datetime.today().month
                     date_series=tab4_df['Date']
@@ -797,25 +792,40 @@ else:
                     leader_df=leader_df.to_csv(index=False).encode('utf-8')
                     _,butt,_= st.columns([1,1,1])
                     with butt:
-                        st.download_button(label='Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
-    elif page == "Admin":
+                        st.download_button(label='📤 Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
+    
+#   ======================= ADMIN( RAAMANAND: ME ) TAB ============================
+
+    elif page == "👨‍🔬 Admin":
+        st.title("👨‍🔬 Admin Panel")
         def write(msg):
             with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                 f.write(msg) 
 
         if st.session_state.get("device_id", None) in ['ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
-            message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....')
-            if st.button("Start"):
+            st.header("📢 Announcement Management")
+            message = st.text_input(label = "New Announcement:", placeholder='Enter your messsage...')
+            if st.button("🔊 Publish Announcement"):
                 write(message)
         
-            if st.button("Stop"):
+            if st.button("🔇 Clear Announcement"):
                 write("")
-                
+            st.write("---")
+            st.header("📊 System Staistics")
+            x,y,z=st.columns(3)
+            with x:
+                st.metric(f"Total Students",len(CLASS_ROLL_NUMBERS))  
+            with y:
+                st.metric(f"Registered Students",len(MARKED_FILE))
+            with z:
+                st.metric(f"Today's Attendance", len(pd.read_csv(ATTENDANCE_FILE)[pd.read_csv(ATTENDANCE_FILE)['Date'] == datetime.today().strftime("%Y-%m-%d")]))
+            st.write("---")   
         else:
-            st.error("YOU AREN'T ABLE TO OPEN ADMIN SECTION!!")
+            st.error("🚫 Access denied. Admin privileges required.")
 
+#   ======================= ABOUT TAB ===========================
 
-    elif page == "About":
+    elif page == "ℹ️ About":
             from datetime import datetime
 
             APP_NAME = "GeoMark Attendance"
@@ -885,13 +895,15 @@ else:
 
             st.download_button("Download App Manual", """~ A Website made by Raamanand.""", file_name="manual.txt")
 
+#   ======================= SETTINGS TAB ========================
 
-    elif page == "Settings":
-            st.header("Change password if you want!!")
-            prev_name=st.text_input("Enter User Name: ", placeholder=f"E.g: YAKSHRAJ").strip()
-            prev_pass=st.text_input("Enter previous password: ", placeholder='Type here...', type='password').strip()
-            curr_pass=st.text_input("Enter current password: ", placeholder="Type here...", type='password').strip()
-            if st.button("Submit"):
+    elif page == "⚙️ Settings":
+            st.header("🛠️ Account Settings")
+            st.subheader("🔒 Change Password")
+            prev_name=st.text_input("Enter Current Username: ", placeholder=f"E.g: YAKSHRAJ").strip()
+            prev_pass=st.text_input("Enter Current password: ", placeholder='******', type='password').strip()
+            curr_pass=st.text_input("Enter New password: ", placeholder="******", type='password').strip()
+            if st.button("Update Password"):
                 if prev_name == "" or prev_pass == "" or curr_pass == "":
                     st.warning("All fields are required!!")
                 elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
@@ -906,6 +918,4 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
-                # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
-
 
