@@ -368,7 +368,7 @@ else:
                                         if location.get("latitude") and location.get("longitude"):
                                             lat = location['latitude']
                                             long = location['longitude']
-                                            if (lat >= 18.09 and lat <= 18.12) and (long >= 83.39 and long <= 83.42):
+                                            if (lat >= 18.0264 and lat <= 18.0300) and (long >= 83.3984 and long <= 83.4022):
                                                     st.session_state['user'] = selected  # Save the selection in session
                                                     # Device-bound check for attendance
                                                     conn = get_db_connection()
@@ -907,3 +907,4 @@ else:
                 else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
+
