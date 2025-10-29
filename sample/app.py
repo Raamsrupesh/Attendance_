@@ -189,7 +189,7 @@ else:
                             absent['Result'] = absent['Roll_NO'].isin(teach_per_df['Roll_no']) 
                             st.dataframe(absent,use_container_width=True) 
                         except:
-                            pass 
+                            st.info("No one yet marked attendance!!")  
                     try:
                         ment_attendance_df=(pd.concat([pd.Series(data=[str(date)] * max(len(present), len(absent))),present, absent], axis=1,ignore_index=True))
                         ment_attendance_df=ment_attendance_df.rename(columns={0: 'Date', 1:'Presenties', 2: 'Absenties'})    
@@ -907,4 +907,5 @@ else:
                 else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
+
 
