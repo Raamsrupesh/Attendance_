@@ -74,7 +74,7 @@ if not st.session_state.user_authenticated:
                 if stored_password.size > 0 and stored_password[0] == user_password:
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
-                    st.rerun() 
+                    # # # # # # # # # st.rerun() 
                 else:
                     st.error("Wrong password!")
             elif user_name=="" and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
@@ -119,18 +119,21 @@ else:
                             sanitized_msg = html.escape(str(row['Reason']))
                             key=f"checkbox_{idx}"
                             if key not in st.session_state:
-                                st.session_state[key] = False 
-                            st.markdown(
-                                "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
-                                unsafe_allow_html=True
-                            )
-        
+                                st.session_state[key] = bool(per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'].values[0])
+                                st.toast(f"Recieved notification from {sanitized_roll}", icon="💬")
+                            if sanitized_roll not in per_df['Roll_no'].tolist():
+                                st.markdown(
+                                        "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
+                                        unsafe_allow_html=True
+                                )
+                                
+                            # st.session_state['checked'] = bool(per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'].values[0])
                             st.session_state['checked'] = st.checkbox(
                                 f"{sanitized_roll}: {sanitized_msg}",
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
                             )
-                            # st.toast(f"Recieved notification from {sanitized_roll}", icon="💬")
+                            
                             # import time 
                             # time.sleep(5)
                             if st.session_state['checked']:
@@ -145,7 +148,7 @@ else:
                         if st.button("Reset", key="Mentor_erasing"):
                             per_df = pd.DataFrame(columns=per_df.columns)
                             per_df.to_csv(PERMISSIONS_FILE, index=False)
-                            st.rerun()
+                            # # # # # # # # # # st.rerun()
 
                     except FileNotFoundError or NameError:
                         st.success("NO ONE YET ASKED PERMISSION AND NOTHING TO DOWNLOAD!!")
@@ -168,15 +171,16 @@ else:
                             st.subheader('Presenties: ')
                             teach_df = pd.read_csv(ATTENDANCE_FILE)
                             
-                            present = teach_df.loc[teach_df['Date'] == date.strftime("%Y-%m-%d")]
+                            present = teach_df.loc[teach_df['Date'] == date.strftime("%Y-%m-%d")] 
                             present=(present.drop(columns=['SessionID', 'Date']))
-                            present=present.rename(columns={"Name":'Roll_NO'})
+                            present=present.rename(columns={"Name":'Roll_NO'}) 
                             st.write(present)
                             present_list=teach_df['Name'].tolist() 
                         except:
                             st.info("Not one marked present yet!!") 
                     with y:
                         try:
+                            import numpy as np
                             st.subheader("Absenties: ")
                             absent = pd.DataFrame([i for i in options if i not in present_list],columns=['Roll_NO'])
                             teach_per_df = pd.read_csv(PERMISSIONS_FILE)
@@ -262,7 +266,7 @@ else:
                                 marked_df = pd.concat([marked_df, new_row], ignore_index=True)
                                 marked_df.to_csv(MARKED_FILE, index=False)
                                 st.success(f"Registered successfully as {roll_no}")
-                                st.rerun()
+                                # # # # # # # # # # st.rerun()
 
                 #================= Other Tabs and Attendance Logic =================
                 # You can add the rest of your student/CR/chat/permission tabs below here
@@ -695,7 +699,7 @@ else:
                             if st.button("Reset"):
                                 message_df = pd.DataFrame(columns=message_df.columns)
                                 message_df.to_csv(MESSAGE_FILE, index=False)
-                                st.rerun()
+                                # # # # # # # # # # st.rerun()
                                 
 
                     else:
@@ -703,7 +707,6 @@ else:
 
 
                 with tab3:
-
                     PERMISSIONS_FILE = "permissions.csv"
                     no_of_days = 0
                     try:
@@ -763,9 +766,9 @@ else:
                                     # if st.button("Reset"):
                                     #         per_df = pd.DataFrame(columns=per_df.columns)
                                     #         per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                    #         st.rerun()
+                                    #         # # # # # # # # # st.rerun()
                                     # if st.button("REFRESH"):
-                                    #         st.rerun()
+                                    #         # # # # # # # # # st.rerun()
                     else:
                         st.error("Please enter a valid roll number.")
                 st.caption(f"Device ID: {device_id}")            
@@ -800,7 +803,7 @@ else:
             with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                 f.write(msg) 
 
-        if st.session_state.get("device_id", None) in ['27d53c6c4c3c57fc442b583404c652ed7304cb926b789427f6b5e961c837726f','ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
+        if st.session_state.get("device_id", None) in ['ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
             message = st.text_input(label = "Enter the pop up you wanted to: ", placeholder='Type here.....')
             if st.button("Start"):
                 write(message)
@@ -809,7 +812,9 @@ else:
                 write("")
                 
         else:
-            st.error("Eve is trying to get in Admin Section!!")
+            st.error("YOU AREN'T ABLE TO OPEN ADMIN SECTION!!")
+
+
     elif page == "About":
             from datetime import datetime
 
@@ -902,6 +907,3 @@ else:
                 else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
-    
-
-
