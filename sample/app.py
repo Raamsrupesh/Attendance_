@@ -179,7 +179,11 @@ else:
                         try:
                             st.subheader("Absenties: ")
                             absent = pd.DataFrame([i for i in options if i not in present_list],columns=['Roll_NO'])
-                            st.write(absent)
+                            teach_per_df = pd.read_csv(PERMISSIONS_FILE)
+                            teach_per_df=teach_per_df.drop(columns=['No_of_days', 'Reason']) 
+                            teach_per_df=teach_per_df.loc[teach_per_df['Granted'] == True]
+                            absent['Result'] = absent['Roll_NO'].isin(teach_per_df['Roll_no']) 
+                            st.dataframe(absent,use_container_width=True) 
                         except:
                             pass 
                     try:
@@ -899,4 +903,5 @@ else:
                     st.error("❌❌ Error Occured!!")
                 # password_df=pd.concat([password_df, pd.DataFrame({'device_id': device_id})])
     
+
 
