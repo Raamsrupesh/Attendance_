@@ -1050,7 +1050,7 @@ else:
                 elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
                     password_df.loc[password_df['user_name']==prev_name, 'pass'] = curr_pass 
                     password_df.to_csv(PASS_FILE, index=False)
-                    st.success(f"Password has changed to {password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]}")
+                    st.success(f"Password has successfully changed !!")
     
                 elif password_df.loc[password_df['user_name'] == prev_name].empty or prev_name not in password_df['user_name'].to_list():
                     st.error("User Name is incorrect!")
@@ -1059,6 +1059,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
