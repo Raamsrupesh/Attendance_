@@ -390,7 +390,7 @@ else:
                                         if location.get("latitude") and location.get("longitude"):
                                             lat = location['latitude']
                                             long = location['longitude']
-                                            if (lat >= 18.09 and lat <= 18.12) and (long >= 83.39 and long <= 83.42):
+                                            if (lat >= 18.020 and lat <= 18.265) and (long >= 83.39 and long <= 83.42):
                                                     st.session_state['user'] = selected
                                                     conn = get_db_connection()
                                                     cur = conn.cursor()
@@ -1059,4 +1059,5 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
