@@ -23,7 +23,7 @@ POLLS_FILE = "polls.csv"
 
 #   =========================================================================
 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
-rep_password = 'REP123'
+rep_password = f'{chr(82)+chr(69)+'P123'}'
 
 #   ===================== MARQUEE ===========================================
 def read():
@@ -72,7 +72,7 @@ if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
 
 if not st.session_state.user_authenticated:
-    st.header("Sign In / Register")
+    st.header("🔐 Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
     user_name = st.text_input("Enter your Name:", placeholder=f"E.g: GARUD").strip()
     user_password = st.text_input("Enter Password:", type="password", placeholder='Type here....').strip()
@@ -146,7 +146,7 @@ else:
                             if key not in st.session_state:
                                 st.session_state[key] = bool(per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'].values[0])
                                 st.toast(f"Recieved notification from {sanitized_roll}", icon="💬")
-                            if sanitized_roll not in per_df['Roll_no'].tolist():
+                            if sanitized_roll in per_df['Roll_no'].tolist():
                                 st.markdown(
                                         "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                         unsafe_allow_html=True
@@ -261,15 +261,15 @@ else:
                 marked_df = pd.read_csv(MARKED_FILE)
 
                 #================= Registration / Login UI =================
-                st.header("Register / Login")
+                # st.header("Register / Login")
 
                 registered_entry = marked_df.loc[marked_df["device_id"] == device_id]
 
                 if not registered_entry.empty:
                     saved_roll = registered_entry.iloc[0]["Roll_no"]
-                    st.success(f"You are permanently registered with Roll No: {saved_roll}")
+                    st.success(f"🪪 Permanently enrolled under Roll No. {saved_roll}; this device 🔗 is indelibly bound to your identity. 📱")
                     st.text_input("Roll Number", value=saved_roll, disabled=True)
-                    st.info("You cannot change Roll Number on this device.")
+                    # st.info("You cannot change Roll Number on this device.")
                     st.write(f"Device ID: {device_id}")
                 else:
                     name = st.text_input("Enter your Name:")
@@ -288,7 +288,7 @@ else:
                                 marked_df = pd.concat([marked_df, new_row], ignore_index=True)
                                 marked_df.to_csv(MARKED_FILE, index=False)
                                 st.success(f"Registered successfully as {roll_no}")
-                                # st.rerun()
+                                st.rerun()
 
                 #================= Other Tabs and Attendance Logic =================
                 # For each tab, I should use the value of device_id and the permanent roll_no lookup as your identity key
@@ -383,7 +383,7 @@ else:
 
                                 selected = st.selectbox('Who are You?', [roll_no_tab2])
                                 password = st.text_input("Enter Secret Password:", type='password', placeholder='Type here...')
-                                if st.button('Mark Present?', type='primary'):
+                                if st.button('Mark Present?'):
                                     today = datetime.today().strftime('%Y-%m-%d')
                                     input_time = datetime.now().strftime("%H:%M:%S")
                                     if passwords[selected] == password:
@@ -409,9 +409,12 @@ else:
                                                         if already_marked.empty:
                                                             data = [[st.session_state['session_id'], selected, today]]
                                                             new_df = pd.DataFrame(data, columns=['SessionID', 'Name', 'Date'])
+                                                            st.metric(label='Presence Hike', value = len(attendance_df[pd.to_datetime(attendance_df['Date']) == datetime.today().month]), delta = "+1")
                                                             attendance_df = pd.concat([attendance_df, new_df], ignore_index=True)
                                                             attendance_df.to_csv(ATTENDANCE_FILE, index=False)
+                                                            
                                                         st.success(f"You ({selected}) are now marked as present for {today}!")
+                                                        
                                             else:
                                                 st.error("Your Location is not matching i.e you aren't there in college!!")
                                         else:
@@ -702,6 +705,144 @@ else:
                                     message_df = pd.DataFrame(columns=message_df.columns)
                                     message_df.to_csv(MESSAGE_FILE, index=False)
                                 # st.rerun()
+                            with chat2:
+                                from collections import Counter 
+
+                                POLLS_FILE = "polls.csv"
+                                try:
+                                    df = pd.read_csv(POLLS_FILE)
+                                    if 'votes' not in df.columns:
+                                        df['votes'] = '{}'
+                                    if 'is_active' not in df.columns:
+                                        df['is_active'] = True
+                                except FileNotFoundError:
+                                    df = pd.DataFrame(columns=['poll_id', 'question', 'options', 'votes', 'created_by', 'created_at', 'is_active'])
+
+                                def save_polls():
+                                    df.to_csv(POLLS_FILE, index=False)
+
+                                def create_poll(created_by, question, options):
+                                    global df
+                                    poll_id = df['poll_id'].max() + 1 if not df.empty else 1
+                                    new_poll = {
+                                        'poll_id': poll_id,
+                                        'question': question,
+                                        'options': '|'.join(options),
+                                        'votes': '{}',
+                                        'created_by': created_by,
+                                        'created_at': pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                        'is_active': True
+                                    }
+                                    df = pd.concat([df, pd.DataFrame([new_poll])], ignore_index=True)
+                                    save_polls()
+                                    return True
+
+
+                                def get_poll_results(poll_id):
+                                    poll_row = df[df['poll_id'] == poll_id]
+                                    if poll_row.empty:
+                                        return None
+                                    poll_data = poll_row.iloc[0]
+                                    options = poll_data['options'].split('|')
+                                    votes = eval(poll_data['votes']) if poll_data['votes'] else {}
+                                    results = []
+                                    for i, option in enumerate(options):
+                                        voters = votes.get(str(i), [])
+                                        results.append({
+                                            'option': option,
+                                            'votes': len(voters),
+                                            'voters': voters
+                                        })
+                                    return results
+
+                                def vote_in_poll(poll_id, user_id, option_index):
+                                    global df
+                                    poll_index = df.index[df['poll_id'] == poll_id][0]
+                                    votes = eval(df.at[poll_index, 'votes']) if df.at[poll_index, 'votes'] else {}
+                                    # Prevent user from voting multiple times
+                                    for voters in votes.values():
+                                        if user_id in voters:
+                                            return False
+                                    votes.setdefault(str(option_index), []).append(user_id)
+                                    df.at[poll_index, 'votes'] = str(votes)
+                                    save_polls()
+                                    return True
+
+                                # Streamlit app UI
+
+                                # st.title("Poll Creator & Voter")
+
+                                user_id = st.text_input("Create poll with user ID:", value = st.session_state['user'], disabled=True)
+
+                                with st.expander("Create a New Poll"):
+                                    question = st.text_input("Poll Question:")
+                                    col1, col2 = st.columns(2)
+                                    opts = []
+                                    for i in range(4):
+                                        with col1 if i % 2 == 0 else col2:
+                                            opt = st.text_input(f"Option {i+1}", key=f"opt_{i}")
+                                            if opt:
+                                                opts.append(opt)
+                                    if st.button("Create Poll") and question and len(opts) >= 2:
+                                        if create_poll(user_id, question, opts):
+                                            st.success("Poll created successfully!")
+                                            st.rerun() 
+
+                                    if st.button("Delete poll", type = 'primary'):
+                                        try:
+                                            df_p = pd.read_csv(POLLS_FILE)
+                                            ma = df_p['created_by'].astype(str) == str(user_id)
+                                            if not df_p.loc[ma].empty:
+                                                df_p=df_p.loc[~ma]
+                                                df_p.to_csv(POLLS_FILE, index=False) 
+                                                st.rerun()
+                                            else:
+                                                st.warning("The user id is not matching!!")
+                                        except Exception as e:
+                                            st.error(f"YOU CANNOT DELETE THIS. {e}")
+
+                                        
+
+                                st.write("---")
+
+                                active_polls = df[df['is_active'] == True]
+
+                                if active_polls.empty:
+                                    st.info("No active polls available yet.")
+                                else:
+                                    for _, poll in active_polls.iterrows():
+                                        st.subheader(poll['question'])
+                                        st.caption(f"Created by: {poll['created_by']} at {poll['created_at']}")
+                                        options = poll['options'].split('|')
+                                        results = get_poll_results(poll['poll_id'])
+                                        user_voted = any(user_id in r['voters'] for r in results) if results else False
+
+                                        if not user_voted and user_id != "":
+                                            choice = st.radio("Choose your option:", options, key=str(poll['poll_id']))
+                                            if st.button("Vote", key=f"vote_{poll['poll_id']}"):
+                                                success = vote_in_poll(poll['poll_id'], user_id, options.index(choice))
+                                                if success:
+                                                    st.success("Vote registered!")
+                                                    st.rerun()
+                                                else:
+                                                    st.error("You've already voted in this poll.")
+                                        elif user_id == "":
+                                            st.info("Please enter your user ID to vote.")
+                                        else:
+                                            st.info("You have already voted in this poll. Results:")
+
+                                        if results:
+                                            total_votes = sum(r['votes'] for r in results)
+                                            for r in results:
+                                                pct = (r['votes'] / total_votes * 100) if total_votes > 0 else 0
+                                                st.write(f"**{r['option']}**: {r['votes']} votes ({pct:.1f}%)")
+                                                st.progress(pct / 100)
+
+                                        st.write("---")
+
+                            with chat3:
+                                st.file_uploader('Drop files here: ',type=["jpg", "jpeg", "png", "csv", "png"],accept_multiple_files=True)
+
                            
                     else:
                         st.error("Please enter a valid roll number.")
@@ -731,8 +872,8 @@ else:
                                             per_df = pd.read_csv(PERMISSIONS_FILE)
                                         
                                     issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
-                                    if issue:
-                                            sanitized_issue = html.escape(issue)
+                                    if st.button("Send Request"):
+                                            sanitized_issue = html.escape(str(issue))
                                             sanitized_days = html.escape(str(no_of_days))
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
@@ -816,7 +957,7 @@ else:
             with x:
                 st.metric(f"Total Students",len(CLASS_ROLL_NUMBERS))  
             with y:
-                st.metric(f"Registered Students",len(MARKED_FILE))
+                st.metric(f"Registered Students",len(pd.read_csv(MARKED_FILE)['Roll_no'].tolist()))
             with z:
                 st.metric(f"Today's Attendance", len(pd.read_csv(ATTENDANCE_FILE)[pd.read_csv(ATTENDANCE_FILE)['Date'] == datetime.today().strftime("%Y-%m-%d")]))
             st.write("---")   
