@@ -870,7 +870,7 @@ else:
                                     else:
                                             per_df = pd.read_csv(PERMISSIONS_FILE)
                                     def clear_input():
-                                        st.session_state["user_input"] = ""
+                                        st.session_state["issue"] = ""
                                     issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input", on_change = clear_input)
                                     if st.button("Send Request"):
                                             sanitized_issue = html.escape(str(issue))
@@ -1060,6 +1060,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
