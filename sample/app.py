@@ -785,22 +785,7 @@ else:
                                     if st.button("Create Poll") and question and len(opts) >= 2:
                                         if create_poll(user_id, question, opts):
                                             st.success("Poll created successfully!")
-                                            st.rerun() 
-
-                                    if st.button("Delete poll", type = 'primary'):
-                                        try:
-                                            df_p = pd.read_csv(POLLS_FILE)
-                                            ma = df_p['created_by'].astype(str) == str(user_id)
-                                            if not df_p.loc[ma].empty:
-                                                df_p=df_p.loc[~ma]
-                                                df_p.to_csv(POLLS_FILE, index=False) 
-                                                st.rerun()
-                                            else:
-                                                st.warning("The user id is not matching!!")
-                                        except Exception as e:
-                                            st.error(f"YOU CANNOT DELETE THIS. {e}")
-
-                                        
+                                            # st.rerun()                                         
 
                                 st.write("---")
 
@@ -838,6 +823,18 @@ else:
                                                 st.progress(pct / 100)
 
                                         st.write("---")
+                                        if st.button("Delete poll", type = 'primary'):
+                                            try:
+                                                df_p = pd.read_csv(POLLS_FILE)
+                                                ma = df_p['created_by'].astype(str) == str(user_id)
+                                                if not df_p.loc[ma].empty:
+                                                    df_p=df_p.loc[~ma]
+                                                    df_p.to_csv(POLLS_FILE, index=False) 
+                                                    st.rerun()
+                                                else:
+                                                    st.warning("The user id is not matching!!")
+                                            except Exception as e:
+                                                st.error(f"YOU CANNOT DELETE THIS. {e}")
 
                             with chat3:
                                 st.file_uploader('Drop files here: ',type=["jpg", "jpeg", "png", "csv", "png"],accept_multiple_files=True)
@@ -1059,6 +1056,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
