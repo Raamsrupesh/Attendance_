@@ -869,17 +869,15 @@ else:
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
                                     else:
                                             per_df = pd.read_csv(PERMISSIONS_FILE)
-                                    def clear_input():
-                                        st.session_state["issue"] = ""
-                                        st.session_state["no_of_days"] = ""
-                                    issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
+
+                                    issue = st.text_input("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
                                     if st.button("Send Request"):
                                             sanitized_issue = html.escape(str(issue))
                                             sanitized_days = html.escape(str(no_of_days))
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                            clear_input()
+                                            
                                         
                                     per_df = per_df.sort_index()
                                     st.write("---")
@@ -1061,6 +1059,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
