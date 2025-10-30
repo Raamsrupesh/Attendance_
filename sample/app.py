@@ -869,15 +869,16 @@ else:
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
                                     else:
                                             per_df = pd.read_csv(PERMISSIONS_FILE)
-                                        
-                                    issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
+                                    def clear_input():
+                                        st.session_state["user_input"] = ""
+                                    issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input", on_change = clear_input)
                                     if st.button("Send Request"):
                                             sanitized_issue = html.escape(str(issue))
                                             sanitized_days = html.escape(str(no_of_days))
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                            issue = ""
+                                            
                                         
                                     per_df = per_df.sort_index()
                                     st.write("---")
@@ -887,7 +888,7 @@ else:
                                             # st.toast("⌛Your request is pending...")
                                             st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
-                                            # st.toast("🎉Your leave has been approved!", icon="✅")
+                                            # st.toast("🎉Your leave has been approved!", icon="✅") 
                                             st.success('✅ Your permissions has been approved!!')
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
@@ -1059,6 +1060,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
