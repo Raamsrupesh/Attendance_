@@ -877,6 +877,7 @@ else:
                                             new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                             per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                             per_df.to_csv(PERMISSIONS_FILE, index=False)
+                                            issue = ""
                                         
                                     per_df = per_df.sort_index()
                                     st.write("---")
@@ -1058,6 +1059,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
