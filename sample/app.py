@@ -70,7 +70,8 @@ password_df = pd.read_csv(PASS_FILE)
 
 if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
-
+from streamlit_autorefresh import st_autorefresh
+st_autorefresh(interval=3000, key='mentor_refresh')
 if not st.session_state.user_authenticated:
     st.header("🔐 Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
@@ -126,8 +127,6 @@ else:
 
     page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings"], index=1)
     import html
-    from streamlit_autorefresh import st_autorefresh
-    st_autorefresh(interval=3000, key='mentor_refresh')
 
 #   =========================== MENTOR PORTAL =================================
 
@@ -1059,6 +1058,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
