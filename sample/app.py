@@ -1064,6 +1064,18 @@ else:
         
                     else:
                         st.error("❌❌ Error Occured!!")
+                    # Device info
+                st.write("---")
+                st.subheader("📱 Device Information")
+                st.write(f"**Device ID:** {get_device_id()}")
+                st.write(f"**Session ID:** {get_script_run_ctx().session_id if get_script_run_ctx() else 'N/A'}")
+                
+                # Logout
+                st.write("---")
+                if st.button("🚪 Logout", type="primary"):
+                    for key in list(st.session_state.keys()):
+                        del st.session_state[key]
+                    st.rerun()
 
 
 
