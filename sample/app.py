@@ -960,7 +960,7 @@ else:
             st.write("---")                 
             st.header("🔧 System Maintenance")
             if st.button("🔄 Clear All Data", type="secondary"):
-                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS]:
+                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS_FILE]:
                     if os.path.exists(file):
                         os.remove(file)
                 st.success("All data cleared!")
@@ -1062,6 +1062,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
