@@ -130,7 +130,7 @@ else:
 
 #   ================================================================================
 
-    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "⏮️ Pre Records"], index=1)
+    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🪧 NoticeBoard"], index=1)
     import html
     # from streamlit_autorefresh import st_autorefresh
     # st_autorefresh(interval=3000, key='mentor_refresh')
@@ -1276,4 +1276,5 @@ else:
         
                     else:
                         st.error("❌❌ Error Occured!!")
+
 
