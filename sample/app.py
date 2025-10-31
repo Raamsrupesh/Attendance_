@@ -933,6 +933,260 @@ else:
                     _,butt,_= st.columns([1,1,1])
                     with butt:
                         st.download_button(label='📤 Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
+                with tab5:
+                    st.title("Previous Attendance Records")
+                    user = st.session_state['user']
+                    from io import StringIO
+                    july = """
+                    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+                    X1,SANAPATHIYAMUNA,P,P,P,AB,P,P,P,P,P,P,AB,P,AB,P,P,P,P,AB,P,AB,P
+                    X2,SANKURABOTHUMANITEJ,P,P,P,P,P,P,AB,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    X3,SARIKAAASWITHA,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P
+                    X4,SARIKAJASMINE,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X5,SATTALARAMAKRISHNA,AB,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,AB
+                    X6,SEEMAKURTHISAHITHI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X7,SEERAPUARYANREDDY,AB,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X8,SEERAPUMEGHANA,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P
+                    X9,SEERAPUSHIVADHEERAJ,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y0,SHAIKSHAHID,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y1,SHAIKSHAZID,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y2,SHEIKARIF,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y3,SHEIKNOORJAHAN,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P
+                    Y4,SHETTITEJASWARI,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P
+                    Y5,SIDAGAMRAJESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y6,SIDDAANITHA,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y7,SIGALAPELLIPAVANKUMAR,P,P,P,P,P,P,P,P,AB,AB,AB,AB,AB,P,P,AB,P,P,P,P,P
+                    Y8,SIRIPURAPURAGHU,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y9,SIRIPURAPUTRINADHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z0,SIVVITIKIRANMAYEE,P,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    Z2,SURUAKSHAYA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z3,TAKARLARONITHREDDY,P,P,P,P,P,P,P,P,P,P,AB,AB,AB,P,P,P,P,AB,P,P,P
+                    Z4,TALACHUTLAHASINI,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,AB,P,P
+                    Z5,TALADAKAVYAJAHNAVI,P,P,P,P,P,P,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P
+                    Z6,TALADASREEVENKATESH,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P
+                    Z7,TALEBHANUTEJA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z8,TEDLAPUSAIREESHNIKA,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z9,TEDLAPUSHANMUKHESWAR,P,P,P,P,P,P,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P
+                    AA,TEEDAJENYA,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AB,TEEDASRILAKSHMI,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    AC,TELUKALAKEERTHANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AD,THADDIVINAY,AB,AB,P,AB,P,P,P,P,P,P,AB,P,P,P,P,P,P,AB,P,P,P
+                    AE,THAMMINATEJASWI,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    AF,THOTAGAYATHRISRUJANA,P,P,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AG,THUMMAGANTIGANESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AH,TIPPANASAINIKHILESH,AB,AB,AB,P,P,AB,P,P,P,P,AB,AB,AB,P,P,AB,AB,AB,AB,AB,AB
+                    AI,TRIPURAGIRIAKHILA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AJ,TULUGUGAYATHRI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AK,UPPALAPATIYOGENDRAVARMA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AL,VADAPALLILIKHITHMANOHAR,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,AB,P
+                    AM,VADDADINAGESHKUMAR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AN,VADUGURUSRINIDHI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AO,VAKAMULLULAKSHMINARAYANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,AB
+                    AP,VALLURIRANADHEERNAIDU,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    AQ,VANKAYASWANTHESWAR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AR,VARREJAGADEESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AS,VARRILEELAKRISHNA,P,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    AT,VARRINEELIMA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AU,VEMPADAPUMOHINI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AV,VEMPADAPUUMAJYOTHSNA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AW,YADLASAIDEEKSHITHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AX,YAJJALAKISHOR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AY,YALAANUSH,P,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,AB,AB
+                    AZ,YALLASAMUELSATHVIK,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    BA,YANDRAPUVAMSI,AB,P,P,AB,AB,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    BB,YARRAMADHUSUDHANARAO,P,P,P,P,P,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P,AB
+                    BD,YARRARAPUPUNYAVATHI,P,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P,AB,AB,AB,P,P
+                    BE,YEGIREDDYTEJA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB
+                    BF,YELAMANCHILIRAKESH,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    BG,YELUSOORIVIJAY,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BH,YERRARUPESH,P,P,P,P,P,P,P,P,P,P,P,AB,AB,P,P,AB,AB,AB,P,AB,AB
+                    BI,YERRASHYAMCHANDU,P,P,AB,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    BJ,YERRASIRICHANDANA,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BK,YETURISURESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P
+                    """
+
+                    august = """
+                    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+                    X1,SANAPATHIYAMUNA,P,P,P,AB,P,P,P,P,P,P,AB,P,AB,P,P,P,P,AB,P,AB,P
+                    X2,SANKURABOTHUMANITEJ,P,P,P,P,P,P,AB,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    X3,SARIKAAASWITHA,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P
+                    X4,SARIKAJASMINE,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X5,SATTALARAMAKRISHNA,AB,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,AB
+                    X6,SEEMAKURTHISAHITHI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X7,SEERAPUARYANREDDY,AB,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X8,SEERAPUMEGHANA,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P
+                    X9,SEERAPUSHIVADHEERAJ,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y0,SHAIKSHAHID,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y1,SHAIKSHAZID,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y2,SHEIKARIF,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y3,SHEIKNOORJAHAN,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P
+                    Y4,SHETTITEJASWARI,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P
+                    Y5,SIDAGAMRAJESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y6,SIDDAANITHA,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y7,SIGALAPELLIPAVANKUMAR,P,P,P,P,P,P,P,P,AB,AB,AB,AB,AB,P,P,AB,P,P,P,P,P
+                    Y8,SIRIPURAPURAGHU,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y9,SIRIPURAPUTRINADHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z0,SIVVITIKIRANMAYEE,P,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    Z2,SURUAKSHAYA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z3,TAKARLARONITHREDDY,P,P,P,P,P,P,P,P,P,P,AB,AB,AB,P,P,P,P,AB,P,P,P
+                    Z4,TALACHUTLAHASINI,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,AB,P,P
+                    Z5,TALADAKAVYAJAHNAVI,P,P,P,P,P,P,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P
+                    Z6,TALADASREEVENKATESH,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P
+                    Z7,TALEBHANUTEJA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z8,TEDLAPUSAIREESHNIKA,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z9,TEDLAPUSHANMUKHESWAR,P,P,P,P,P,P,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P
+                    AA,TEEDAJENYA,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AB,TEEDASRILAKSHMI,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    AC,TELUKALAKEERTHANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AD,THADDIVINAY,AB,AB,P,AB,P,P,P,P,P,P,AB,P,P,P,P,P,P,AB,P,P,P
+                    AE,THAMMINATEJASWI,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    AF,THOTAGAYATHRISRUJANA,P,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AG,THUMMAGANTIGANESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AH,TIPPANASAINIKHILESH,AB,AB,AB,P,P,AB,P,P,P,P,AB,AB,AB,P,P,AB,AB,AB,AB,AB,AB
+                    AI,TRIPURAGIRIAKHILA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AJ,TULUGUGAYATHRI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AK,UPPALAPATIYOGENDRAVARMA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AL,VADAPALLILIKHITHMANOHAR,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,AB,P
+                    AM,VADDADINAGESHKUMAR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AN,VADUGURUSRINIDHI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AO,VAKAMULLULAKSHMINARAYANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,AB
+                    AP,VALLURIRANADHEERNAIDU,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    AQ,VANKAYASWANTHESWAR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AR,VARREJAGADEESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AS,VARRILEELAKRISHNA,P,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    AT,VARRINEELIMA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AU,VEMPADAPUMOHINI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AV,VEMPADAPUUMAJYOTHSNA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AW,YADLASAIDEEKSHITHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AX,YAJJALAKISHOR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AY,YALAANUSH,P,P,P,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,AB,AB
+                    AZ,YALLASAMUELSATHVIK,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    BA,YANDRAPUVAMSI,AB,P,P,AB,AB,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    BB,YARRAMADHUSUDHANARAO,P,P,P,P,P,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P,AB
+                    BD,YARRARAPUPUNYAVATHI,P,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P,AB,AB,AB,P,P
+                    BE,YEGIREDDYTEJA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB
+                    BF,YELAMANCHILIRAKESH,P,P,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    BG,YELUSOORIVIJAY,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BH,YERRARUPESH,P,P,P,P,P,P,P,P,P,P,P,AB,AB,P,P,AB,AB,AB,P,AB,AB
+                    BI,YERRASHYAMCHANDU,P,P,AB,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    BJ,YERRASIRICHANDANA,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BK,YETURISURESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P
+                    """
+                    sept = """
+                    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+                    X1,SANAPATHIYAMUNA,AB,P,AB,AB,AB,P,P,P,P,P,P,P,P,AB,P,P,P
+                    X2,SANKURABOTHUMANITEJ,P,P,P,P,P,P,P,P,P,P,P,AB,AB,P,P,AB,AB
+                    X3,SARIKAAASWITHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X4,SARIKAJASMINE,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    X5,SATTALARAMAKRISHNA,AB,P,P,P,P,P,P,P,P,P,P,AB,AB,P,P,P,P
+                    X6,SEEMAKURTHISAHITHI,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    X7,SEERAPUARYANREDDY,AB,AB,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    X8,SEERAPUMEGHANA,P,P,AB,P,P,P,P,AB,P,P,P,P,P,P,P,P,P
+                    X9,SEERAPUSHIVADHEERAJ,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y0,SHAIKSHAHID,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,AB,P
+                    Y1,SHAIKSHAZID,P,P,P,P,AB,P,AB,P,AB,P,P,P,P,AB,P,P,P
+                    Y2,SHEIKARIF,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y3,SHEIKNOORJAHAN,P,P,AB,P,AB,P,P,P,P,P,P,AB,P,AB,P,P,P
+                    Y4,SHETTITEJASWARI,P,P,AB,P,P,P,P,P,P,P,AB,P,AB,P,P,P,P
+                    Y5,SIDAGAMRAJESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y6,SIDDAANITHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y7,SIGALAPELLIPAVANKUMAR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y8,SIRIPURAPURAGHU,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Y9,SIRIPURAPUTRINADHA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z0,SIVVITIKIRANMAYEE,AB,AB,P,P,P,P,AB,AB,P,AB,AB,P,P,AB,AB,AB,AB
+                    Z2,SURUAKSHAYA,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    Z3,TAKARLARONITHREDDY,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z4,TALACHUTLAHASINI,P,P,P,P,AB,P,AB,P,P,P,P,P,P,AB,P,P,P
+                    Z5,TALADAKAVYAJAHNAVI,P,P,AB,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z6,TALADASREEVENKATESH,P,P,P,P,AB,P,P,AB,P,P,P,P,P,P,P,P,P
+                    Z7,TALEBHANUTEJA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    Z8,TEDLAPUSAIREESHNIKA,P,P,P,P,P,AB,AB,P,P,P,P,P,P,P,P,AB,P
+                    Z9,TEDLAPUSHANMUKHESWAR,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P
+                    AA,TEEDAJENYA,P,P,P,P,P,P,P,P,AB,P,P,P,P,P,P,P,P
+                    AB,TEEDASRILAKSHMI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AC,TELUKALAKEERTHANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AD,THADDIVINAY,P,P,P,P,P,AB,AB,P,P,P,P,P,AB,AB,AB,P,P
+                    AE,THAMMINATEJASWI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AF,THOTAGAYATHRISRUJANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AG,THUMMAGANTIGANESH,P,P,P,P,P,P,AB,P,P,P,P,P,AB,P,P,P,P
+                    AH,TIPPANASAINIKHILESH,P,P,P,AB,AB,AB,P,P,P,P,P,P,P,P,P,P,P
+                    AI,TRIPURAGIRIAKHILA,P,P,P,AB,P,P,AB,P,P,P,P,P,P,P,P,P,P
+                    AJ,TULUGUGAYATHRI,P,P,P,P,AB,P,P,P,AB,P,P,P,P,P,P,P,P
+                    AK,UPPALAPATIYOGENDRAVARMA,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,AB,P
+                    AL,VADAPALLILIKHITHMANOHAR,P,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P
+                    AM,VADDADINAGESHKUMAR,P,P,P,P,P,AB,P,P,P,P,P,AB,AB,P,P,P,P
+                    AN,VADUGURUSRINIDHI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AO,VAKAMULLULAKSHMINARAYANA,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AP,VALLURIRANADHEERNAIDU,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AQ,VANKAYASWANTHESWAR,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P
+                    AR,VARREJAGADEESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    AS,VARRILEELAKRISHNA,P,P,P,AB,P,P,P,P,AB,P,AB,P,P,AB,P,P,P
+                    AT,VARRINEELIMA,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AU,VEMPADAPUMOHINI,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AV,VEMPADAPUUMAJYOTHSNA,P,P,P,P,AB,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AW,YADLASAIDEEKSHITHA,P,P,P,P,P,P,P,P,P,P,P,P,P,,P,P,P
+                    AX,YAJJALAKISHOR,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    AY,YALAANUSH,P,P,P,P,P,AB,P,P,P,P,P,P,P,AB,P,P,P
+                    AZ,YALLASAMUELSATHVIK,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BA,YANDRAPUVAMSI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BB,YARRAMADHUSUDHANARAO,P,P,P,P,AB,P,P,P,P,P,P,P,P,P,P,P,P
+                    BD,YARRARAPUPUNYAVATHI,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BE,YEGIREDDYTEJA,P,P,P,P,P,P,P,P,P,P,P,P,P,AB,P,P,P
+                    BF,YELAMANCHILIRAKESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BG,YELUSOORIVIJAY,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BH,YERRARUPESH,P,AB,AB,AB,AB,AB,P,P,P,AB,AB,AB,AB,P,P,AB,P
+                    BI,YERRASHYAMCHANDU,P,AB,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BJ,YERRASIRICHANDANA,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    BK,YETURISURESH,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P
+                    """
+                    
+                    july_df = pd.read_csv(StringIO(july), header=0, index_col=0)
+                    july_df.index = july_df.index.str.strip()
+                    july_df = july_df[july_df.index == user]
+
+
+                    august_df = pd.read_csv(StringIO(august), header=0, index_col=0)
+                    august_df.index = august_df.index.str.strip()
+                    august_df = august_df[august_df.index == user]
+
+
+                    sept_df = pd.read_csv(StringIO(sept), header=0, index_col=0)
+                    sept_df.index = sept_df.index.str.strip()
+                    sept_df = sept_df[sept_df.index == user]
+
+
+                    # Show dataframes in columns
+                    j, a, s = st.columns([1, 1, 1])
+                    with j:
+                        st.dataframe(july_df.T)
+                        st.download_button(
+                            label="Download July Report",
+                            data=july_df.to_csv(index=False).encode('utf-8'),
+                            file_name=f"{user}_julyattendance.csv",
+                            mime='text/csv',
+                            key=f"july_{user}_download"
+                        )
+
+                    with a:
+                        st.dataframe(august_df.T)
+                        st.download_button(
+                            label="Download August Report",
+                            data=august_df.to_csv(index=False).encode('utf-8'),
+                            file_name=f"{user}_augustattendance.csv",
+                            mime='text/csv',
+                            key=f"august_{user}_download"
+                        )
+
+                    with s:
+                        st.dataframe(sept_df.T)
+                        st.download_button(
+                            label="Download Sept Report",
+                            data=sept_df.to_csv(index=False).encode('utf-8'),
+                            file_name=f"{user}_septattendance.csv",
+                            mime='text/csv',
+                            key=f"sept_{user}_download"
+                        )
+#   ======================= ADMIN( RAAMANAND: ME ) TAB ============================
     
 #   ======================= ADMIN( RAAMANAND: ME ) TAB ============================
 
@@ -1077,6 +1331,7 @@ else:
                 for key in list(st.session_state.keys()):
                     del st.session_state[key]
                 st.rerun() 
+
 
 
 
