@@ -1044,26 +1044,27 @@ else:
 
     elif page == "⚙️ Settings":
             st.header("🛠️ Account Settings")
-        with st.form("Change_password"):
-            st.subheader("🔒 Change Password")
-            prev_name=st.text_input("Enter Current Username: ", placeholder=f"E.g: YAKSHRAJ").strip()
-            prev_pass=st.text_input("Enter Current password: ", placeholder='******', type='password').strip()
-            curr_pass=st.text_input("Enter New password: ", placeholder="******", type='password').strip()
-            if st.form_submit_button("Update Password"):
-                if prev_name == "" or prev_pass == "" or curr_pass == "":
-                    st.warning("All fields are required!!")
-                elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
-                    password_df.loc[password_df['user_name']==prev_name, 'pass'] = curr_pass 
-                    password_df.to_csv(PASS_FILE, index=False)
-                    st.success(f"Password has successfully changed !!")
-    
-                elif password_df.loc[password_df['user_name'] == prev_name].empty or prev_name not in password_df['user_name'].to_list():
-                    st.error("User Name is incorrect!")
-                elif prev_pass != password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
-                    st.error("The password is incorrect!!")
-    
-                else:
-                    st.error("❌❌ Error Occured!!")
+            with st.form("Change_password"):
+                st.subheader("🔒 Change Password")
+                prev_name=st.text_input("Enter Current Username: ", placeholder=f"E.g: YAKSHRAJ").strip()
+                prev_pass=st.text_input("Enter Current password: ", placeholder='******', type='password').strip()
+                curr_pass=st.text_input("Enter New password: ", placeholder="******", type='password').strip()
+                if st.form_submit_button("Update Password"):
+                    if prev_name == "" or prev_pass == "" or curr_pass == "":
+                        st.warning("All fields are required!!")
+                    elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
+                        password_df.loc[password_df['user_name']==prev_name, 'pass'] = curr_pass 
+                        password_df.to_csv(PASS_FILE, index=False)
+                        st.success(f"Password has successfully changed !!")
+        
+                    elif password_df.loc[password_df['user_name'] == prev_name].empty or prev_name not in password_df['user_name'].to_list():
+                        st.error("User Name is incorrect!")
+                    elif prev_pass != password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
+                        st.error("The password is incorrect!!")
+        
+                    else:
+                        st.error("❌❌ Error Occured!!")
+
 
 
 
