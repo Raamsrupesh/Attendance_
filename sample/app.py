@@ -771,7 +771,7 @@ else:
 
                                 # st.title("Poll Creator & Voter")
 
-                                user_id = st.text_input("Create poll with user ID:", value = st.session_state['user'], disabled=True)
+                                user_id = st.text_input("Create poll with user ID:", value = roll_no_tab3, disabled=True)
 
                                 with st.expander("Create a New Poll"):
                                     question = st.text_input("Poll Question:")
@@ -1056,6 +1056,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
