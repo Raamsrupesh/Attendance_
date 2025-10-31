@@ -19,18 +19,18 @@ PASS_FILE = 'password.csv'
 PERMISSIONS_FILE = 'permissions.csv' 
 MESSAGE_FILE = "messages.csv"
 MARKED_FILE = "marked.csv"
-POLLS_FILE = "polls.csv"
+POLLS = 'polls.csv'
 
 #   =========================================================================
 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
-rep_password = f'{chr(82)+chr(69)+'P123'}'
+rep_password = 'REP123'
 
 #   ===================== MARQUEE ===========================================
 def read():
     if os.path.exists(GOOD_NEWS):
         with open(GOOD_NEWS, mode='r', encoding='utf-8') as f:
-            return f.read()
-        return ""
+            return f.read() if f.read() else ""
+    return ""
 st.markdown("""
         <style>
             .block-container { padding-top: 2rem !important; margin-top:1.5rem !important;}
@@ -62,6 +62,9 @@ if read() != "" and read() is not None:
 )
             st.markdown("<br><br>", unsafe_allow_html=True)
 
+
+from streamlit_autorefresh import st_autorefresh 
+st_autorefresh(interval=3500) 
 #   ================================================================================
 if not os.path.exists(PASS_FILE):
     password_df = pd.DataFrame(columns=['user_name', 'pass'])
@@ -70,8 +73,10 @@ password_df = pd.read_csv(PASS_FILE)
 
 if 'user_authenticated' not in st.session_state:
     st.session_state.user_authenticated = False
-# from streamlit_autorefresh import st_autorefresh
-# st_autorefresh(interval=3000, key='mentor_refresh') 
+
+if 'user' not in st.session_state:
+    st.session_state.user = None 
+global saved_roll
 if not st.session_state.user_authenticated:
     st.header("🔐 Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
@@ -125,8 +130,10 @@ else:
 
 #   ================================================================================
 
-    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🚪 Logout"], index=1)
+    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "⏮️ Pre Records"], index=1)
     import html
+    # from streamlit_autorefresh import st_autorefresh
+    # st_autorefresh(interval=3000, key='mentor_refresh')
 
 #   =========================== MENTOR PORTAL =================================
 
@@ -225,7 +232,7 @@ else:
                 elif ment_cr_pass == "":
                     st.warning("⚠️ Please enter the correct mentor password to access this section.")
 #   =========================== STUDENT AND CR PORTAL ==================================            
-
+    
     elif page == "👨‍🎓 Student":
                 import pandas as pd
                 import hashlib, uuid, os
@@ -266,6 +273,8 @@ else:
 
                 if not registered_entry.empty:
                     saved_roll = registered_entry.iloc[0]["Roll_no"]
+                    
+                    st.session_state['user'] = saved_roll
                     st.success(f"🪪 Permanently enrolled under Roll No. {saved_roll}; this device 🔗 is indelibly bound to your identity. 📱")
                     st.text_input("Roll Number", value=saved_roll, disabled=True)
                     # st.info("You cannot change Roll Number on this device.")
@@ -286,6 +295,7 @@ else:
                                 new_row = pd.DataFrame([{"Roll_no": roll_no, "device_id": device_id}])
                                 marked_df = pd.concat([marked_df, new_row], ignore_index=True)
                                 marked_df.to_csv(MARKED_FILE, index=False)
+                                st.session_state['user'] = roll_no
                                 st.success(f"Registered successfully as {roll_no}")
                                 st.rerun()
 
@@ -389,7 +399,7 @@ else:
                                         if location.get("latitude") and location.get("longitude"):
                                             lat = location['latitude']
                                             long = location['longitude']
-                                            if (lat >= 18.020 and lat <= 18.265) and (long >= 83.39 and long <= 83.42):
+                                            if (lat >= 18.09 and lat <= 18.12) and (long >= 83.39 and long <= 83.42):
                                                     st.session_state['user'] = selected
                                                     conn = get_db_connection()
                                                     cur = conn.cursor()
@@ -705,137 +715,80 @@ else:
                                     message_df.to_csv(MESSAGE_FILE, index=False)
                                 # st.rerun()
                             with chat2:
-                                pass
-                                # from collections import Counter 
+                                import ast                                 
+                                roll = st.text_input("Enter your Rollno: ", value = roll_no_tab3, disabled=True) 
+                                with st.expander("🔊 Create a New Poll"):
+                                    question = st.text_input("Poll question")
+                                    option_cols = st.columns(4)
+                                    options = []
+                                    
+                                    for i in range(4):
+                                        opt = option_cols[i].text_input(f"Option {i+1}", key=f"option_{i}")
+                                        if opt:
+                                            options.append(opt)
+                                    
 
-                                # POLLS_FILE = "polls.csv"
-                                # try:
-                                #     df = pd.read_csv(POLLS_FILE)
-                                #     if 'votes' not in df.columns:
-                                #         df['votes'] = '{}'
-                                #     if 'is_active' not in df.columns:
-                                #         df['is_active'] = True
-                                # except FileNotFoundError:
-                                #     df = pd.DataFrame(columns=['poll_id', 'question', 'options', 'votes', 'created_by', 'created_at', 'is_active'])
+                                    if st.button("➕ Create Poll"):
+                                        if question and len(options) >= 2:
+                                            df = pd.DataFrame({'question': question,'options': options, 'votes': [0,0,0,0], 'voted': [[] for _ in options], 'created_by': [roll_no_tab3 for _ in options]})
+                                            df.to_csv(POLLS)
+                                            st.success("Poll created successfully!")
+                                            st.rerun()
+                                        else:
+                                            st.warning("Please enter a question and at least two options.") 
 
-                                # def save_polls():
-                                #     df.to_csv(POLLS_FILE, index=False)
+                                st.write("---")
 
-                                # def create_poll(created_by, question, options):
-                                #     global df
-                                #     poll_id = df['poll_id'].max() + 1 if not df.empty else 1
-                                #     new_poll = {
-                                #         'poll_id': poll_id,
-                                #         'question': question,
-                                #         'options': '|'.join(options),
-                                #         'votes': '{}',
-                                #         'created_by': created_by,
-                                #         'created_at': pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                #         'is_active': True
-                                #     }
-                                #     df = pd.concat([df, pd.DataFrame([new_poll])], ignore_index=True)
-                                #     save_polls()
-                                #     return True
+                                try: 
+                                    df = pd.read_csv(POLLS) 
+                                    options = df['options']
+                                    st.header(df['question'][0]) 
+                                    st.write(f"Created by: {df['created_by'][0]}") 
+                                    choosed = st.radio("Choose any one: ", options=options)
+                                    row_index=0
+                                    if st.button("Submit"):
+                                        if roll in df['voted'][0]:
+                                            st.warning("You've aldready entered!!") 
+                                        elif roll != "":
+                                            df.loc[df['options'] == choosed, 'votes'] += 1
+
+                                            df['voted'] = df['voted'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
 
 
-                                # def get_poll_results(poll_id):
-                                #     poll_row = df[df['poll_id'] == poll_id]
-                                #     if poll_row.empty:
-                                #         return None
-                                #     poll_data = poll_row.iloc[0]
-                                #     options = poll_data['options'].split('|')
-                                #     votes = eval(poll_data['votes']) if poll_data['votes'] else {}
-                                #     results = []
-                                #     for i, option in enumerate(options):
-                                #         voters = votes.get(str(i), [])
-                                #         results.append({
-                                #             'option': option,
-                                #             'votes': len(voters),
-                                #             'voters': voters
-                                #         })
-                                #     return results
+                                            df.at[row_index, 'voted'].append(roll)
 
-                                # def vote_in_poll(poll_id, user_id, option_index):
-                                #     global df
-                                #     poll_index = df.index[df['poll_id'] == poll_id][0]
-                                #     votes = eval(df.at[poll_index, 'votes']) if df.at[poll_index, 'votes'] else {}
-                                #     # Prevent user from voting multiple times
-                                #     for voters in votes.values():
-                                #         if user_id in voters:
-                                #             return False
-                                #     votes.setdefault(str(option_index), []).append(user_id)
-                                #     df.at[poll_index, 'votes'] = str(votes)
-                                #     save_polls()
-                                #     return True
+                                            df.to_csv(POLLS, index=False)
+                                            # st.write(df) 
 
-                                # # Streamlit app UI
+                                        elif roll == "":
+                                            st.warning("Enter Roll NO")
+                                    # st.write(df['voted'][0]) 
+                                except:
+                                    st.info("No Poll created yet!!")
 
-                                # # st.title("Poll Creator & Voter")
+                                st.write("---")
 
-                                # user_id = st.text_input("Create poll with user ID:", value = roll_no_tab3, disabled=True)
+                                try:
+                                    df = pd.read_csv(POLLS) 
+                                    total = 0
+                                    for i in df['votes']:
+                                        total += i 
+                                    st.header("Results Section: ")
+                                    for i,j in enumerate(df['votes']):
+                                        print(f"Option {i}: {j/total * 100}") 
+                                        st.progress(value = j/total, text = f"Option {i+1}: {j/total * 100}%") 
+                                    st.rerun()
+                                except:
+                                    pass 
 
-                                # with st.expander("Create a New Poll"):
-                                #     question = st.text_input("Poll Question:")
-                                #     col1, col2 = st.columns(2)
-                                #     opts = []
-                                #     for i in range(4):
-                                #         with col1 if i % 2 == 0 else col2:
-                                #             opt = st.text_input(f"Option {i+1}", key=f"opt_{i}")
-                                #             if opt:
-                                #                 opts.append(opt)
-                                #     if st.button("Create Poll") and question and len(opts) >= 2:
-                                #         if create_poll(user_id, question, opts):
-                                #             st.success("Poll created successfully!")
-                                #             # st.rerun()                                         
 
-                                # st.write("---")
-
-                                # active_polls = df[df['is_active'] == True]
-
-                                # if active_polls.empty:
-                                #     st.info("No active polls available yet.")
-                                # else:
-                                #     for _, poll in active_polls.iterrows():
-                                #         st.subheader(poll['question'])
-                                #         st.caption(f"Created by: {poll['created_by']} at {poll['created_at']}")
-                                #         options = poll['options'].split('|')
-                                #         results = get_poll_results(poll['poll_id'])
-                                #         user_voted = any(user_id in r['voters'] for r in results) if results else False
-
-                                #         if not user_voted and user_id != "":
-                                #             choice = st.radio("Choose your option:", options, key=str(poll['poll_id']))
-                                #             if st.button("Vote", key=f"vote_{poll['poll_id']}"):
-                                #                 success = vote_in_poll(poll['poll_id'], user_id, options.index(choice))
-                                #                 if success:
-                                #                     st.success("Vote registered!")
-                                #                     st.rerun()
-                                #                 else:
-                                #                     st.error("You've already voted in this poll.")
-                                #         elif user_id == "":
-                                #             st.info("Please enter your user ID to vote.")
-                                #         else:
-                                #             st.info("You have already voted in this poll. Results:")
-
-                                #         if results:
-                                #             total_votes = sum(r['votes'] for r in results)
-                                #             for r in results:
-                                #                 pct = (r['votes'] / total_votes * 100) if total_votes > 0 else 0
-                                #                 st.write(f"**{r['option']}**: {r['votes']} votes ({pct:.1f}%)")
-                                #                 st.progress(pct / 100)
-
-                                #         st.write("---")
-                                #         if st.button("Delete poll", type = 'primary'):
-                                #             try:
-                                #                 df_p = pd.read_csv(POLLS_FILE)
-                                #                 ma = df_p['created_by'].astype(str) == str(user_id)
-                                #                 if not df_p.loc[ma].empty:
-                                #                     df_p=df_p.loc[~ma]
-                                #                     df_p.to_csv(POLLS_FILE, index=False) 
-                                #                     st.rerun()
-                                #                 else:
-                                #                     st.warning("The user id is not matching!!")
-                                #             except Exception as e:
-                                #                 st.error(f"YOU CANNOT DELETE THIS. {e}")
+                                if st.button("Delete Poll", type='primary'):
+                                    if roll == df['created_by'][0]:
+                                        df = pd.DataFrame(columns=['question','options','votes','voted', 'created_by'])
+                                        df.to_csv(POLLS, index=False) 
+                                        # st.rerun()
+                                    else:
+                                        st.error("You cannot do it as your roll no not matching!") 
 
                             with chat3:
                                 st.file_uploader('Drop files here: ',type=["jpg", "jpeg", "png", "csv", "png"],accept_multiple_files=True)
@@ -868,7 +821,7 @@ else:
                                                 per_df.to_csv(PERMISSIONS_FILE, index=False)
                                         else:
                                                 per_df = pd.read_csv(PERMISSIONS_FILE)
-    
+                                            
                                         issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
                                         if st.form_submit_button("Send Request"):
                                                 sanitized_issue = html.escape(str(issue))
@@ -876,7 +829,6 @@ else:
                                                 new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                                 per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                                 per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                                st.session_state["issue"] = ""
                                             
                                         per_df = per_df.sort_index()
                                     st.write("---")
@@ -886,14 +838,16 @@ else:
                                             # st.toast("⌛Your request is pending...")
                                             st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
-                                            # st.toast("🎉Your leave has been approved!", icon="✅") 
-                                            st.success('✅ Your permissions has been approved!!')
+                                    
+                                            st.toast("🎉 Your leave has been approved!", icon="✅", duration='short')
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
-                                            )
+                                                )
+                                            st.success(f'✅ Your permissions for {per_df.loc[per_df['Roll_no'] == Roll_no, 'No_of_days'][0]} days has been granted!!')
+                                            
                                         else:
-                                            # st.toast("Your leave might be rejected!", icon="❌")
+                                            st.toast("Your leave might be rejected!", icon="❌")
                                             st.markdown(
                                                 "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                 unsafe_allow_html=True
@@ -933,6 +887,8 @@ else:
                     _,butt,_= st.columns([1,1,1])
                     with butt:
                         st.download_button(label='📤 Download Leaderboard', file_name=f"{month}Leaderboard.csv", data=leader_df,mime='text/csv', key=f"{month}Leaderboard")
+    
+
                 with tab5:
                     st.title("Previous Attendance Records")
                     user = st.session_state['user']
@@ -1187,8 +1143,6 @@ else:
                             key=f"sept_{user}_download"
                         )
 #   ======================= ADMIN( RAAMANAND: ME ) TAB ============================
-    
-#   ======================= ADMIN( RAAMANAND: ME ) TAB ============================
 
     elif page == "👨‍🔬 Admin":
         st.title("👨‍🔬 Admin Panel")
@@ -1196,7 +1150,7 @@ else:
             with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                 f.write(msg) 
 
-        if st.session_state.get("device_id", None) in ['a9513efb32968fd6881b89f36f221a254578ba203239086a6d39e2a72b5eb847','ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
+        if st.session_state.get("device_id", None) in ['ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
             st.header("📢 Announcement Management")
             message = st.text_input(label = "New Announcement:", placeholder='Enter your messsage...')
             if st.button("🔊 Publish Announcement"):
@@ -1205,7 +1159,7 @@ else:
             if st.button("🔇 Clear Announcement"):
                 write("")
             st.write("---")
-            st.header("📊 System Staistics")
+            st.header("📊 System Statistics")
             x,y,z=st.columns(3)
             with x:
                 st.metric(f"Total Students",len(CLASS_ROLL_NUMBERS))  
@@ -1213,10 +1167,13 @@ else:
                 st.metric(f"Registered Students",len(pd.read_csv(MARKED_FILE)['Roll_no'].tolist()))
             with z:
                 st.metric(f"Today's Attendance", len(pd.read_csv(ATTENDANCE_FILE)[pd.read_csv(ATTENDANCE_FILE)['Date'] == datetime.today().strftime("%Y-%m-%d")]))
-            st.write("---")                 
+            st.write("---")   
+                
             st.header("🔧 System Maintenance")
+            
             if st.button("🔄 Clear All Data", type="secondary"):
-                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS_FILE]:
+                # Clear all data files
+                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS]:
                     if os.path.exists(file):
                         os.remove(file)
                 st.success("All data cleared!")
@@ -1299,7 +1256,7 @@ else:
 
     elif page == "⚙️ Settings":
             st.header("🛠️ Account Settings")
-            with st.form("Change_password"):
+            with st.form("Settings_form"):
                 st.subheader("🔒 Change Password")
                 prev_name=st.text_input("Enter Current Username: ", placeholder=f"E.g: YAKSHRAJ").strip()
                 prev_pass=st.text_input("Enter Current password: ", placeholder='******', type='password').strip()
@@ -1310,7 +1267,7 @@ else:
                     elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
                         password_df.loc[password_df['user_name']==prev_name, 'pass'] = curr_pass 
                         password_df.to_csv(PASS_FILE, index=False)
-                        st.success(f"Password has successfully changed !!")
+                        st.success(f"Password has changed to {password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]}")
         
                     elif password_df.loc[password_df['user_name'] == prev_name].empty or prev_name not in password_df['user_name'].to_list():
                         st.error("User Name is incorrect!")
@@ -1319,47 +1276,4 @@ else:
         
                     else:
                         st.error("❌❌ Error Occured!!")
-                    # Device info
-            st.write("---")
-            st.subheader("📱 Device Information")
-            st.write(f"**Device ID:** {st.session_state['device_id']}")
-            st.write(f"**Session ID:** {get_script_run_ctx().session_id if get_script_run_ctx() else 'N/A'}")
-        
-            st.write("---")
-        
-            if st.button("🚪 Logout", type="primary"):
-                for key in list(st.session_state.keys()):
-                    del st.session_state[key]
-                st.rerun() 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
