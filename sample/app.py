@@ -351,7 +351,7 @@ else:
                             return False 
                         else:
                             return True 
-                tab1, tab2, tab3, tab4 = st.tabs(['🎯 Student/CR', '💬 Chat', '📝 Ask Permission', '🏆 Leaderboard'])
+                tab1, tab2, tab3, tab4, tab5 = st.tabs(['🎯 Student/CR', '💬 Chat', '📝 Ask Permission', '🏆 Leaderboard', '⏮️ Prev Records'])
 #   ======================= STUDENT SECTION =============================                
                 with tab1:
                     st.header('📑 Mark your Attendance')
@@ -1331,6 +1331,7 @@ else:
                 for key in list(st.session_state.keys()):
                     del st.session_state[key]
                 st.rerun() 
+
 
 
 
