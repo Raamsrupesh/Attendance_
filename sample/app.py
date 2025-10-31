@@ -705,136 +705,137 @@ else:
                                     message_df.to_csv(MESSAGE_FILE, index=False)
                                 # st.rerun()
                             with chat2:
-                                from collections import Counter 
+                                pass
+                                # from collections import Counter 
 
-                                POLLS_FILE = "polls.csv"
-                                try:
-                                    df = pd.read_csv(POLLS_FILE)
-                                    if 'votes' not in df.columns:
-                                        df['votes'] = '{}'
-                                    if 'is_active' not in df.columns:
-                                        df['is_active'] = True
-                                except FileNotFoundError:
-                                    df = pd.DataFrame(columns=['poll_id', 'question', 'options', 'votes', 'created_by', 'created_at', 'is_active'])
+                                # POLLS_FILE = "polls.csv"
+                                # try:
+                                #     df = pd.read_csv(POLLS_FILE)
+                                #     if 'votes' not in df.columns:
+                                #         df['votes'] = '{}'
+                                #     if 'is_active' not in df.columns:
+                                #         df['is_active'] = True
+                                # except FileNotFoundError:
+                                #     df = pd.DataFrame(columns=['poll_id', 'question', 'options', 'votes', 'created_by', 'created_at', 'is_active'])
 
-                                def save_polls():
-                                    df.to_csv(POLLS_FILE, index=False)
+                                # def save_polls():
+                                #     df.to_csv(POLLS_FILE, index=False)
 
-                                def create_poll(created_by, question, options):
-                                    global df
-                                    poll_id = df['poll_id'].max() + 1 if not df.empty else 1
-                                    new_poll = {
-                                        'poll_id': poll_id,
-                                        'question': question,
-                                        'options': '|'.join(options),
-                                        'votes': '{}',
-                                        'created_by': created_by,
-                                        'created_at': pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                        'is_active': True
-                                    }
-                                    df = pd.concat([df, pd.DataFrame([new_poll])], ignore_index=True)
-                                    save_polls()
-                                    return True
+                                # def create_poll(created_by, question, options):
+                                #     global df
+                                #     poll_id = df['poll_id'].max() + 1 if not df.empty else 1
+                                #     new_poll = {
+                                #         'poll_id': poll_id,
+                                #         'question': question,
+                                #         'options': '|'.join(options),
+                                #         'votes': '{}',
+                                #         'created_by': created_by,
+                                #         'created_at': pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                #         'is_active': True
+                                #     }
+                                #     df = pd.concat([df, pd.DataFrame([new_poll])], ignore_index=True)
+                                #     save_polls()
+                                #     return True
 
 
-                                def get_poll_results(poll_id):
-                                    poll_row = df[df['poll_id'] == poll_id]
-                                    if poll_row.empty:
-                                        return None
-                                    poll_data = poll_row.iloc[0]
-                                    options = poll_data['options'].split('|')
-                                    votes = eval(poll_data['votes']) if poll_data['votes'] else {}
-                                    results = []
-                                    for i, option in enumerate(options):
-                                        voters = votes.get(str(i), [])
-                                        results.append({
-                                            'option': option,
-                                            'votes': len(voters),
-                                            'voters': voters
-                                        })
-                                    return results
+                                # def get_poll_results(poll_id):
+                                #     poll_row = df[df['poll_id'] == poll_id]
+                                #     if poll_row.empty:
+                                #         return None
+                                #     poll_data = poll_row.iloc[0]
+                                #     options = poll_data['options'].split('|')
+                                #     votes = eval(poll_data['votes']) if poll_data['votes'] else {}
+                                #     results = []
+                                #     for i, option in enumerate(options):
+                                #         voters = votes.get(str(i), [])
+                                #         results.append({
+                                #             'option': option,
+                                #             'votes': len(voters),
+                                #             'voters': voters
+                                #         })
+                                #     return results
 
-                                def vote_in_poll(poll_id, user_id, option_index):
-                                    global df
-                                    poll_index = df.index[df['poll_id'] == poll_id][0]
-                                    votes = eval(df.at[poll_index, 'votes']) if df.at[poll_index, 'votes'] else {}
-                                    # Prevent user from voting multiple times
-                                    for voters in votes.values():
-                                        if user_id in voters:
-                                            return False
-                                    votes.setdefault(str(option_index), []).append(user_id)
-                                    df.at[poll_index, 'votes'] = str(votes)
-                                    save_polls()
-                                    return True
+                                # def vote_in_poll(poll_id, user_id, option_index):
+                                #     global df
+                                #     poll_index = df.index[df['poll_id'] == poll_id][0]
+                                #     votes = eval(df.at[poll_index, 'votes']) if df.at[poll_index, 'votes'] else {}
+                                #     # Prevent user from voting multiple times
+                                #     for voters in votes.values():
+                                #         if user_id in voters:
+                                #             return False
+                                #     votes.setdefault(str(option_index), []).append(user_id)
+                                #     df.at[poll_index, 'votes'] = str(votes)
+                                #     save_polls()
+                                #     return True
 
-                                # Streamlit app UI
+                                # # Streamlit app UI
 
-                                # st.title("Poll Creator & Voter")
+                                # # st.title("Poll Creator & Voter")
 
-                                user_id = st.text_input("Create poll with user ID:", value = roll_no_tab3, disabled=True)
+                                # user_id = st.text_input("Create poll with user ID:", value = roll_no_tab3, disabled=True)
 
-                                with st.expander("Create a New Poll"):
-                                    question = st.text_input("Poll Question:")
-                                    col1, col2 = st.columns(2)
-                                    opts = []
-                                    for i in range(4):
-                                        with col1 if i % 2 == 0 else col2:
-                                            opt = st.text_input(f"Option {i+1}", key=f"opt_{i}")
-                                            if opt:
-                                                opts.append(opt)
-                                    if st.button("Create Poll") and question and len(opts) >= 2:
-                                        if create_poll(user_id, question, opts):
-                                            st.success("Poll created successfully!")
-                                            # st.rerun()                                         
+                                # with st.expander("Create a New Poll"):
+                                #     question = st.text_input("Poll Question:")
+                                #     col1, col2 = st.columns(2)
+                                #     opts = []
+                                #     for i in range(4):
+                                #         with col1 if i % 2 == 0 else col2:
+                                #             opt = st.text_input(f"Option {i+1}", key=f"opt_{i}")
+                                #             if opt:
+                                #                 opts.append(opt)
+                                #     if st.button("Create Poll") and question and len(opts) >= 2:
+                                #         if create_poll(user_id, question, opts):
+                                #             st.success("Poll created successfully!")
+                                #             # st.rerun()                                         
 
-                                st.write("---")
+                                # st.write("---")
 
-                                active_polls = df[df['is_active'] == True]
+                                # active_polls = df[df['is_active'] == True]
 
-                                if active_polls.empty:
-                                    st.info("No active polls available yet.")
-                                else:
-                                    for _, poll in active_polls.iterrows():
-                                        st.subheader(poll['question'])
-                                        st.caption(f"Created by: {poll['created_by']} at {poll['created_at']}")
-                                        options = poll['options'].split('|')
-                                        results = get_poll_results(poll['poll_id'])
-                                        user_voted = any(user_id in r['voters'] for r in results) if results else False
+                                # if active_polls.empty:
+                                #     st.info("No active polls available yet.")
+                                # else:
+                                #     for _, poll in active_polls.iterrows():
+                                #         st.subheader(poll['question'])
+                                #         st.caption(f"Created by: {poll['created_by']} at {poll['created_at']}")
+                                #         options = poll['options'].split('|')
+                                #         results = get_poll_results(poll['poll_id'])
+                                #         user_voted = any(user_id in r['voters'] for r in results) if results else False
 
-                                        if not user_voted and user_id != "":
-                                            choice = st.radio("Choose your option:", options, key=str(poll['poll_id']))
-                                            if st.button("Vote", key=f"vote_{poll['poll_id']}"):
-                                                success = vote_in_poll(poll['poll_id'], user_id, options.index(choice))
-                                                if success:
-                                                    st.success("Vote registered!")
-                                                    st.rerun()
-                                                else:
-                                                    st.error("You've already voted in this poll.")
-                                        elif user_id == "":
-                                            st.info("Please enter your user ID to vote.")
-                                        else:
-                                            st.info("You have already voted in this poll. Results:")
+                                #         if not user_voted and user_id != "":
+                                #             choice = st.radio("Choose your option:", options, key=str(poll['poll_id']))
+                                #             if st.button("Vote", key=f"vote_{poll['poll_id']}"):
+                                #                 success = vote_in_poll(poll['poll_id'], user_id, options.index(choice))
+                                #                 if success:
+                                #                     st.success("Vote registered!")
+                                #                     st.rerun()
+                                #                 else:
+                                #                     st.error("You've already voted in this poll.")
+                                #         elif user_id == "":
+                                #             st.info("Please enter your user ID to vote.")
+                                #         else:
+                                #             st.info("You have already voted in this poll. Results:")
 
-                                        if results:
-                                            total_votes = sum(r['votes'] for r in results)
-                                            for r in results:
-                                                pct = (r['votes'] / total_votes * 100) if total_votes > 0 else 0
-                                                st.write(f"**{r['option']}**: {r['votes']} votes ({pct:.1f}%)")
-                                                st.progress(pct / 100)
+                                #         if results:
+                                #             total_votes = sum(r['votes'] for r in results)
+                                #             for r in results:
+                                #                 pct = (r['votes'] / total_votes * 100) if total_votes > 0 else 0
+                                #                 st.write(f"**{r['option']}**: {r['votes']} votes ({pct:.1f}%)")
+                                #                 st.progress(pct / 100)
 
-                                        st.write("---")
-                                        if st.button("Delete poll", type = 'primary'):
-                                            try:
-                                                df_p = pd.read_csv(POLLS_FILE)
-                                                ma = df_p['created_by'].astype(str) == str(user_id)
-                                                if not df_p.loc[ma].empty:
-                                                    df_p=df_p.loc[~ma]
-                                                    df_p.to_csv(POLLS_FILE, index=False) 
-                                                    st.rerun()
-                                                else:
-                                                    st.warning("The user id is not matching!!")
-                                            except Exception as e:
-                                                st.error(f"YOU CANNOT DELETE THIS. {e}")
+                                #         st.write("---")
+                                #         if st.button("Delete poll", type = 'primary'):
+                                #             try:
+                                #                 df_p = pd.read_csv(POLLS_FILE)
+                                #                 ma = df_p['created_by'].astype(str) == str(user_id)
+                                #                 if not df_p.loc[ma].empty:
+                                #                     df_p=df_p.loc[~ma]
+                                #                     df_p.to_csv(POLLS_FILE, index=False) 
+                                #                     st.rerun()
+                                #                 else:
+                                #                     st.warning("The user id is not matching!!")
+                                #             except Exception as e:
+                                #                 st.error(f"YOU CANNOT DELETE THIS. {e}")
 
                             with chat3:
                                 st.file_uploader('Drop files here: ',type=["jpg", "jpeg", "png", "csv", "png"],accept_multiple_files=True)
@@ -1076,6 +1077,7 @@ else:
                 for key in list(st.session_state.keys()):
                     del st.session_state[key]
                 st.rerun() 
+
 
 
 
