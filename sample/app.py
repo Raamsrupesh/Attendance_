@@ -957,7 +957,13 @@ else:
                 st.metric(f"Registered Students",len(pd.read_csv(MARKED_FILE)['Roll_no'].tolist()))
             with z:
                 st.metric(f"Today's Attendance", len(pd.read_csv(ATTENDANCE_FILE)[pd.read_csv(ATTENDANCE_FILE)['Date'] == datetime.today().strftime("%Y-%m-%d")]))
-            st.write("---")   
+            st.write("---")                 
+            st.header("🔧 System Maintenance")
+            if st.button("🔄 Clear All Data", type="secondary"):
+                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS]:
+                    if os.path.exists(file):
+                        os.remove(file)
+                st.success("All data cleared!")
         else:
             st.error("🚫 Access denied. Admin privileges required.")
 
@@ -1056,6 +1062,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
