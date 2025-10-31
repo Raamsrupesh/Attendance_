@@ -1276,5 +1276,9 @@ else:
         
                     else:
                         st.error("❌❌ Error Occured!!")
+    elif page == "🪧 NoticeBoard":
+        st.info("No significant highlights are available!!") 
+        
+
 
 
