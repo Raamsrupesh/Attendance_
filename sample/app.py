@@ -125,7 +125,7 @@ else:
 
 #   ================================================================================
 
-    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings"], index=1)
+    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🚪 Logout"], index=1)
     import html
 
 #   =========================== MENTOR PORTAL =================================
@@ -1072,10 +1072,12 @@ else:
                 
                 # Logout
             st.write("---")
-            if st.button("🚪 Logout", type="primary"):
-                for key in list(st.session_state.keys()):
-                    del st.session_state[key]
-                st.rerun()
+        
+    elif page == '🚪 Logout:
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+
 
 
 
