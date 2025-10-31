@@ -1150,7 +1150,7 @@ else:
             with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                 f.write(msg) 
 
-        if st.session_state.get("device_id", None) in ['ae13c33d3dadf2fce93466719f317f193a866f82785e41159b5ac6e09cc23901','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755', '0ef9971b655434bcc90d4be635d49525a96e83b6843d22922e5eb0a3ec7d0939', '924bbb24123b5c091969aac6db8d0bcd17ca4966064cbfe21e017d345e58bf90', '1f755f8ba87ca0d627d2f73c3fbfd2f6d5deda9e18cf4ec81226ab77c77cc10d']:
+        if st.session_state.get("device_id", None) in ['a9513efb32968fd6881b89f36f221a254578ba203239086a6d39e2a72b5eb847','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755']:
             st.header("📢 Announcement Management")
             message = st.text_input(label = "New Announcement:", placeholder='Enter your messsage...')
             if st.button("🔊 Publish Announcement"):
@@ -1276,10 +1276,22 @@ else:
         
                     else:
                         st.error("❌❌ Error Occured!!")
+            st.write("---")
+            st.subheader("📱 Device Information")
+            st.write(f"**Device ID:** {st.session_state['device_id']}")
+            st.write(f"**Session ID:** {get_script_run_ctx().session_id if get_script_run_ctx() else 'N/A'}")
+        
+            st.write("---")
+        
+            if st.button("🚪 Logout", type="primary"):
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.rerun() 
     elif page == "🪧 NoticeBoard":
         st.title("🪧 NoticeBoard")
         st.info("No significant highlights are available!!") 
         
+
 
 
 
