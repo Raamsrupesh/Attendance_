@@ -272,7 +272,7 @@ else:
                     st.write(f"Device ID: {device_id}")
                 else:
                     name = st.text_input("Enter your Name:")
-                    roll_no = st.text_input("Enter your Roll Number:")
+                    roll_no = st.selectbox("Enter your Roll Number:", CLASS_ROLL_NUMBERS)
                     if st.button("Register"):
                         if not name or not roll_no:
                             st.error("Please fill in all fields.")
@@ -1064,6 +1064,7 @@ else:
         
                     else:
                         st.error("❌❌ Error Occured!!")
+
 
 
 
