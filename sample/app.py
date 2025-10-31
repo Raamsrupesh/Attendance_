@@ -1067,7 +1067,7 @@ else:
                     # Device info
                 st.write("---")
                 st.subheader("📱 Device Information")
-                st.write(f"**Device ID:** {get_device_id()}")
+                st.write(f"**Device ID:** {st.session_state['device_id']}")
                 st.write(f"**Session ID:** {get_script_run_ctx().session_id if get_script_run_ctx() else 'N/A'}")
                 
                 # Logout
@@ -1076,6 +1076,7 @@ else:
                     for key in list(st.session_state.keys()):
                         del st.session_state[key]
                     st.rerun()
+
 
 
 
