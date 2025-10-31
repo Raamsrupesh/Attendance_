@@ -859,24 +859,25 @@ else:
                                 if st.session_state['user'] is not None and roll_no_tab3 != st.session_state['user']:
                                     st.error("Provide the Valid Roll NO first!")
                                 else:
-                                    st.subheader("New Permission request")
-                                    no_of_days = st.slider("Number of days: ", min_value=1, max_value=10)
-                                    if not os.path.exists(PERMISSIONS_FILE):
-                                            per_df = pd.DataFrame(columns=['Roll_no', 'Reason', 'Granted', "No_of_days"])
-                                            per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                    else:
-                                            per_df = pd.read_csv(PERMISSIONS_FILE)
-
-                                    issue = st.text_input("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
-                                    if st.button("Send Request"):
-                                            sanitized_issue = html.escape(str(issue))
-                                            sanitized_days = html.escape(str(no_of_days))
-                                            new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
-                                            per_df = pd.concat([per_df, new_msg], ignore_index=True)
-                                            per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                            st.session_state["issue"] = ""
-                                        
-                                    per_df = per_df.sort_index()
+                                    with st.form("permission_form", clear_on_submit=True):
+                                        st.subheader("New Permission request")
+                                        no_of_days = st.slider("Number of days: ", min_value=1, max_value=10)
+                                        if not os.path.exists(PERMISSIONS_FILE):
+                                                per_df = pd.DataFrame(columns=['Roll_no', 'Reason', 'Granted', "No_of_days"])
+                                                per_df.to_csv(PERMISSIONS_FILE, index=False)
+                                        else:
+                                                per_df = pd.read_csv(PERMISSIONS_FILE)
+    
+                                        issue = st.text_area("Reason for leave",placeholder="Explain your reason briefly...", key="permission_input")
+                                        if st.form_submit_button("Send Request"):
+                                                sanitized_issue = html.escape(str(issue))
+                                                sanitized_days = html.escape(str(no_of_days))
+                                                new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
+                                                per_df = pd.concat([per_df, new_msg], ignore_index=True)
+                                                per_df.to_csv(PERMISSIONS_FILE, index=False)
+                                                st.session_state["issue"] = ""
+                                            
+                                        per_df = per_df.sort_index()
                                     st.write("---")
                                     st.subheader("📑 Requested Permissions report")
                                     if Roll_no in per_df['Roll_no'].values:
@@ -1043,11 +1044,12 @@ else:
 
     elif page == "⚙️ Settings":
             st.header("🛠️ Account Settings")
+        with st.form("Change_password"):
             st.subheader("🔒 Change Password")
             prev_name=st.text_input("Enter Current Username: ", placeholder=f"E.g: YAKSHRAJ").strip()
             prev_pass=st.text_input("Enter Current password: ", placeholder='******', type='password').strip()
             curr_pass=st.text_input("Enter New password: ", placeholder="******", type='password').strip()
-            if st.button("Update Password"):
+            if st.form_submit_button("Update Password"):
                 if prev_name == "" or prev_pass == "" or curr_pass == "":
                     st.warning("All fields are required!!")
                 elif not password_df.loc[password_df['user_name'] == prev_name, 'pass'].empty and prev_pass == password_df.loc[password_df['user_name'] == prev_name, 'pass'].values[0]:
@@ -1062,6 +1064,7 @@ else:
     
                 else:
                     st.error("❌❌ Error Occured!!")
+
 
 
 
