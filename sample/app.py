@@ -1073,9 +1073,10 @@ else:
             st.write("---")
         
             if st.button("🚪 Logout", type="primary"):
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun() 
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.rerun() 
+
 
 
 
