@@ -1069,14 +1069,14 @@ else:
             st.subheader("📱 Device Information")
             st.write(f"**Device ID:** {st.session_state['device_id']}")
             st.write(f"**Session ID:** {get_script_run_ctx().session_id if get_script_run_ctx() else 'N/A'}")
-                
-                # Logout
+        
             st.write("---")
         
-    elif page == '🚪 Logout':
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+            if st.button("Logout", text = "primary"):
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.rerun()
+
 
 
 
