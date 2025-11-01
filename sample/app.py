@@ -1291,6 +1291,7 @@ else:
         
     elif page == "🧑‍🍼 Feedback":
         st.title("Drop your feedback here (if any) !")
+        st.write("---")
         with st.form("FeedbackForm"):
             feed_name = st.text_input("Kindly enter your name:") 
             feedback = st.text_area("Feedback form: ", placeholder = 'Type your feedback here!!')
@@ -1304,6 +1305,8 @@ else:
                     time.sleep(2)
                 elif feed_name == "":
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
+         st.write("---")
+
 
 
 
