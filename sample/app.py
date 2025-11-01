@@ -128,7 +128,7 @@ else:
 
 #   ================================================================================
 
-    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🪧 NoticeBoard"], index=1)
+    page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🪧 NoticeBoard", "🧑‍🍼 Feedback"], index=1)
     import html
     # from streamlit_autorefresh import st_autorefresh
     # st_autorefresh(interval=3000, key='mentor_refresh')
@@ -1277,4 +1277,20 @@ else:
         st.title("🪧 NoticeBoard")
         st.info("No significant highlights are available!!") 
         
+    elif page == "🧑‍🍼 Feedback":
+        st.title("Drop your feedback here (if any) !")
+        with st.form("FeedbackForm"):
+            feed_name = st.text_input("Kindly enter your name:") 
+            feedback = st.text_area("Feedback form: ", placeholder = 'Type it here!!')
+            if st.form_submit_button("Submit!"):
+                if feedback != "" and feed_name != "":
+                    if not os.path.exists("feedback.csv"):
+                        feedback_df = pd.DataFrame({'name':[feed_name], 'feedback': [feedback]})
+                        feedback_df.to_csv('feedback.csv', index=False) 
+                    st.success("🙏 Thank you for giving your feedback!!")
+                    import time
+                    time.sleep(2)
+                elif feed_name == "":
+                    st.warning("Kindly enter the name you wanted to be appeleated with!")
+
 
