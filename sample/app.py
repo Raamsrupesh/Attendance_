@@ -422,12 +422,20 @@ else:
                                                             attendance_df.to_csv(ATTENDANCE_FILE, index=False)
                                                             
                                                         st.success(f"You ({selected}) are now marked as present for {today}!")
+                                                        import time
+                                                        time.sleep(2)
                                                         
                                             else:
-                                                st.error("Your Location is not matching i.e you aren't there in college!!")
+                                                import time
+                                                time.sleep(2)
+                                                st.error("⚠️ Your Location is not matching i.e you aren't there in college!!")
                                         else:
                                             st.error(f"Didn't fetch location, open settings and grant permission of accessing Loaction for this device!!")
+                                            import time
+                                            time.sleep(2)
                                     else:
+                                            import time
+                                            time.sleep(2)
                                             st.error('WRONG PASSWORD!!')
                                 try:
                                     import datetime
@@ -1318,6 +1326,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
