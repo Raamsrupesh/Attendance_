@@ -76,7 +76,6 @@ if 'user_authenticated' not in st.session_state:
 
 if 'user' not in st.session_state:
     st.session_state.user = None 
-global saved_roll
 if not st.session_state.user_authenticated:
     st.header("🔐 Sign In / Register")
     action = st.radio("Select Action", ["Sign In", "Register"], index=0)
@@ -1292,6 +1291,7 @@ else:
         st.title("🪧 NoticeBoard")
         st.info("No significant highlights are available!!") 
         
+
 
 
 
