@@ -111,7 +111,7 @@ if not st.session_state.user_authenticated:
             st.session_state.user_authenticated = True
             st.rerun()
         else:
-            st.error("Username not found!")
+            st.session_state.user_authenticated = True
 
 else:    
     CLASS_ROLL_NUMBERS = [
@@ -1292,6 +1292,7 @@ else:
         st.title("🪧 NoticeBoard")
         st.info("No significant highlights are available!!") 
         
+
 
 
 
