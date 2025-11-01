@@ -98,7 +98,6 @@ if not st.session_state.user_authenticated:
 #   ========================== SIGN IN TAB ==========================
 
     elif action == "Sign In":
-    if st.button("Sign In"):
         if user_name in password_df['user_name'].to_list():
             stored_password = password_df.loc[password_df['user_name'] == user_name, 'pass'].values
             if stored_password.size > 0 and stored_password[0] == user_password:
@@ -1293,6 +1292,7 @@ else:
         st.title("🪧 NoticeBoard")
         st.info("No significant highlights are available!!") 
         
+
 
 
 
