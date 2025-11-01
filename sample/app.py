@@ -1305,7 +1305,9 @@ else:
                     time.sleep(2)
                 elif feed_name == "":
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
-         st.write("---")
+        st.write("---")
+         
+
 
 
 
