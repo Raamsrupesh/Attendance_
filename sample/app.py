@@ -20,6 +20,7 @@ PERMISSIONS_FILE = 'permissions.csv'
 MESSAGE_FILE = "messages.csv"
 MARKED_FILE = "marked.csv"
 POLLS = 'polls.csv'
+FEEDBACK_FILE = 'feedback.csv'
 
 #   =========================================================================
 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
@@ -1157,7 +1158,7 @@ else:
             if st.button("🔇 Clear Announcement"):
                 write("")
             st.write("---")
-            st.header("📊 System Staistics")
+            st.header("📊 System Statistics")
             x,y,z=st.columns(3)
             with x:
                 st.metric(f"Total Students",len(CLASS_ROLL_NUMBERS))  
@@ -1281,16 +1282,17 @@ else:
         st.title("Drop your feedback here (if any) !")
         with st.form("FeedbackForm"):
             feed_name = st.text_input("Kindly enter your name:") 
-            feedback = st.text_area("Feedback form: ", placeholder = 'Type it here!!')
+            feedback = st.text_area("Feedback form: ", placeholder = 'Type your feedback here!!')
             if st.form_submit_button("Submit!"):
                 if feedback != "" and feed_name != "":
-                    if not os.path.exists("feedback.csv"):
+                    if not os.path.exists(FEEDBACK_FILE):
                         feedback_df = pd.DataFrame({'name':[feed_name], 'feedback': [feedback]})
-                        feedback_df.to_csv('feedback.csv', index=False) 
+                        feedback_df.to_csv(FEEDBACK_FILE, index=False) 
                     st.success("🙏 Thank you for giving your feedback!!")
                     import time
                     time.sleep(2)
                 elif feed_name == "":
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
+
 
 
