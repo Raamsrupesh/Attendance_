@@ -24,7 +24,7 @@ FEEDBACK_FILE = 'feedback.csv'
 
 #   =========================================================================
 TEA_CR_PASSWORD = f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'
-rep_password = 'REP123'
+rep_password = f'{chr(82)+chr(69)}P{chr(84)+chr(69)}'
 
 #   ===================== MARQUEE ===========================================
 def read():
@@ -100,11 +100,11 @@ if not st.session_state.user_authenticated:
     elif action == "Sign In":
         if st.button("Sign In"):
             if user_name in password_df['user_name'].to_list():
-                stored_password = password_df.loc[password_df['user_name'] == user_name, 'pass'].values
+                stored_password = password_df.loc[password_df['user_name'].str.strip() == user_name, 'pass'].values
                 if stored_password.size > 0 and stored_password[0] == user_password:
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
-                    # st.rerun() 
+                    st.rerun() 
                 else:
                     st.error("Wrong password!")
             elif user_name=="" and user_password == chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
@@ -1307,6 +1307,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
