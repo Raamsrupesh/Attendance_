@@ -1159,17 +1159,28 @@ else:
                 write("")
             st.write("---")
             st.header("📊 System Statistics")
-            x,y,z=st.columns(3)
-            with x:
-                st.metric(f"Total Students",len(CLASS_ROLL_NUMBERS))  
-            with y:
-                st.metric(f"Registered Students",len(pd.read_csv(MARKED_FILE)['Roll_no'].tolist()))
-            with z:
-                st.metric(f"Today's Attendance", len(pd.read_csv(ATTENDANCE_FILE)[pd.read_csv(ATTENDANCE_FILE)['Date'] == datetime.today().strftime("%Y-%m-%d")]))
-            st.write("---")                 
+            try:
+                x,y,z=st.columns(3)
+                with x:
+                    st.metric(f"Total Students",len(CLASS_ROLL_NUMBERS))  
+                with y:
+                    st.metric(f"Registered Students",len(pd.read_csv(MARKED_FILE)['Roll_no'].tolist()))
+                with z:
+                    st.metric(f"Today's Attendance", len(pd.read_csv(ATTENDANCE_FILE)[pd.read_csv(ATTENDANCE_FILE)['Date'] == datetime.today().strftime("%Y-%m-%d")]))
+            except:
+                st.error("Files not created yet!!")
+            st.write("---")  
+            try:
+                st.header("User Feedbacks: ")
+                feedback_df = pd.read_csv(FEEDBACK_FILE) 
+                for i,j in feedback_df.iterrows():
+                    st.write(f"{j[0]}: {j[1]}")    
+            except:
+                st.info("No one has yet given the feedback!!")           
+            st.write("---")
             st.header("🔧 System Maintenance")
             if st.button("🔄 Clear All Data", type="secondary"):
-                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS]:
+                for file in [ATTENDANCE_FILE, MESSAGE_FILE, PERMISSIONS_FILE, POLLS, FEEDBACK_FILE]:
                     if os.path.exists(file):
                         os.remove(file)
                 st.success("All data cleared!") 
@@ -1293,6 +1304,7 @@ else:
                     time.sleep(2)
                 elif feed_name == "":
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
+
 
 
 
