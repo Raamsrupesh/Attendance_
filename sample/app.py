@@ -821,7 +821,7 @@ else:
                                     st.error("Provide the Valid Roll NO first!")
                                 else:
                                     with st.form("permission_form", clear_on_submit=True):
-                                        st.subheader("New Permission request")
+                                        st.subheader("New Leave Application Form:")
                                         no_of_days = st.slider("Number of days: ", min_value=1, max_value=10)
                                         if not os.path.exists(PERMISSIONS_FILE):
                                                 per_df = pd.DataFrame(columns=['Roll_no', 'Reason', 'Granted', "No_of_days"])
@@ -1327,6 +1327,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
