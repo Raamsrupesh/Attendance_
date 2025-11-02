@@ -788,14 +788,16 @@ else:
                                 except:
                                     pass 
 
-
-                                if st.button("Delete Poll", type='primary'):
-                                    if roll == df['created_by'][0]:
-                                        df = pd.DataFrame(columns=['question','options','votes','voted', 'created_by'])
-                                        df.to_csv(POLLS, index=False) 
-                                        # st.rerun()
-                                    else:
-                                        st.error("You cannot do it as your roll no not matching!") 
+                                try:
+                                    if st.button("Delete Poll", type='primary'):
+                                        if roll == df['created_by'][0]:
+                                            df = pd.DataFrame(columns=['question','options','votes','voted', 'created_by'])
+                                            df.to_csv(POLLS, index=False) 
+                                            # st.rerun()
+                                        else:
+                                            st.error("You cannot do it as your roll no not matching!") 
+                                except:
+                                    pass
 
                             with chat3:
                                 st.file_uploader('Drop files here: ',type=["jpg", "jpeg", "png", "csv", "png"],accept_multiple_files=True)
@@ -1327,6 +1329,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
