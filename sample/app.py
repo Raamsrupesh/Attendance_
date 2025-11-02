@@ -1311,9 +1311,10 @@ else:
     elif page == "🧑‍🍼 Feedback":
         st.title("Drop your feedback here (if any) !")
         st.write("---")
+        st.subheader("Feedback form:")
         with st.form("FeedbackForm"):
-            feed_name = st.text_input("Kindly enter your name:") 
-            feedback = st.text_area("Feedback form: ", placeholder = 'Type your feedback here!!')
+            feed_name = st.text_input("Name:") 
+            feedback = st.text_area("Feedback: ", placeholder = 'Type your feedback here!!')
             if st.form_submit_button("Submit!"):
                 if feedback != "" and feed_name != "":
                     if not os.path.exists(FEEDBACK_FILE):
@@ -1326,6 +1327,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
