@@ -159,7 +159,7 @@ else:
                                 )
                                 
                             st.session_state['checked'] = st.checkbox(
-                                f"{sanitized_roll}: {sanitized_msg} for {santized_for} days",
+                                f"{sanitized_roll}: {sanitized_msg}. So student needs leave for {santized_for} days",
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
                             )
@@ -1340,7 +1340,6 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
-
 
 
 
