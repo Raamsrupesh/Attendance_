@@ -1330,7 +1330,8 @@ else:
                 elif feed_name == "":
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
-         
+st.caption("~ An app made by Saketh (Rupesh) on 27-10-2025")
+
 
 
 
