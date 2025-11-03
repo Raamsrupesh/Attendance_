@@ -1202,7 +1202,7 @@ else:
     elif page == "ℹ️ About":
             from datetime import datetime
 
-            APP_NAME = "VeriClassixPro"
+            APP_NAME = "Presaloc Pro"
             VERSION = "v2.0"
             DEVELOPER = "Raamanand"
             LAST_UPDATE = datetime(2025, 10, 27)
@@ -1210,7 +1210,7 @@ else:
             about_header = f"""
              # Welcome to **{APP_NAME}** app!
 
-             A professional system designed to verify and secure attendance across classes (students, CRs, mentors, admins), all with advanced, modern technology and strict validation.
+             A professional system designed to verify and secure attendance across classes (students, CRs, mentors, admin), all with advanced, modern technology and strict validation.
             
             ---
             Updated Recently on: {LAST_UPDATE}\n
@@ -1331,6 +1331,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
