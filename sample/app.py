@@ -1208,7 +1208,7 @@ else:
             LAST_UPDATE = datetime(2025, 10, 27)
 
             about_header = f"""
-            # Welcome to **{APP_NAME}** app!
+             Welcome to **{APP_NAME}** app!
             
             ---
             Updated Recently on: {LAST_UPDATE}\n
@@ -1329,6 +1329,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
