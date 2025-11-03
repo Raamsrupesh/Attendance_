@@ -147,6 +147,7 @@ else:
                         for idx, row in per_df.iterrows():
                             sanitized_roll = html.escape(str(row['Roll_no']))
                             sanitized_msg = html.escape(str(row['Reason']))
+                            santized_for = html.escape(str(row['No_of_days'])) 
                             key=f"checkbox_{idx}"
                             if key not in st.session_state:
                                 st.session_state[key] = bool(per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'].values[0])
@@ -158,7 +159,7 @@ else:
                                 )
                                 
                             st.session_state['checked'] = st.checkbox(
-                                f"{sanitized_roll}: {sanitized_msg}",
+                                f"{sanitized_roll}: {sanitized_msg} for {santized_for} days",
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
                             )
@@ -1339,6 +1340,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
