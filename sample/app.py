@@ -144,7 +144,6 @@ else:
                         per_df = pd.read_csv(PERMISSIONS_FILE) 
                         st.write("---")
                         st.subheader("📋 Permission Requests")
-                        st.rerun()
                         for idx, row in per_df.iterrows():
                             sanitized_roll = html.escape(str(row['Roll_no']))
                             sanitized_msg = html.escape(str(row['Reason']))
@@ -1340,6 +1339,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
