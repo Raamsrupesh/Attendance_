@@ -842,25 +842,30 @@ else:
                                         per_df = per_df.sort_index()
                                     st.write("---")
                                     st.subheader("📑 Requested Permissions report")
+                                    st.session_state[f"{Roll_no}"] = False
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
-                                            # st.toast("⌛Your request is pending...")
-                                            st.warning(f"😥😥Your case is still in **PENDING**")
+                                            if not st.session_state[f"{Roll_no}"]:
+                                                st.warning(f"😥😥Your case is still in **PENDING**")
+                                                st.session_state[f"{Roll_no}"] = True 
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
-                                    
-                                            st.toast("🎉 Your leave has been approved!", icon="✅", duration='short')
-                                            st.markdown(
-                                                "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
-                                                unsafe_allow_html=True
-                                                )
+                                            if not st.session_state[f"{Roll_no}"]:
+                                                st.toast("🎉 Your leave has been approved!", icon="✅", duration='short')
+                                                st.markdown(
+                                                    "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
+                                                    unsafe_allow_html=True
+                                                    )
+                                                st.session_state[f"{Roll_no}"] = True 
                                             st.success(f'✅ Your permissions for {per_df.loc[per_df['Roll_no'] == Roll_no, 'No_of_days'][0]} days has been granted!!')
                                             
                                         else:
-                                            st.toast("Your leave might be rejected!", icon="❌")
-                                            st.markdown(
-                                                "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
-                                                unsafe_allow_html=True
-                                            )
+                                            if not st.session_state[f"{Roll_no}"]:
+                                                st.toast("Your leave might be rejected!", icon="❌")
+                                                st.markdown(
+                                                    "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
+                                                    unsafe_allow_html=True
+                                                )
+                                                st.session_state[f"{Roll_no}"] = True 
                                             st.error('😑😑The Mentor has **MIGHT BE REJECTED** your leave!!')
                                     else:
                                         st.write("You didn't raise any permission request!!")
@@ -1331,6 +1336,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
