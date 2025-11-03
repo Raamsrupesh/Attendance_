@@ -125,7 +125,7 @@ else:
 #   ============================== LOGO BAR ========================================
 
     st.logo("https://user-gen-media-assets.s3.amazonaws.com/seedream_images/e12a6ea7-3195-4197-97dd-47a453f95487.png", size="medium")    
-    st.sidebar.image("https://icon2.cleanpng.com/20180424/vdq/avttdstoo.webp")
+    st.sidebar.image("https://user-gen-media-assets.s3.amazonaws.com/seedream_images/e12a6ea7-3195-4197-97dd-47a453f95487.png")
 
 #   ================================================================================
 
@@ -1331,6 +1331,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
