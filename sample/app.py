@@ -125,7 +125,7 @@ else:
 #   ============================== LOGO BAR ========================================
 
     st.logo("https://media.canva.com/v2/download/name:I+want+an+image+for+a+logo+for+an+app+in+which+viewers+are+students+and+professionals+so+keep+this+logo+modern+and+it+should+have+%27RR%27+as+the+symbol+it+should+be+professional+and+modern+as+well_and+create+images+DISCLAIMER_+_nothing+should+be+written.jpg/uri:ifs%3A%2F%2FM%2F399e6685-f853-4f80-9dd7-ae0854ccda82?csig=AAAAAAAAAAAAAAAAAAAAAAnz1DZlMocG-RS6nJwvAm-YTwrfHHlHJKZ3YdP9ZCAn&exp=1762146852&signer=media-rpc&token=AAIAAU0AJDM5OWU2Njg1LWY4NTMtNGY4MC05ZGQ3LWFlMDg1NGNjZGE4MgAAAAABmkjH6p-lVA6GzMMzwFXaQwAD4BMkoPveZf6IOiCwedOBOKWsJQ", size="medium")    
-    st.sidebar.image("https://media.canva.com/v2/download/name:I+want+an+image+for+a+logo+for+an+app+in+which+viewers+are+students+and+professionals+so+keep+this+logo+modern+and+it+should+have+%27RR%27+as+the+symbol+it+should+be+professional+and+modern+as+well_and+create+images+DISCLAIMER_+_nothing+should+be+written.jpg/uri:ifs%3A%2F%2FM%2F399e6685-f853-4f80-9dd7-ae0854ccda82?csig=AAAAAAAAAAAAAAAAAAAAAAnz1DZlMocG-RS6nJwvAm-YTwrfHHlHJKZ3YdP9ZCAn&exp=1762146852&signer=media-rpc&token=AAIAAU0AJDM5OWU2Njg1LWY4NTMtNGY4MC05ZGQ3LWFlMDg1NGNjZGE4MgAAAAABmkjH6p-lVA6GzMMzwFXaQwAD4BMkoPveZf6IOiCwedOBOKWsJQ")
+    st.sidebar.image("https://tse2.mm.bing.net/th/id/OIP.pxzctoeqjVO7cxvHl2M1uQHaHa?pid=ImgDet&w=202&h=202&c=7&o=7&rm=3")
 
 #   ================================================================================
 
@@ -1331,6 +1331,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
