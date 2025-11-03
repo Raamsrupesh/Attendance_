@@ -161,16 +161,17 @@ else:
                                 f"{sanitized_roll}: {sanitized_msg}",
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
-                                st.rerun()
                             )
                             
 
                             if st.session_state['checked']:
                                 st.write(f"Accepted: {sanitized_roll}")
                                 per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = True 
+                                
 
                             else:
                                 per_df.loc[per_df['Roll_no'] == sanitized_roll, 'Granted'] = False  
+                            st.rerun()
                             per_df.to_csv(PERMISSIONS_FILE, index=False)
 
                         if st.button("🔁 Clear", key="Mentor_erasing"):
@@ -1339,6 +1340,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
