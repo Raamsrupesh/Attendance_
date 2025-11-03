@@ -1202,13 +1202,13 @@ else:
     elif page == "ℹ️ About":
             from datetime import datetime
 
-            APP_NAME = "EduPresence Fortress"
+            APP_NAME = "VeriClassixPro"
             VERSION = "v2.0"
             DEVELOPER = "Raamanand"
             LAST_UPDATE = datetime(2025, 10, 27)
 
             about_header = f"""
-            # {APP_NAME}
+            # Welcome to **{APP_NAME}** app!
             
             ---
             Updated Recently on: {LAST_UPDATE}\n
@@ -1329,6 +1329,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
