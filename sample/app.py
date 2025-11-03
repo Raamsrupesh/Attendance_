@@ -131,8 +131,8 @@ else:
 
     page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🪧 NoticeBoard", "🧑‍🍼 Feedback"], index=1)
     import html
-    # from streamlit_autorefresh import st_autorefresh
-    # st_autorefresh(interval=3000, key='mentor_refresh')
+    from streamlit_autorefresh import st_autorefresh
+    st_autorefresh(interval=5000, key='mentor_refresh')
 
 #   =========================== MENTOR PORTAL =================================
 
@@ -1339,6 +1339,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
