@@ -1204,7 +1204,7 @@ else:
 
             APP_NAME = "Presaloc Pro"
             VERSION = "v2.0"
-            DEVELOPER = "Raamanand"
+            DEVELOPER = "Saketh (Rupesh)"
             LAST_UPDATE = datetime(2025, 10, 27)
 
             about_header = f"""
@@ -1267,9 +1267,9 @@ else:
                     )
 
             with st.expander("Meet the Developer"):
-                st.write("Created by Raamanand, a student developer passionate about practical AI solutions.")
+                st.write("Created by Saketh (Rupesh), a student developer passionate about practical AI solutions.")
 
-            st.download_button("Download App Manual", """~ A Website made by Raamanand.""", file_name="manual.txt")
+            st.download_button("Download App Manual", """~ A Website made by Saketh (Rupesh).""", file_name="manual.txt")
 
 #   ======================= SETTINGS TAB ========================
 
@@ -1331,6 +1331,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
