@@ -838,9 +838,9 @@ else:
                                                 new_msg = pd.DataFrame({"Roll_no": [roll_no_tab3], "Reason": [sanitized_issue], "No_of_days": [sanitized_days], "Granted": ['Pending']})
                                                 per_df = pd.concat([per_df, new_msg], ignore_index=True)
                                                 per_df.to_csv(PERMISSIONS_FILE, index=False)
-                                            
+                                                st.rerun()
                                         per_df = per_df.sort_index()
-                                        st.rerun()
+                                        
                                     st.write("---")
                                     st.subheader("📑 Requested Permissions report")
                                     st.session_state[f"{Roll_no}"] = False
@@ -1338,6 +1338,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
