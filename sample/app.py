@@ -63,7 +63,8 @@ if read() != "" and read() is not None:
 )
             st.markdown("<br><br>", unsafe_allow_html=True)
 
-# from streamlit_autorefresh import st_autorefresh 
+from streamlit_autorefresh import st_autorefresh
+st_autorefresh(interval=5000, key='fullautorefresh')
 # count = st_autorefresh(interval=3500, key="fullautorefresh") 
 #   ================================================================================
 if not os.path.exists(PASS_FILE):
@@ -131,8 +132,7 @@ else:
 
     page = st.sidebar.radio("Navigate to:", ["🧑‍🏫 Mentor", "👨‍🎓 Student","👨‍🔬 Admin", "ℹ️ About", "⚙️ Settings", "🪧 NoticeBoard", "🧑‍🍼 Feedback"], index=1)
     import html
-    from streamlit_autorefresh import st_autorefresh
-    st_autorefresh(interval=5000, key='mentor_refresh')
+
 
 #   =========================== MENTOR PORTAL =================================
 
@@ -1340,6 +1340,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
