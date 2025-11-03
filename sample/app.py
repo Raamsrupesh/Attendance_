@@ -1208,7 +1208,9 @@ else:
             LAST_UPDATE = datetime(2025, 10, 27)
 
             about_header = f"""
-             Welcome to **{APP_NAME}** app!
+             # Welcome to **{APP_NAME}** app!
+
+             A professional system designed to verify and secure attendance across classes (students, CRs, mentors, admins), all with advanced, modern technology and strict validation.
             
             ---
             Updated Recently on: {LAST_UPDATE}\n
@@ -1329,6 +1331,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
