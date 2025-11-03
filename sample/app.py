@@ -124,7 +124,7 @@ else:
 
 #   ============================== LOGO BAR ========================================
 
-    st.logo("https://user-gen-media-assets.s3.amazonaws.com/seedream_images/e12a6ea7-3195-4197-97dd-47a453f95487.png", size="medium")    
+    st.logo("https://media.canva.com/v2/download/name:I+want+an+image+for+a+logo+for+an+app+in+which+viewers+are+students+and+professionals+so+keep+this+logo+modern+and+it+should+have+%27RR%27+as+the+symbol+it+should+be+professional+and+modern+as+well_and+create+images+like+Rolls+royals+symbol+%27RR%27+but+not+.jpg/uri:ifs%3A%2F%2FM%2Fd50baa8b-e833-41e6-9b66-f4918c5f23fc?csig=AAAAAAAAAAAAAAAAAAAAALCjZ6i9f9G2T1DfxlJkKZtbHXVPaVap6ZpDA5Xuyawe&exp=1762146705&signer=media-rpc&token=AAIAAU0AJGQ1MGJhYThiLWU4MzMtNDFlNi05YjY2LWY0OTE4YzVmMjNmYwAAAAABmkjFrSIecLW0ibeiU1VEKFStIjgYzPygF71w-pg2vAXgy5zkag", size="medium")    
     st.sidebar.image("https://media.canva.com/v2/download/name:I+want+an+image+for+a+logo+for+an+app+in+which+viewers+are+students+and+professionals+so+keep+this+logo+modern+and+it+should+have+%27RR%27+as+the+symbol+it+should+be+professional+and+modern+as+well_and+create+images+like+Rolls+royals+symbol+%27RR%27+but+not+.jpg/uri:ifs%3A%2F%2FM%2Fd50baa8b-e833-41e6-9b66-f4918c5f23fc?csig=AAAAAAAAAAAAAAAAAAAAALCjZ6i9f9G2T1DfxlJkKZtbHXVPaVap6ZpDA5Xuyawe&exp=1762146705&signer=media-rpc&token=AAIAAU0AJGQ1MGJhYThiLWU4MzMtNDFlNi05YjY2LWY0OTE4YzVmMjNmYwAAAAABmkjFrSIecLW0ibeiU1VEKFStIjgYzPygF71w-pg2vAXgy5zkag")
 
 #   ================================================================================
@@ -1331,6 +1331,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
