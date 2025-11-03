@@ -840,6 +840,7 @@ else:
                                                 per_df.to_csv(PERMISSIONS_FILE, index=False)
                                             
                                         per_df = per_df.sort_index()
+                                        st.rerun()
                                     st.write("---")
                                     st.subheader("📑 Requested Permissions report")
                                     st.session_state[f"{Roll_no}"] = False
@@ -1337,6 +1338,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
