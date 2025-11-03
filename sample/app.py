@@ -161,6 +161,7 @@ else:
                                 f"{sanitized_roll}: {sanitized_msg}",
                                 key=f"checkbox_{idx}",
                                 value=st.session_state[key]
+                                st.rerun()
                             )
                             
 
@@ -1338,6 +1339,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
