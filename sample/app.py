@@ -175,7 +175,7 @@ else:
                         if st.button("🔁 Clear", key="Mentor_erasing"):
                             per_df = pd.DataFrame(columns=per_df.columns)
                             per_df.to_csv(PERMISSIONS_FILE, index=False)
-                            # st.rerun()
+                            st.rerun()
 
                     except FileNotFoundError or NameError:
                         st.success("NO ONE YET ASKED PERMISSION AND NOTHING TO DOWNLOAD!!")
@@ -1337,6 +1337,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
