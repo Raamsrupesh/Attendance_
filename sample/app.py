@@ -64,7 +64,7 @@ if read() != "" and read() is not None:
             st.markdown("<br><br>", unsafe_allow_html=True)
 
 from streamlit_autorefresh import st_autorefresh 
-count = st_autorefresh(interval=2500, key="fullautorefresh") 
+count = st_autorefresh(interval=3500, key="fullautorefresh") 
 #   ================================================================================
 if not os.path.exists(PASS_FILE):
     password_df = pd.DataFrame(columns=['user_name', 'pass'])
@@ -846,11 +846,12 @@ else:
                                     if Roll_no in per_df['Roll_no'].values:
                                         if (per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'] == 'Pending').any():
                                             if not st.session_state[f"{Roll_no}"]:
-                                                st.warning(f"😥😥Your case is still in **PENDING**")
+                                                st.toast("😔 Your request is still in pending!", icon="⚠️", duration='infinite')
                                                 st.session_state[f"{Roll_no}"] = True 
+                                            st.warning(f"😥😥Your case is still in **PENDING**")
                                         elif per_df.loc[per_df['Roll_no'] == Roll_no, 'Granted'].any():
                                             if not st.session_state[f"{Roll_no}"]:
-                                                st.toast("🎉 Your leave has been approved!", icon="✅", duration='short')
+                                                st.toast("🎉 Your leave has been approved!", icon="✅", duration='infinite')
                                                 st.markdown(
                                                     "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                     unsafe_allow_html=True
@@ -860,7 +861,7 @@ else:
                                             
                                         else:
                                             if not st.session_state[f"{Roll_no}"]:
-                                                st.toast("Your leave might be rejected!", icon="❌")
+                                                st.toast("Your leave might be rejected!", icon="❌", duration='infinite')
                                                 st.markdown(
                                                     "<audio autoplay><source src='https://www.soundjay.com/buttons/button-3.mp3' type='audio/mpeg'></audio>",
                                                     unsafe_allow_html=True
@@ -1336,6 +1337,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
