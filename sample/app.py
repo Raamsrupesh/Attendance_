@@ -63,8 +63,8 @@ if read() != "" and read() is not None:
 )
             st.markdown("<br><br>", unsafe_allow_html=True)
 
-from streamlit_autorefresh import st_autorefresh 
-count = st_autorefresh(interval=3500, key="fullautorefresh") 
+# from streamlit_autorefresh import st_autorefresh 
+# count = st_autorefresh(interval=3500, key="fullautorefresh") 
 #   ================================================================================
 if not os.path.exists(PASS_FILE):
     password_df = pd.DataFrame(columns=['user_name', 'pass'])
@@ -1337,6 +1337,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
