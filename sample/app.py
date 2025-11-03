@@ -1330,7 +1330,8 @@ else:
                 elif feed_name == "":
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
-st.caption("~ An app made by Saketh (Rupesh) which was completed prior to the 27th October 2025, with development accomplished in 5-6 days.")
+st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
