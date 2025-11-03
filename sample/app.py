@@ -1202,7 +1202,7 @@ else:
     elif page == "ℹ️ About":
             from datetime import datetime
 
-            APP_NAME = "GeoMark Attendance"
+            APP_NAME = "EduPresence Fortress"
             VERSION = "v2.0"
             DEVELOPER = "Raamanand"
             LAST_UPDATE = datetime(2025, 10, 27)
@@ -1329,6 +1329,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
          
+
 
 
 
