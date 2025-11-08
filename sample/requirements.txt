@@ -6,5 +6,6 @@ streamlit_cookies_controller
 streamlit_geolocation
 streamlit_autorefresh 
 plyer
-opencv-python==4.8.1.78
+opencv-python==4.5.5.64
+
 
