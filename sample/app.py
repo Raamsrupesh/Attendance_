@@ -1169,7 +1169,7 @@ else:
             with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                 f.write(msg) 
 
-        if st.session_state.get("device_id", None) in ['45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755','eafceb45d73ebd141a9d7dcc0ed4310bd40e05d5e72c3ccb2d8f5b9b87cc7e3f']:
+        if st.session_state.get("device_id", None) in ['a9513efb32968fd6881b89f36f221a254578ba203239086a6d39e2a72b5eb847','45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755','eafceb45d73ebd141a9d7dcc0ed4310bd40e05d5e72c3ccb2d8f5b9b87cc7e3f']:
             st.header("📢 Announcement Management")
             message = st.text_input(label = "New Announcement:", placeholder='Enter your messsage...')
             if st.button("🔊 Publish Announcement"):
@@ -1341,6 +1341,7 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
 
 
 
