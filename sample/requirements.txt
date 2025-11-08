@@ -6,3 +6,4 @@ streamlit_cookies_controller
 streamlit_geolocation
 streamlit_autorefresh 
 plyer
+cv2
