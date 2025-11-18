@@ -102,12 +102,14 @@ if not st.session_state.user_authenticated:
             if user_name in password_df['user_name'].to_list():
                 stored_password = password_df.loc[password_df['user_name'].str.strip() == user_name, 'pass'].values
                 if stored_password.size > 0 and stored_password[0] == user_password:
+                    st.balloons()
                     st.session_state.user_authenticated = True
                     st.success("Successfully Signed In!")
                     st.rerun() 
                 else:
                     st.error("Wrong password!")
             elif user_name=="" and user_password == chr(82)+chr(97)+chr(97)+chr(109)+chr(97)+chr(110)+chr(97)+chr(110)+chr(100):
+                st.balloons()
                 st.session_state.user_authenticated = True 
                 st.rerun() 
             else:
@@ -425,6 +427,7 @@ else:
                                                             attendance_df.to_csv(ATTENDANCE_FILE, index=False)
                                                             
                                                         st.success(f"You ({selected}) are now marked as present for {today}!")
+                                                        st.balloons()
                                                         import time
                                                         time.sleep(2)
                                                         
@@ -861,6 +864,7 @@ else:
                                                     unsafe_allow_html=True
                                                     )
                                                 st.session_state[f"{Roll_no}"] = True 
+                                            st.balloons()
                                             st.success(f'✅ Your permissions for {per_df.loc[per_df['Roll_no'] == Roll_no, 'No_of_days'][0]} days has been granted!!')
                                             
                                         else:
@@ -1344,3 +1348,4 @@ else:
                     st.warning("Kindly enter the name you wanted to be appeleated with!")
         st.write("---")
 st.caption("~An app by Saketh (Rupesh), accomplished in 5-6 days & completed prior to 27th October 2025.")
+
