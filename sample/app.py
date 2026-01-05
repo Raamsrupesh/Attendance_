@@ -271,12 +271,12 @@ else:
             st.success(
                 f"🪪 {saved_roll} is permanently bound with this device."
             )
-            st.text_input("Roll Number", value=saved_roll, disabled=True)
-            st.write(f"Device ID: {device_id}")
+            st.text_input("🆔 Roll Number", value=saved_roll, disabled=True)
+            # st.write(f"Device ID: {device_id}")
         else:
             # first time on this device → registration
             roll_no = st.selectbox("Enter your Roll Number:", CLASS_ROLL_NUMBERS)
-            if st.button("**🧷 BIND PERMANENTLY**", type = 'primary'):
+            if st.button("**🔗 BIND PERMANENTLY**", type = 'primary'):
                 if not roll_no:
                     st.error("Please fill in all fields.")
                 else:
@@ -303,7 +303,7 @@ else:
         # NOTE: from here, NEVER ask roll again; always use user_roll.
 
         st.subheader(f"🙏 Welcome {st.session_state.get('user_name', user_roll)} 🙏")
-        st.selectbox("🎫 Roll NO:", options=[user_roll], disabled=True)
+        # st.selectbox("🎫 Roll NO:", options=[user_roll], disabled=True)
 
         # Permission toast for today (your original logic adjusted to use user_roll)
         student_per_df = pd.read_sql(
@@ -926,7 +926,7 @@ else:
                 else:
                     st.error("No user **EXISTS**!!")
         st.write("---")
-    
+        st.write(f"Device ID: {device_id}")
     
     elif who == "📃ToDoList":
         todo_pswd = st.text_input(type='password', label='Name your TodoList: ', placeholder="******")
@@ -1101,6 +1101,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
