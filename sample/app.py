@@ -276,7 +276,7 @@ else:
         else:
             # first time on this device → registration
             roll_no = st.selectbox("Enter your Roll Number:", CLASS_ROLL_NUMBERS)
-            if st.button("Register"):
+            if st.button("**🧷 BIND PERMANENTLY**", type = 'primary'):
                 if not roll_no:
                     st.error("Please fill in all fields.")
                 else:
@@ -1101,5 +1101,6 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
