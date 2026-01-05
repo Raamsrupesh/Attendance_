@@ -926,7 +926,7 @@ else:
                 else:
                     st.error("No user **EXISTS**!!")
         st.write("---")
-        st.write(f"Device ID: {device_id}")
+        st.write(f"Device ID: {st.session_state.get('device_id')}")
     
     elif who == "📃ToDoList":
         todo_pswd = st.text_input(type='password', label='Name your TodoList: ', placeholder="******")
@@ -1101,6 +1101,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
