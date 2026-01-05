@@ -329,7 +329,7 @@ else:
             a = st.radio("⚙️ options available: ", ['🧑 STUDENT', '👑 CR'])
 
             if a == "🧑 STUDENT":
-                st.write("─" * 50)
+                st.write("---")
                 st.header("✅ Mark Your Presence")
                 from streamlit_geolocation import streamlit_geolocation 
                 location = streamlit_geolocation()
@@ -367,7 +367,7 @@ else:
                             "📅 SELECT MONTH: ",
                             ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
                             'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-                            index=datime.now().month + 1
+                            index=datime.now().date().month-1
                         )
                         if mon == 'JAN':
                             mon = '01'
@@ -407,30 +407,29 @@ else:
                             total_days = 31          
 
                         csv_data = pd.read_sql(
-                            sql='SELECT rollno as Roll NO,date_pre as Date,time_pre as Time '
-                                'FROM attendance WHERE rollno = ? AND date_pre LIKE ?',
+                            sql='''SELECT rollno as RollNo, date_pre as Date, time_pre as Time FROM attendance WHERE rollno = ? AND date_pre LIKE ?''',
                             con=at_con,
                             params=(user_roll, f"{datime.now().strftime('%Y-%m')}-%")
                         )
                         st.download_button(
-                            "Download Report",
-                            data=csv_data.to_csv(index=False),
-                            file_name=f'{user_roll}{mon}attendance.csv',
-                            mime="text/csv",
-                            icon="📥"
+                                label="Download Report",
+                                data=csv_data.to_csv(index=False),
+                                file_name=f'{user_roll}{mon}attendance.csv',
+                                mime="text/csv",
+                                icon="📥",
+                                key=f"{user_roll}{mon}attendance"
                         )
                 except:
-                    pass 
+                    st.error("Contact ADMIN")
 
                 at_cur.execute(
-                    'SELECT COUNT(DISTINCT date_pre) FROM attendance '
-                    'WHERE (rollno = ?) AND (date_pre LIKE ?);',
-                    (user_roll, f"{datime.now().year}-{datime.now().month}-%")
+                    '''SELECT COUNT(DISTINCT date_pre) FROM attendance WHERE (rollno = ?) AND (date_pre LIKE ?);''',
+                    (user_roll, f"{datime.now().date().year}-{datime.now().date().month}-%")
                 )
-                total_present_days = at_cur.fetchone()[0]
+                total_present_days = at_cur.fetchall()
                 # total_days from above expander scope; you may want to move this calculation earlier safely
                 try:
-                    percentage = (total_present_days / (total_days - 4)) * 100
+                    percentage = (len(total_present_days) / (total_days - 4)) * 100
                     if percentage < 62:
                         st.error(f"📉 The attendance percentage is: {percentage}%")
                     elif percentage >= 63 and percentage < 75:
@@ -438,7 +437,7 @@ else:
                     else:
                         st.success(f"📈 The attendance percentage is: {percentage}%")
                 except Exception:
-                    pass
+                    st.error("Contact Admin")
 
             elif a == "👑 CR":
                 with open(REP_PASS, 'r', newline="") as f:
@@ -448,48 +447,49 @@ else:
                     placeholder='*******',
                     type='password'
                 )
-                if CR_pass == "":
-                    st.warning("⚠️ Enter the CR password!")
-                elif hashlib.sha256(CR_pass.encode()).hexdigest() == act_cr:
-                    st.write("---")
-                    st.header(f"{datime.now().date()} Attendance: ")
-                    pre, abs_col = st.columns([2, 1])
-                    with pre:
-                        st.subheader("Presenties: ")
-                        pre_df = pd.read_sql(
-                            sql="SELECT rollno, time_pre FROM attendance WHERE date_pre = ?;",
-                            con=at_con,
-                            params=(datime.now().strftime("%Y-%m-%d"),)
-                        )
-                        st.write(pre_df)
-
-                    with abs_col:
-                        st.subheader("Absenties: ")
-                        absenties = []
-                        for i in CLASS_ROLL_NUMBERS:
-                            if i not in pre_df['rollno'].to_list():
-                                absenties.append(i)
-                        absenties = pd.DataFrame(absenties, columns=['rollno'])
-                        abse = absenties['rollno'].isin(
-                            pd.read_sql(
-                                'SELECT rollno FROM permissions WHERE date_per = ?',
-                                per_con,
+                if st.button("CHECK"):
+                    if CR_pass == "":
+                        st.warning("⚠️ Enter the CR password!")
+                    elif hashlib.sha256(CR_pass.encode()).hexdigest() == act_cr:
+                        st.write("---")
+                        st.header(f"{datime.now().date()} Attendance: ")
+                        pre, abs_col = st.columns([2, 1])
+                        with pre:
+                            st.subheader("Presenties: ")
+                            pre_df = pd.read_sql(
+                                sql="SELECT rollno as RollNO, time_pre as Time FROM attendance WHERE date_pre = ?;",
+                                con=at_con,
                                 params=(datime.now().strftime("%Y-%m-%d"),)
                             )
+                            st.write(pre_df)
+
+                        with abs_col:
+                            st.subheader("Absenties: ")
+                            absenties = []
+                            for i in CLASS_ROLL_NUMBERS:
+                                if i not in pre_df['RollNO'].to_list():
+                                    absenties.append(i)
+                            absenties = pd.DataFrame(absenties, columns=['rollno'])
+                            abse = absenties['rollno'].isin(
+                                pd.read_sql(
+                                    'SELECT rollno FROM permissions WHERE date_per = ?',
+                                    per_con,
+                                    params=(datime.now().strftime("%Y-%m-%d"),)
+                                )
+                            )
+                            abse = pd.concat([absenties, abse], axis=1, ignore_index=True)
+                            st.write(abse)
+                        csv_data_cr = pd.concat([pre_df, abse], axis=1, ignore_index=True)
+                        st.download_button(
+                            label="Download Today's Attendance",
+                            data=csv_data_cr.to_csv(index=False),
+                            file_name=f"{datime.now().strftime('%Y-%m-%d')}-Attendance.csv",
+                            mime="text/csv",
+                            key=f"{datime.now().strftime('%Y-%m-%d')}cr_present_download",
+                            icon="⏬"
                         )
-                        abse = pd.concat([absenties, abse], axis=1, ignore_index=True)
-                        st.write(abse)
-                    csv_data_cr = pd.concat([pre_df, abse], axis=1, ignore_index=True)
-                    st.download_button(
-                        label="Download Today's Attendance",
-                        data=csv_data_cr.to_csv(index=False),
-                        file_name=f"{datime.now().strftime('%Y-%m-%d')}-Attendance.csv",
-                        mime="text/csv",
-                        key=f"{datime.now().strftime('%Y-%m-%d')}cr_present_download",
-                        icon="⏬"
-                    )
-                else:
-                    st.error("❌ Wrong CR Password!!")         
+                    else:
+                        st.error("❌ Wrong CR Password!!")         
 
         # ------------ TAB 2: ASK PERMISSION ------------
         with st2:
@@ -698,12 +698,19 @@ else:
                     st.info("📭 No one has yet given the feedback!!")           
                 st.write("─" * 50)
                 st.header("🔧 System Maintenance")
-                if st.button("🗑️ Clear All Data", type="secondary"):
-                    per_cur.execute("DELETE FROM permissions;")
-                    per_con.commit()
-                    per_con.close()
-                    pd.read_csv(FEEDBACK_FILE).iloc[0:0].to_csv(FEEDBACK_FILE,index=False)
-                st.write("─" * 50)
+                st.markdown("<br>", unsafe_allow_html=True)
+                a_, b_, c_ = st.columns([4,4, 10])
+                with a_:
+                    if st.button("🗑️ Clear All Data", type='primary'):
+                        per_cur.execute("DELETE FROM permissions;")
+                        per_con.commit()
+                        per_con.close()
+                        pd.read_csv(FEEDBACK_FILE).iloc[0:0].to_csv(FEEDBACK_FILE,index=False)
+                with b_:
+                    if st.button("🧹 Clear cache"):
+                        st.cache_data.clear()
+                        st.rerun()
+                st.write("---------------------------"*20)
                 changed_rep = st.text_input("Change REP Password: ", type='password', placeholder="******")
                 if st.button("Change REP"):
                     with open (REP_PASS, mode="w", newline="") as rep:
@@ -723,11 +730,8 @@ else:
                 with _2:
                     min_lonrange = st.number_input("🌐 Enter longitude min range")
                     maxlonrange = st.number_input("🌐 Enter longitude max range")
-                if st.button("🧹 Clear cache"):
-                    st.cache_data.clear()
-                    st.rerun()
                 st.write("---")
-                sql_admin_db = st.selectbox("Enter on which you want to perform queries: ", options=[f"{ATTENDANCE_DB} -> attendance", f"{NAME_PASS_DB} -> name_pass", f"{PERMISSIONS_DB} -> permissions", f"{ROLL_DEVICE_STU_DB} -> studentrolldevice", f"{TODO_DB} -> todo(todo_pswd)"])
+                sql_admin_db = st.selectbox("Enter on which you want to perform queries: ", options=[f"{ATTENDANCE_DB} → attendance", f"{NAME_PASS_DB} → name_pass", f"{PERMISSIONS_DB} → permissions", f"{ROLL_DEVICE_STU_DB} → studentrolldevice", f"{TODO_DB} → todo(todo_pswd)"])
                 query = st.text_area('Enter the query here: ', placeholder=f"SELECT * FROM attendance WHERE Roll NO = '{st.session_state.get('user')}';")
                 oneormany = st.selectbox("One or Many outputs in output: ", options=['one', 'many'])
                 
@@ -735,7 +739,7 @@ else:
                     st.write("---")
                     st.subheader("Output Console: ")
                     try:
-                            if sql_admin_db == f"{ATTENDANCE_DB} -> attendance":
+                            if sql_admin_db == f"{ATTENDANCE_DB} → attendance":
                                 at_con = sqlite3.connect(ATTENDANCE_DB)
                                 at_cur = at_con.cursor()
                                 at_cur.execute(query.lower())
@@ -747,7 +751,7 @@ else:
                                 if 'insert' in query or 'update' in query or 'delete' in query:
                                         at_con.commit()
                                         at_con.close()
-                            elif sql_admin_db == f"{NAME_PASS_DB} -> name_pass":
+                            elif sql_admin_db == f"{NAME_PASS_DB} → name_pass":
                                 np_co = sqlite3.connect(NAME_PASS_DB)
                                 np_cr = np_co.cursor()
                                 np_cr.execute(query.lower())
@@ -759,7 +763,7 @@ else:
                                 if 'insert' in query or 'update' in query or 'delete' in query:
                                         np_co.commit()
                                         np_co.close()
-                            elif sql_admin_db == f"{PERMISSIONS_DB} -> permissions":
+                            elif sql_admin_db == f"{PERMISSIONS_DB} → permissions":
                                 per_con = sqlite3.connect(PERMISSIONS_DB)
                                 per_cur = per_con.cursor()
                                 per_cur.execute(query.lower())
@@ -771,7 +775,7 @@ else:
                                 if 'insert' in query or 'update' in query or 'delete' in query:
                                         per_con.commit()
                                         per_con.close()
-                            elif sql_admin_db == f"{ROLL_DEVICE_STU_DB} -> studentrolldevice":
+                            elif sql_admin_db == f"{ROLL_DEVICE_STU_DB} → studentrolldevice":
                                 conn = sqlite3.connect(ROLL_DEVICE_STU_DB)
                                 cur = conn.cursor()
                                 cur.execute(query.lower())
@@ -783,7 +787,7 @@ else:
                                 if 'insert' in query or 'update' in query or 'delete' in query:
                                         conn.commit()
                                         conn.close()
-                            elif sql_admin_db == f"{TODO_DB} -> todo(todo_pswd)":
+                            elif sql_admin_db == f"{TODO_DB} → todo(todo_pswd)":
                                 todo_cn = sqlite3.connect(TODO_DB)
                                 todo_cr = todo_cn.cursor()
                                 todo_cr.execute(query.lower())
@@ -1101,8 +1105,6 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
-
-
 
 
 
