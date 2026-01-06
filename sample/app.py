@@ -22,6 +22,9 @@ NAME_PASS_DB = 'name_pass.db'  # 👤
 TODO_DB = 'todo.db'
 MESSAGE_FILE = 'messages.csv'
 MARKED_FILE = 'marked.csv'
+REP_PASS_TXT = 'rep_pass.txt'
+MENT_PASSWORD_TXT = 'ment_pass.txt'
+
 
 np_co = sqlite3.connect(NAME_PASS_DB)
 np_cr = np_co.cursor()
@@ -310,7 +313,7 @@ else:
             con=per_con,
             params=(f"{datime.now().strftime('%Y-%m-%d')}", user_roll)
         )
-        if not student_per_df.empty and (student_per_df['granted'] == "✅ ACCEPTED").any():
+        if not student_per_df.empty and (student_per_df['granted'] == "✅ ACCEPTED").any() and student_per_df['date_per'] == datime.now().strftime("%Y-%m-%d"):
             st.toast(
                 f"✅ ACCEPTED on {student_per_df['date_per'].iloc[0]} "
                 f"for {student_per_df['no_of_days'].iloc[0]} days.",
@@ -670,7 +673,7 @@ else:
                 with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                     f.write(msg) 
 
-            if st.session_state['device_id'] in ['1f399fbb313d1aaabbfcf8265f53cca63aa13c9c3cbc4203b5a4791276d7ee3b', '39412adf9162573ea0af6b0ff1b8f2f0f210e91b1a10aaca2f6840e06350da14']:
+            if st.session_state['device_id'] == '1f399fbb313d1aaabbfcf8265f53cca63aa13c9c3cbc4203b5a4791276d7ee3b':
                 st.header("📢 Announcement Management")
                 message = st.text_input(label = "📝 New Announcement:", placeholder='Enter your message...')
                 if st.button("🔊 Publish Announcement"):
@@ -680,9 +683,6 @@ else:
                 if st.button("🔇 Clear Announcement"):
                     write("")
                     st.success("✅ Announcement Cleared!")
-                st.write("─" * 50)
-                st.caption(f"Currently the representative password is:{None}")
-                st.caption(f"Currently the Mentor password is:{None}")
                 st.write("─" * 50)
                 st.header("📊 System Statistics")
                 try:
@@ -716,19 +716,39 @@ else:
                 with b_:
                     if st.button("🧹 Clear cache"):
                         st.cache_data.clear()
-                        st.rerun()
+                        # st.rerun()
                 st.write("---------------------------"*20)
-                changed_rep = st.text_input("Change REP Password: ", type='password', placeholder="******")
-                if st.button("Change REP"):
-                    with open (REP_PASS, mode="w", newline="") as rep:
-                        rep.write(hashlib.sha256(changed_rep.encode()).hexdigest())
-                        st.success("Successfully changed representative password")
+                try:
+                    changed_rep = st.text_input("Change REP Password: ", type='password', placeholder="******")
+                    if st.button("Change REP"):
+                        if changed_rep != "":
+                            with open (REP_PASS_TXT, mode="w", newline="") as rep:
+                                rep.write(changed_rep)
+                            with open (REP_PASS, mode="w", newline="") as rep:
+                                rep.write(hashlib.sha256(changed_rep.encode()).hexdigest())
+                                st.success("Successfully changed representative password")
+                        else:
+                            st.warning("It's empty!")
 
-                changed_ment = st.text_input("Change Mentor Password: ", type='password', placeholder="******")
-                if st.button("Change MENT"):
-                    with open(MENT_PASSWORD, mode="w", newline="") as ment:
-                        ment.write(hashlib.sha256(changed_ment.encode()).hexdigest())
-                        st.success("Successfully changed Mentor password")
+                    changed_ment = st.text_input("Change Mentor Password: ", type='password', placeholder="******")
+                
+                    if st.button("Change MENT"):
+                        if changed_ment != "":
+                            with open(MENT_PASSWORD_TXT, mode="w", newline="") as ment:
+                                ment.write(changed_ment)
+                            with open(MENT_PASSWORD, mode="w", newline="") as ment:
+                                ment.write(hashlib.sha256(changed_ment.encode()).hexdigest())
+                                st.success("Successfully changed Mentor password")
+                        else:
+                            st.warning("It's empty!")
+                except:
+                    st.info("For this session you didn't update them!")
+                st.write("─" * 50)
+                with open(MENT_PASSWORD_TXT, mode="r", newline="") as ment:
+                    st.caption(f"Currently the Mentor password is: {ment.read()}")
+                with open(REP_PASS_TXT, mode="r", newline="") as rep:
+                    st.caption(f"Currently the representative password is: {rep.read()}")
+                
                 st.write("─" * 50)
                 _1, _2 = st.columns(2)
                 with _1:
@@ -843,7 +863,7 @@ else:
                     new_row = pd.DataFrame(data={"feed": [feed], "gb": [gb], "appleation": [appleation]})
                     feedback_df = pd.concat([feedback_df, new_row], ignore_index=True, axis=0)
                     feedback_df.to_csv(FEEDBACK_FILE, index=False)
-                    st.toast("🙏 Thank you, Your feedback is too much valuable for us!!", icon="⭐", duration='long')
+                    st.toast("🙏 Thank you, Your feedback is much valuable for us!!", icon="⭐", duration='long')
 
         st.write("─" * 50)
 
@@ -1112,8 +1132,6 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
-
-
 
 
 
