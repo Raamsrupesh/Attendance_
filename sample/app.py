@@ -10,6 +10,7 @@ import csv
 from random import choice
 import html
 
+
 MENT_PASSWORD = 'mentor_password.csv'  # 🔐
 ROLL_DEVICE_STU_DB = 'studentrolldevice.db'  # 📱
 ATTENDANCE_DB = 'attendance.db'  # 📊 
@@ -27,7 +28,7 @@ np_cr = np_co.cursor()
 np_cr.execute("CREATE TABLE IF NOT EXISTS name_pass(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(100) NOT NULL, password VARCHAR(100) NOT NULL);")
 np_co.commit()
 
-
+@st.cache_data(ttl=60) 
 def read():
     if os.path.exists(GOOD_NEWS):
         with open(GOOD_NEWS, mode='r', encoding='utf-8') as f:
@@ -1111,6 +1112,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
