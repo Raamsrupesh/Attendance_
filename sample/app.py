@@ -70,7 +70,7 @@ if "user_auth" not in st.session_state:
     st.session_state['user_auth'] = False 
 
 if not st.session_state['user_auth']:
-    st.title("🔓 SignIn/Register")  # 🔐
+    st.title("🔐  SignIn/Register")  # 🔐
     action = st.radio("🎯 Select Action", ['SignIn', 'Register'], index=0)
     user_name = st.text_input("👤 Enter User Name: ")
     user_pass = st.text_input("🔑 Enter Password", type='password')
@@ -148,50 +148,47 @@ else:
 
     who = st.sidebar.radio("🧭 Navigate to: ", ['👨‍🏫 Mentor', '🧑‍🎓 Student', '👨‍🔬 Admin', '📢 NoticeBoard', '💬 Feedback', 'ℹ️ About', '🔧Settings', '📃ToDoList'], index = 1)
     
-    if who == '👨‍🏫 Mentor': 
+    if who == '👨‍🏫 Mentor':  
         st.header(f"👨‍🏫 Mentor Portal: ")
         ment_password = st.text_input("🔐 Enter Mentor Password: ", type='password')
         if hashlib.sha256(ment_password.encode()).hexdigest() == teach_pass:
-            # try:
-            #     st.write(today_per_df)
-            # except:
-            #     st.toast(f"🙏 Welcome, {st.session_state.user_name}", icon="👨‍🏫")
             st.subheader(f"🙏 Welcome : {st.session_state.user_name}🙏")
             st.write("─" * 75)
-            st.subheader("📋 Permissions for Today:")
-            today_per_df = pd.read_sql(
-                "SELECT * FROM permissions WHERE date_per = ?",
-                con=per_con,
-                params=(datime.now().strftime("%Y-%m-%d"),),
-            )
-
-            status_options = ['👁️ SEEN','✅ ACCEPTED', '❌ REJECTED']
-
-            for i, row in today_per_df.iterrows():
-                # Decide default based on current DB value
-                granted = row['granted']
-                if granted in status_options:
-                    default_index = status_options.index(granted)
-                else:  # e.g. 'NOT YET'
-                    default_index = 0  # SEEN
-
-                stu_per = st.radio(
-                    label=f"📄 {row['rollno']}: {row['cause']}. Therefore I need a leave for {row['no_of_days']} days",
-                    options=status_options,
-                    horizontal=True,
-                    index=default_index,
-                    key=f"perm_{datime.now().strftime('%Y-%m-%d')}_{row['rollno']}"
-                )
-
-                # Only update DB if changed
-                if stu_per != granted:
-                    per_cur.execute(
-                        "UPDATE permissions SET granted = ? WHERE (date_per = ?) AND (rollno = ?);",
-                        (stu_per, datime.now().strftime("%Y-%m-%d"), row['rollno']),
-                    )
-                    per_con.commit()
-            st.download_button(label="Permissions Report", data=today_per_df.to_csv(index=False),file_name=f"{datime.now().date()}_permissions_report", key=f"{datime.now().date()}-{st.session_state['user_name']}-permissions report", mime='text/csv', icon=':material/download:')
-
+            today_per_df = pd.read_sql(sql="SELECT date_per ,rollno , cause, no_of_days, granted  FROM permissions WHERE date_per LIKE ?",con=per_con ,params=(datime.now().strftime("%Y-%m-%d"),))
+            if today_per_df[today_per_df['granted'] == 'NOT YET'].shape[0] != 0:
+                st.toast(f"{today_per_df[today_per_df['granted'] == 'NOT YET'].shape[0]} permissions/Leave letters unseen!")
+            st.subheader("Today's requests:")
+            with st.form(f"Permissions updates{today_per_df.shape[0]}"):
+                for j,i in today_per_df.iterrows():
+                    if (i['granted'] == 'NOT YET') or (i['granted'] == '👁️ SEEN'):
+                        val = st.radio(f"{i['rollno']}: {i['cause']}.Therfore I need leave for {i['no_of_days']}.", options=['👁️ SEEN', '✅ ACCEPTED', '❌ REJECTED'], index=0, horizontal=True, key=f"r_{i['rollno']}_{i['date_per']}",)
+                    elif i['granted'] == '✅ ACCEPTED':
+                        val = st.radio(f"{i['rollno']}: {i['cause']}.Therfore I need leave for {i['no_of_days']}.", options=['👁️ SEEN', '✅ ACCEPTED', '❌ REJECTED'], index=1, horizontal=True, key=f"r_{i['rollno']}_{i['date_per']}",)
+                    elif i['granted'] == '❌ REJECTED':
+                        val = st.radio(f"{i['rollno']}: {i['cause']}.Therfore I need leave for {i['no_of_days']}.", options=['👁️ SEEN', '✅ ACCEPTED', '❌ REJECTED'], index=2, horizontal=True, key=f"r_{i['rollno']}_{i['date_per']}",)
+                    if st.form_submit_button("UPDATE"):
+                        if val != i['granted']:
+                            per_cur.execute("UPDATE permissions SET granted = ? WHERE rollno = ? AND date_per = ?;", (val, i['rollno'], i['date_per']))
+                            per_con.commit()
+            st.download_button(icon=':material/download:',label=f"Today's permissions", file_name=f"{datime.now().strftime('%Y-%m-%d')}", key = f"Mentor downloading {datime.now().strftime('%Y-%m-%d')}", data = pd.read_sql(sql="SELECT * FROM permissions WHERE date_per LIKE ?",con=per_con ,params=(datime.now().strftime("%Y-%m-%d"),)).to_csv(index=False), mime='text/csv')    
+                # if i[5] == 'NOT YET':
+                #     val = st.checkbox(f"{i[2]}: {i[3]}. Therfore I need leave for {i[4]} days.", value=False)
+                #     if val == True:
+                #         per_cur.execute("UPDATE permissions SET granted = 'Accepted' WHERE rollno = ?;", (i[2],))
+                #         per_con.commit()
+                #     if val == False:
+                #         per_cur.execute("UPDATE permissions SET granted = 'REJECTED' WHERE rollno = ?;", (i[2],))
+                #         per_con.commit()
+                # elif i[5] == 'Accepted':
+                #     val = st.checkbox(f"{i[2]}: {i[3]}. Therfore I need leave for {i[4]} days.", value=True)
+                #     if val == False:
+                #         per_cur.execute("UPDATE permissions SET granted = 'REJECTED' WHERE rollno = ?;", (i[2],))
+                #         per_con.commit()
+                # elif i[5] == 'REJECTED':
+                #     val = st.checkbox(f"{i[2]}: {i[3]}. Therfore I need leave for {i[4]} days.", value=False)
+                #     if val == True:
+                #         per_cur.execute("UPDATE permissions SET granted = 'Accepted' WHERE rollno = ?;", (i[2],))
+                #         per_con.commit()
 
             if st.button("🗑️ CLEAR PERMISSIONS"):
                 per_cur.execute("DELETE FROM permissions;")
@@ -315,7 +312,13 @@ else:
         if not student_per_df.empty and (student_per_df['granted'] == "✅ ACCEPTED").any():
             st.toast(
                 f"✅ ACCEPTED on {student_per_df['date_per'].iloc[0]} "
-                f"for {student_per_df['no_of_days'].iloc[0]}",
+                f"for {student_per_df['no_of_days'].iloc[0]} days.",
+                icon="🧑‍🎓"
+            )
+        elif not student_per_df.empty and (student_per_df['granted'] == "❌ REJECTED").any():
+            st.toast(
+                f"❌ REJECTED on {student_per_df['date_per'].iloc[0]} "
+                f"for {student_per_df['no_of_days'].iloc[0]} days.",
                 icon="🧑‍🎓"
             )
 
@@ -472,9 +475,9 @@ else:
                             absenties = pd.DataFrame(absenties, columns=['rollno'])
                             abse = absenties['rollno'].isin(
                                 pd.read_sql(
-                                    'SELECT rollno FROM permissions WHERE date_per = ?',
+                                    'SELECT rollno FROM permissions WHERE date_per = ? AND granted = ?',
                                     per_con,
-                                    params=(datime.now().strftime("%Y-%m-%d"),)
+                                    params=(datime.now().strftime("%Y-%m-%d"),"✅ ACCEPTED")
                                 )
                             )
                             abse = pd.concat([absenties, abse], axis=1, ignore_index=True)
@@ -657,7 +660,7 @@ else:
 
         # ------------ TAB 5: PREV RECORDS ------------
         with st5:
-            st.write("Prev records logic here (your original code)")
+            st.info("This will be certainly added after a period of time.....")
     
      
     elif who == '👨‍🔬 Admin':
@@ -676,6 +679,9 @@ else:
                 if st.button("🔇 Clear Announcement"):
                     write("")
                     st.success("✅ Announcement Cleared!")
+                st.write("─" * 50)
+                st.caption(f"Currently the representative password is:{None}")
+                st.caption(f"Currently the Mentor password is:{None}")
                 st.write("─" * 50)
                 st.header("📊 System Statistics")
                 try:
