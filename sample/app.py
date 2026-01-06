@@ -746,10 +746,13 @@ else:
                 except:
                     st.info("For this session you didn't update them!")
                 st.write("─" * 50)
-                with open(MENT_PASSWORD_TXT, mode="r", newline="") as ment:
-                    st.caption(f"Currently the Mentor password is: {ment.read()}")
-                with open(REP_PASS_TXT, mode="r", newline="") as rep:
-                    st.caption(f"Currently the representative password is: {rep.read()}")
+                try:
+                    with open(MENT_PASSWORD_TXT, mode="r", newline="") as ment:
+                        st.caption(f"Currently the Mentor password is: {ment.read()}")
+                    with open(REP_PASS_TXT, mode="r", newline="") as rep:
+                        st.caption(f"Currently the representative password is: {rep.read()}")
+                except FileNotFoundError:
+                    st.info("You didn't update any passwords in this session")
                 
                 st.write("─" * 50)
                 _1, _2 = st.columns(2)
@@ -1134,6 +1137,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
