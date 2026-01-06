@@ -10,6 +10,8 @@ import csv
 from random import choice
 import html
 
+from streamlit_autorefresh import st_autorefresh
+st_autorefresh(interval=2000, debounce=True, limit=3)
 
 MENT_PASSWORD = 'mentor_password.csv'  # 🔐
 ROLL_DEVICE_STU_DB = 'studentrolldevice.db'  # 📱
@@ -1132,6 +1134,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
