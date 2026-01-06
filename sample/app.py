@@ -673,7 +673,7 @@ else:
                 with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                     f.write(msg) 
 
-            if st.session_state['device_id'] == '1f399fbb313d1aaabbfcf8265f53cca63aa13c9c3cbc4203b5a4791276d7ee3b':
+            if st.session_state['device_id'] == '45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755':
                 st.header("📢 Announcement Management")
                 message = st.text_input(label = "📝 New Announcement:", placeholder='Enter your message...')
                 if st.button("🔊 Publish Announcement"):
@@ -1132,6 +1132,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
