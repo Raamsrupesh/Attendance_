@@ -133,7 +133,7 @@ else:
     per_cur.execute("CREATE TABLE IF NOT EXISTS permissions(id INTEGER PRIMARY KEY AUTOINCREMENT, date_per date NOT NULL, rollno VARCHAR(2) NOT NULL, cause VARCHAR(700) NOT NULL, no_of_days INTEGER NOT NULL, granted VARCHAR(3) NOT NULL);")
     per_con.commit()
 
-    if not os.path.exists(MENT_PASSWORD):
+    if not os.path.exists(MENT_PASSWORD):      
         with open (MENT_PASSWORD , mode='w', newline="") as f:
             f.write(hashlib.sha256(f'{chr(84)+chr(69)+chr(65)+chr(67)+chr(82)}'.encode()).hexdigest())
     if not os.path.exists(REP_PASS):
@@ -675,7 +675,7 @@ else:
                 with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                     f.write(msg) 
 
-            if st.session_state['device_id'] == '45c71d8124d5773d2afc93d2716451a4be8cfcb955bf6d8acdca26066cacc755':
+            if st.session_state['device_id'] == '1f399fbb313d1aaabbfcf8265f53cca63aa13c9c3cbc4203b5a4791276d7ee3b':
                 st.header("📢 Announcement Management")
                 message = st.text_input(label = "📝 New Announcement:", placeholder='Enter your message...')
                 if st.button("🔊 Publish Announcement"):
@@ -746,13 +746,10 @@ else:
                 except:
                     st.info("For this session you didn't update them!")
                 st.write("─" * 50)
-                try:
-                    with open(MENT_PASSWORD_TXT, mode="r", newline="") as ment:
-                        st.caption(f"Currently the Mentor password is: {ment.read()}")
-                    with open(REP_PASS_TXT, mode="r", newline="") as rep:
-                        st.caption(f"Currently the representative password is: {rep.read()}")
-                except FileNotFoundError:
-                    st.info("You didn't update any passwords in this session")
+                with open(MENT_PASSWORD_TXT, mode="r", newline="") as ment:
+                    st.caption(f"Currently the Mentor password is: {ment.read()}")
+                with open(REP_PASS_TXT, mode="r", newline="") as rep:
+                    st.caption(f"Currently the representative password is: {rep.read()}")
                 
                 st.write("─" * 50)
                 _1, _2 = st.columns(2)
@@ -854,7 +851,7 @@ else:
         st.title("💬 Feedback Form")
         st.write("─" * 50)
         st.subheader("Drop your valuable feedback here (if any)!")
-        with st.form(key=f"{st.session_state['user']}Feedbackform"):
+        with st.form(key=f"{st.session_state['device_id']}Feedbackform"):
             appleation = st.text_input("👤 How are you liked to be appeleated as: ")
             feed = st.text_area("💭 Drop your feedback here")
             gb = st.radio("⭐ How was this?", options=['🔧 Need Improvement','🆗 OK', '😊 Satisfied', '🥳 Best'], horizontal=True, index = 2)
@@ -1137,9 +1134,6 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
-
-
-
 
 
 
