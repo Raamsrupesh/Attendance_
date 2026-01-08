@@ -438,7 +438,7 @@ else:
                 total_present_days = at_cur.fetchall()
                 # total_days from above expander scope; you may want to move this calculation earlier safely
                 try:
-                    percentage = (len(total_present_days) / (total_days - 4)) * 100
+                    percentage = total_present_days
                     if percentage < 62:
                         st.error(f"📉 The attendance percentage is: {percentage}%")
                     elif percentage >= 63 and percentage < 75:
@@ -1137,6 +1137,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
