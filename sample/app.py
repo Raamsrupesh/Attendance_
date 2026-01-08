@@ -451,7 +451,7 @@ else:
                 at_cur.execute("SELECT COUNT(date_pre) FROM attendance WHERE date_pre < ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'), user_roll))
                 student_portal_pre = at_cur.fetchone()[0]
                 st.metric(label="Present", value = student_portal_pre, delta="+1 new feature")
-                st.metric(label="Absent", value=(datime.now().strftime('%Y-%m-%d') - student_portal_pre), delta="+2 this week")
+                st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre), delta="+2 this week")
 
             elif a == "👑 CR":
                 with open(REP_PASS, 'r', newline="") as f:
@@ -1142,6 +1142,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
