@@ -475,14 +475,14 @@ else:
                  # After your queries where today_presence = at_cur.fetchone() is not None
                 if today_presence is not None:
                     # Present today: highlight present as "up", no delta on absent
-                    pre_col, abs_col = st.columns(2)
+                    pre_col, abs_col = st.columns([0.5,0.5])
                     with pre_col:
                         st.metric(label="Present", value=student_portal_pre, delta=1, delta_color="normal")
                     with abs_col:
                         st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre))
                 else:
                     # Absent today: highlight absent as "up", no delta on present
-                    pre_col, abs_col = st.columns(2)
+                    pre_col, abs_col = st.columns([0.5,0.5])
                     with pre_col:
                         st.metric(label="Present", value=student_portal_pre)
                     with abs_col:
@@ -1179,6 +1179,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
