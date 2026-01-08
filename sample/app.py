@@ -451,7 +451,8 @@ else:
                 at_cur.execute("SELECT COUNT(date_pre) FROM attendance WHERE date_pre < ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'), user_roll))
                 student_portal_pre = at_cur.fetchone()[0]
                 at_cur.execute("SELECT date_pre FROM attendance WHERE date_pre = ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'),user_roll))
-                today_presence = at_cur.fetchone()[0]
+                today_presence = at_cur.fetchone()
+                st.write(today_presence)
                 if today_presence is not None:
                     pre_col, abs_col = st.columns(2)
                     with pre_col:
@@ -1154,6 +1155,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
