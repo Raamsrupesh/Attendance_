@@ -451,38 +451,55 @@ else:
                 at_cur.execute("SELECT COUNT(date_pre) FROM attendance WHERE date_pre < ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'), user_roll))
                 student_portal_pre = at_cur.fetchone()[0]
                 at_cur.execute("SELECT date_pre FROM attendance WHERE date_pre = ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'),user_roll))
-                today_presence = at_cur.fetchone() is not None
+                today_presence = at_cur.fetchone()
                 # st.write(today_presence)
-                present_html = f"""
+                present_today = today_presence is not None
+                
+                delta_present = "+1" if present_today else "0"
+                delta_absent  = "+1" if not present_today else "0"
+                delta_present_color = "#16c784" if present_today else "#888888"  # green or gray
+                delta_absent_color  = "#ff4b4b" if not present_today else "#888888"  # red or gray
+                
+                html_pre = f"""
                 <div style="
                     display:flex;
                     justify-content:space-between;
                     gap:1rem;
                 ">
+                  <!-- Present card -->
                   <div style="
                       flex:1;
                       border:1px solid #444;
-                      padding:0.5rem 0.75rem;
-                      border-radius:0.5rem;
+                      padding:0.6rem 0.8rem;
+                      border-radius:0.6rem;
                       background-color:#111;
                   ">
                     <div style="font-size:0.8rem;opacity:0.7;">Present</div>
-                    <div style="font-size:1.4rem;font-weight:600;">{student_portal_pre}</div>
+                    <div style="font-size:1.5rem;font-weight:600;">{student_portal_pre}</div>
+                    <div style="font-size:0.9rem;color:{delta_present_color};margin-top:0.15rem;">
+                      {delta_present}
+                    </div>
                   </div>
+                
+                  <!-- Absent card -->
                   <div style="
                       flex:1;
                       border:1px solid #444;
-                      padding:0.5rem 0.75rem;
-                      border-radius:0.5rem;
+                      padding:0.6rem 0.8rem;
+                      border-radius:0.6rem;
                       background-color:#111;
                   ">
                     <div style="font-size:0.8rem;opacity:0.7;">Absent</div>
-                    <div style="font-size:1.4rem;font-weight:600;">{datime.now().date().day - student_portal_pre}</div>
+                    <div style="font-size:1.5rem;font-weight:600;">{absent_count}</div>
+                    <div style="font-size:0.9rem;color:{delta_absent_color};margin-top:0.15rem;">
+                      {delta_absent}
+                    </div>
                   </div>
                 </div>
                 """
                 
-                st.markdown(present_html, unsafe_allow_html=True)
+                st.markdown(html_pre, unsafe_allow_html=True)
+
 
                  # After your queries where today_presence = at_cur.fetchone() is not None
                 if today_presence is not None:
@@ -1191,6 +1208,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
