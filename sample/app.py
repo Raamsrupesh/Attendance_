@@ -433,9 +433,9 @@ else:
 
                 at_cur.execute(
                     '''SELECT COUNT(date_pre) FROM attendance WHERE (rollno = ?) AND (date_pre LIKE ?);''',
-                    (user_roll, f"{datime.now().date().year}-{datime.now().date().month}-%")
+                    (user_roll, f"{datime.now().strftime('%Y-%m')}-%")
                 )
-                total_present_days = at_cur.fetchall()
+                total_present_days = at_cur.fetchone()[0]
                 # total_days from above expander scope; you may want to move this calculation earlier safely
                 try:
                     percentage = total_present_days
@@ -1138,6 +1138,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
