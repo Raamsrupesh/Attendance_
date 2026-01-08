@@ -223,7 +223,7 @@ else:
                 styled_df = tea_abs_df.style.apply(green_style, axis=1)
                 st.dataframe(styled_df, use_container_width=True)
         
-            st.write("─" * 75)
+            
             present_html = f"""
             <div style="
                 display:flex;
@@ -251,10 +251,11 @@ else:
                 <div style="font-size:1.4rem;font-weight:600;">{len(tea_abs_df)}</div>
               </div>
             </div>
+            </br>
             """
             
             st.markdown(present_html, unsafe_allow_html=True)
-
+            st.write("─" * 75)
             # Date, Roll NO, Time, P/A
             teach_date_ip = st.date_input("Enter the date to check attendance: ", value='today', help="Enter the date to Access the Attendance of that day", format="YYYY-MM-DD")
             teach_date_df = pd.read_sql("SELECT rollno, time_pre FROM attendance WHERE date_pre LIKE ?", con=at_con, params=(teach_date_ip,))
@@ -574,6 +575,38 @@ else:
                             abse = pd.concat([absenties, abse], axis=1, ignore_index=True)
                             st.write(abse)
                         csv_data_cr = pd.concat([pre_df, abse], axis=1, ignore_index=True)
+                                    
+                        present_html = f"""
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            gap:1rem;
+                        ">
+                          <div style="
+                              flex:1;
+                              border:1px solid #444;
+                              padding:0.5rem 0.75rem;
+                              border-radius:0.5rem;
+                              background-color:#111;
+                          ">
+                            <div style="font-size:0.8rem;opacity:0.7;">Today's Presenties</div>
+                            <div style="font-size:1.4rem;font-weight:600;">{len(pre_df)}</div>
+                          </div>
+                          <div style="
+                              flex:1;
+                              border:1px solid #444;
+                              padding:0.5rem 0.75rem;
+                              border-radius:0.5rem;
+                              background-color:#111;
+                          ">
+                            <div style="font-size:0.8rem;opacity:0.7;">Today's Absenties</div>
+                            <div style="font-size:1.4rem;font-weight:600;">{len(abse)}</div>
+                          </div>
+                        </div>
+                        </br>
+                        """
+                        
+                        st.markdown(present_html, unsafe_allow_html=True)
                         st.download_button(
                             label="Download Today's Attendance",
                             data=csv_data_cr.to_csv(index=False),
@@ -1222,6 +1255,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
