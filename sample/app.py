@@ -450,8 +450,20 @@ else:
                     st.error("Contact Admin")
                 at_cur.execute("SELECT COUNT(date_pre) FROM attendance WHERE date_pre < ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'), user_roll))
                 student_portal_pre = at_cur.fetchone()[0]
-                st.metric(label="Present", value = student_portal_pre, delta="+1 new feature")
-                st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre), delta="+2 this week")
+                at_cur.execute("SELECT date_pre FROM attendance WHERE date_pre = ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'),user_roll))
+                today_presence = at_cur.fetchone()[0]
+                if today_presence is not None:
+                    pre_col, abs_col = st.columns(2)
+                    with pre_col:
+                        st.metric(label="Present", value = student_portal_pre, delta="+1 day")
+                    with abs_col:
+                        st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre))
+                else:
+                    pre_col, abs_col = st.columns(2)
+                    with pre_col:
+                        st.metric(label="Present", value = student_portal_pre)
+                    with abs_col:
+                        st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre), delta="+1 day")
 
             elif a == "👑 CR":
                 with open(REP_PASS, 'r', newline="") as f:
@@ -1142,6 +1154,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
