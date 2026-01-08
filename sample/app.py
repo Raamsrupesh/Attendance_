@@ -454,13 +454,13 @@ else:
                 today_presence = at_cur.fetchone()
                 st.write(today_presence)
                 if today_presence is not None:
-                    pre_col, abs_col = st.columns([2])
+                    pre_col, abs_col = st.columns(1,1)
                     with pre_col:
                         st.metric(label="Present", value = student_portal_pre, delta="+1 day")
                     with abs_col:
                         st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre))
                 else:
-                    pre_col, abs_col = st.columns([2])
+                    pre_col, abs_col = st.columns(1,1)
                     with pre_col:
                         st.metric(label="Present", value = student_portal_pre)
                     with abs_col:
@@ -1155,6 +1155,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
