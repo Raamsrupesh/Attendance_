@@ -196,7 +196,7 @@ else:
                 #         per_cur.execute("UPDATE permissions SET granted = 'Accepted' WHERE rollno = ?;", (i[2],))
                 #         per_con.commit()
 
-            if st.button("🗑️ CLEAR PERMISSIONS"):
+            if st.button(f"🗑️ CLEAR {per_cur.execute("SELECT COUNT(*) FROM permissions;").fetchone()[0]} PERMISSIONS"):
                 per_cur.execute("DELETE FROM permissions;")
                 per_con.commit()
                 per_con.close()
@@ -208,6 +208,7 @@ else:
             with tea_pre:
                 tea_pre_df = pd.read_sql("SELECT rollno, time_pre FROM attendance WHERE date_pre = ?;", con = at_con, params=(datime.now().strftime("%Y-%m-%d"),))
                 st.write(tea_pre_df)
+                
             with tea_abs:
                 tea_abs_df = []
                 for i in CLASS_ROLL_NUMBERS:
@@ -223,6 +224,37 @@ else:
                 st.dataframe(styled_df, use_container_width=True)
         
             st.write("─" * 75)
+            present_html = f"""
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                gap:1rem;
+            ">
+              <div style="
+                  flex:1;
+                  border:1px solid #444;
+                  padding:0.5rem 0.75rem;
+                  border-radius:0.5rem;
+                  background-color:#111;
+              ">
+                <div style="font-size:0.8rem;opacity:0.7;">Presenties</div>
+                <div style="font-size:1.4rem;font-weight:600;">{len(tea_pre_df)}</div>
+              </div>
+              <div style="
+                  flex:1;
+                  border:1px solid #444;
+                  padding:0.5rem 0.75rem;
+                  border-radius:0.5rem;
+                  background-color:#111;
+              ">
+                <div style="font-size:0.8rem;opacity:0.7;">Absenties</div>
+                <div style="font-size:1.4rem;font-weight:600;">{len(tea_abs_df)}</div>
+              </div>
+            </div>
+            """
+            
+            st.markdown(present_html, unsafe_allow_html=True)
+
             # Date, Roll NO, Time, P/A
             teach_date_ip = st.date_input("Enter the date to check attendance: ", value='today', help="Enter the date to Access the Attendance of that day", format="YYYY-MM-DD")
             teach_date_df = pd.read_sql("SELECT rollno, time_pre FROM attendance WHERE date_pre LIKE ?", con=at_con, params=(teach_date_ip,))
@@ -496,6 +528,7 @@ else:
                     </div>
                   </div>
                 </div>
+                </br>
                 """
                 
                 st.markdown(html_pre, unsafe_allow_html=True)
@@ -1189,6 +1222,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
