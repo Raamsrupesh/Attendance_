@@ -453,36 +453,48 @@ else:
                 at_cur.execute("SELECT date_pre FROM attendance WHERE date_pre = ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'),user_roll))
                 today_presence = at_cur.fetchone() is not None
                 # st.write(today_presence)
-                st.markdown("""
-                <style>
-                    [data-testid="column"] {
-                        width: calc(50% - 0.5rem) !important;
-                        margin-right: 1rem;
-                        flex-direction: row !important;
-                    }
-                    [data-testid="column"]:last-child {
-                        margin-right: 0 !important;
-                    }
-                    @media (max-width: 640px) {
-                        [data-testid="column"] {
-                            width: 100% !important;
-                            margin-right: 0 !important;
-                            margin-bottom: 1rem !important;
-                        }
-                    }
-                </style>
-                """, unsafe_allow_html=True)
+                present_html = f"""
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    gap:1rem;
+                ">
+                  <div style="
+                      flex:1;
+                      border:1px solid #444;
+                      padding:0.5rem 0.75rem;
+                      border-radius:0.5rem;
+                      background-color:#111;
+                  ">
+                    <div style="font-size:0.8rem;opacity:0.7;">Present</div>
+                    <div style="font-size:1.4rem;font-weight:600;">{student_portal_pre}</div>
+                  </div>
+                  <div style="
+                      flex:1;
+                      border:1px solid #444;
+                      padding:0.5rem 0.75rem;
+                      border-radius:0.5rem;
+                      background-color:#111;
+                  ">
+                    <div style="font-size:0.8rem;opacity:0.7;">Absent</div>
+                    <div style="font-size:1.4rem;font-weight:600;">{absent_count}</div>
+                  </div>
+                </div>
+                """
+                
+                st.markdown(present_html, unsafe_allow_html=True)
+
                  # After your queries where today_presence = at_cur.fetchone() is not None
                 if today_presence is not None:
                     # Present today: highlight present as "up", no delta on absent
-                    pre_col, abs_col = st.columns([5,5])
+                    pre_col, abs_col = st.columns(2)
                     with pre_col:
                         st.metric(label="Present", value=student_portal_pre, delta=1, delta_color="normal")
                     with abs_col:
                         st.metric(label="Absent", value=(datime.now().date().day - student_portal_pre))
                 else:
                     # Absent today: highlight absent as "up", no delta on present
-                    pre_col, abs_col = st.columns([5,5])
+                    pre_col, abs_col = st.columns(2)
                     with pre_col:
                         st.metric(label="Present", value=student_portal_pre)
                     with abs_col:
@@ -1179,6 +1191,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
