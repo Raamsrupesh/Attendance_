@@ -453,6 +453,25 @@ else:
                 at_cur.execute("SELECT date_pre FROM attendance WHERE date_pre = ? AND rollno = ?;", (datime.now().strftime('%Y-%m-%d'),user_roll))
                 today_presence = at_cur.fetchone() is not None
                 # st.write(today_presence)
+                st.markdown("""
+                <style>
+                    [data-testid="column"] {
+                        width: calc(50% - 0.5rem) !important;
+                        margin-right: 1rem;
+                        flex-direction: row !important;
+                    }
+                    [data-testid="column"]:last-child {
+                        margin-right: 0 !important;
+                    }
+                    @media (max-width: 640px) {
+                        [data-testid="column"] {
+                            width: 100% !important;
+                            margin-right: 0 !important;
+                            margin-bottom: 1rem !important;
+                        }
+                    }
+                </style>
+                """, unsafe_allow_html=True)
                  # After your queries where today_presence = at_cur.fetchone() is not None
                 if today_presence is not None:
                     # Present today: highlight present as "up", no delta on absent
@@ -1160,6 +1179,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
