@@ -338,7 +338,7 @@ else:
             a = st.radio("⚙️ options available: ", ['🧑 STUDENT', '👑 CR'])
 
             if a == "🧑 STUDENT":
-                st.write("="*50)
+                st.write("="*45)
                 st.header("✅ Mark Your Presence")
                 from streamlit_geolocation import streamlit_geolocation 
                 location = streamlit_geolocation()
@@ -1138,6 +1138,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
