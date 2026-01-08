@@ -432,7 +432,7 @@ else:
                     st.error("Contact ADMIN")
 
                 at_cur.execute(
-                    '''SELECT COUNT(DISTINCT date_pre) FROM attendance WHERE (rollno = ?) AND (date_pre LIKE ?);''',
+                    '''SELECT COUNT(date_pre) FROM attendance WHERE (rollno = ?) AND (date_pre LIKE ?);''',
                     (user_roll, f"{datime.now().date().year}-{datime.now().date().month}-%")
                 )
                 total_present_days = at_cur.fetchall()
@@ -675,7 +675,7 @@ else:
                 with open(GOOD_NEWS, mode='w', encoding='utf-8') as f:
                     f.write(msg) 
 
-            if st.session_state['device_id'] == '1f399fbb313d1aaabbfcf8265f53cca63aa13c9c3cbc4203b5a4791276d7ee3b':
+            if st.session_state['device_id'] in ['1f399fbb313d1aaabbfcf8265f53cca63aa13c9c3cbc4203b5a4791276d7ee3b', '2a16b84b390ab4863191248fb0c1e2c45710160a29fb5d22a261232a8eab4c18']:
                 st.header("📢 Announcement Management")
                 message = st.text_input(label = "📝 New Announcement:", placeholder='Enter your message...')
                 if st.button("🔊 Publish Announcement"):
@@ -1134,6 +1134,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
