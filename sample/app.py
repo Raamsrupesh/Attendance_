@@ -490,7 +490,7 @@ else:
                       background-color:#111;
                   ">
                     <div style="font-size:0.8rem;opacity:0.7;">Absent</div>
-                    <div style="font-size:1.5rem;font-weight:600;">{absent_count}</div>
+                    <div style="font-size:1.5rem;font-weight:600;">{datime.now().date().day - student_portal_pre}</div>
                     <div style="font-size:0.9rem;color:{delta_absent_color};margin-top:0.15rem;">
                       {delta_absent}
                     </div>
@@ -1208,6 +1208,7 @@ else:
 
 # import streamlit as st
 # st.write(pd.concat([df1, df1['Name'].isin(df2['appeleation'])], axis=1, ignore_index=True))
+
 
 
 
